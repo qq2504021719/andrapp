@@ -2,6 +2,7 @@ package com.example.administrator.geoquiz;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ public class QuizActivity extends AppCompatActivity {
     private Button mShangButton;
     private Button mNextButton;
     private TextView mQuestionTextView;
+
+    private static final String TAG = "QuizActivity";
 
     private Question[] mQuestionBank = new Question[]{
         new Question(R.string.question_oceans,true),
@@ -60,6 +63,8 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        Log.d(TAG,"onCreate(Bundle) 调用");
 
         // 显示问题到TextView
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
@@ -112,5 +117,36 @@ public class QuizActivity extends AppCompatActivity {
                 checkAnswer(false);
             }
         });
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG,"onStart() 调用");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG,"onPause() 调用");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG,"onResume() 调用");
+
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(TAG,"onStop() 调用");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG,"onDestroy() 调用");
     }
 }
