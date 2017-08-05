@@ -17,6 +17,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
 
     private static final String TAG = "QuizActivity";
+    private static final String KEY_INDEX = "index";
 
     private Question[] mQuestionBank = new Question[]{
         new Question(R.string.question_oceans,true),
@@ -33,6 +34,7 @@ public class QuizActivity extends AppCompatActivity {
     * 更新TextView显示的内容
     * */
     private void updateQuestion(int is){
+//        Log.d(TAG,"updateQuestion 方法调用 mCurrentIndex="+mCurrentIndex,new Exception());
         if(is == 1){
             mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
         }
@@ -65,6 +67,13 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         Log.d(TAG,"onCreate(Bundle) 调用");
+
+        if(savedInstanceState != null){
+            int key_index = savedInstanceState.getInt(KEY_INDEX,0);
+            if(key_index > 0){
+                mCurrentIndex = key_index;
+            }
+        }
 
         // 显示问题到TextView
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
@@ -117,6 +126,16 @@ public class QuizActivity extends AppCompatActivity {
                 checkAnswer(false);
             }
         });
+    }
+
+    /*
+    * 存储Activity销毁需要保存的变量
+    * */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG,"onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
     }
 
     @Override
