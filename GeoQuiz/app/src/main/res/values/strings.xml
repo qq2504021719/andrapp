@@ -6,9 +6,15 @@
     <string name="incorrect_toast">错误的！</string>
     <string name="shang_button">上一步</string>
     <string name="next_button">下一步</string>
+
     <string name="question_oceans">1:太平洋比大西洋大。</string>
     <string name="question_mideast">2:苏伊士运河连接红海与印度洋</string>
     <string name="question_africa">3:尼罗河的源头在埃及。</string>
     <string name="question_americas">4:亚马逊河是美洲最长的河流。</string>
     <string name="question_asia">5:贝加尔湖是世界上最古老和最深的淡水。</string>
+
+    <string name="warning_text">你确定你要这么做？</string>
+    <string name="show_answer_button">显示答案</string>
+    <string name="cheat_button">查看答案</string>
+    <string name="judgment_toast">查看答案是错误的</string>
 </resources>
