@@ -1,10 +1,14 @@
 package com.example.administrator.geoquiz;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -91,6 +95,26 @@ public class CheatActivity extends AppCompatActivity {
             public void onClick(View v){
                 mIsOnClickShowAnswer = true;
                 ShowTextView();
+
+                // 加动画效果,第102页,效果没有作用
+                // 此效果只有21及以上才有,所有加了判断,运行设备API级别大于本应用目标版本
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+                    int cx = mShowAnswer.getWidth()/2;
+                    int cy = mShowAnswer.getHeight()/2;
+                    float radius = mShowAnswer.getWidth();
+                    Animator anim = ViewAnimationUtils.createCircularReveal(mShowAnswer,cx,cy,radius,0);
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation){
+                            super.onAnimationEnd(animation);
+                            mShowAnswer.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }else{
+                    mShowAnswer.setVisibility(View.INVISIBLE);
+                }
+
             }
         });
     }

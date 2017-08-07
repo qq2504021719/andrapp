@@ -24,6 +24,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
     private static final String KEY_INDEX_S = "index_s";
+    private static final String KEY_INDEX_MIS = "index_mis";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private Question[] mQuestionBank = new Question[]{
@@ -119,7 +120,7 @@ public class QuizActivity extends AppCompatActivity {
             if(key_index > 0){
                 mCurrentIndex = key_index;
             }
-            mIsCheater = savedInstanceState.getBoolean(KEY_INDEX);
+            mIsCheater = savedInstanceState.getBoolean(KEY_INDEX_MIS);
 
         }
 
@@ -219,7 +220,7 @@ public class QuizActivity extends AppCompatActivity {
 //        Log.i(TAG,"onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
         savedInstanceState.putInt(KEY_INDEX_S,mIsCheaterNum);
-        savedInstanceState.putBoolean(KEY_INDEX,mIsCheater);
+        savedInstanceState.putBoolean(KEY_INDEX_MIS,mIsCheater);
 
     }
 
