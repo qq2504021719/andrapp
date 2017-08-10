@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Administrator on 2017/8/9.
@@ -23,7 +25,10 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
+
     private CrimeAdapter mAdapter;
+
+    private int onClickMcrimId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -39,15 +44,37 @@ public class CrimeListFragment extends Fragment {
 
     /*
     *
+    * 托管Activity恢复运行后,操作系统会发出调用onResume()生命周期方法的指令。activity接到指令后
+    * 它的FragmentManager会调用当前被Activity托管的fragment的onResume()方法
+    *
+    * 一般来说,要保证fragment视图得到刷新,在onResume()方法内更新代码是最安全的选择
+    *
+    * */
+    @Override
+    public void onResume(){
+        super.onResume();
+        // 刷新数据
+        updateUI();
+    }
+
+    /*
+    *
     * 创建CrimeAdapter,然后设置给RecyclerView
     *
+    * 如果已经配置好了CrimeAdapter,就会调用notifyDataSetChanged()方法来修改updateUI()方法
     * */
     private void updateUI(){
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
 
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if(mAdapter == null){
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        }else{
+//            Toast.makeText(getActivity(),"点击了id"+onClickMcrimId,Toast.LENGTH_SHORT).show();
+            mAdapter.notifyDataSetChanged();
+//            mAdapter.notifyItemChanged(onClickMcrimId);
+        }
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

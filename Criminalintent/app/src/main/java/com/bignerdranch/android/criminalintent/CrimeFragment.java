@@ -22,6 +22,9 @@ import java.util.UUID;
 
 public class CrimeFragment extends Fragment{
 
+    // argument bundle key
+    private static final String ARG_CRIME_ID = "crime_id";
+
     private Crime mCrime;
     // 标题
     private EditText mTitleField;
@@ -31,11 +34,28 @@ public class CrimeFragment extends Fragment{
     private CheckBox mSolvedCheckBox;
 
 
+    /*
+    *
+    * 要附加argument bundle给fragment,需要调用Fragment.setArguments(Bundle)方法。而且，
+    * 还不洗在fragment创建后,添加给activity前完成
+    *
+    * 托管activity需要fragment实例时,会调用newInstance()方法,而非直接调用其构造方法。
+    * */
+    public static CrimeFragment newInstance(UUID crimeId){
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID,crimeId);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-//        mCrime = new Crime();
-        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        // 获取用户点击列的id
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        // 根据列id获取详细信息
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 

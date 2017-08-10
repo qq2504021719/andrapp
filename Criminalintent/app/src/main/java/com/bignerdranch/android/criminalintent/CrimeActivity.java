@@ -25,7 +25,9 @@ public class CrimeActivity extends SingleFragmentActivity {
     * */
     @Override
     protected Fragment createFragment(){
-        return new CrimeFragment();
+        // 从intent中获取extra的值,传入newInstance()中
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        return CrimeFragment.newInstance(crimeId);
     }
 
 
