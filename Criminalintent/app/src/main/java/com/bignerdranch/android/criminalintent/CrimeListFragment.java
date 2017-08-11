@@ -28,7 +28,7 @@ public class CrimeListFragment extends Fragment {
 
     private CrimeAdapter mAdapter;
 
-    private int onClickMcrimId;
+    private UUID onClickMcrimId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -111,7 +111,8 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v){
             //  启动CrimeActivity
-            Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getId());
+//            Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(),mCrime.getId());
             startActivity(intent);
         }
 

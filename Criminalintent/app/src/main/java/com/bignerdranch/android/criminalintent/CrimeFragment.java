@@ -3,6 +3,7 @@ package com.bignerdranch.android.criminalintent;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ public class CrimeFragment extends Fragment{
 
     // argument bundle key
     private static final String ARG_CRIME_ID = "crime_id";
+    // DatePickerFragment 标签
+    private static final String DIALOG_DATE = "DialogDate";
 
     private Crime mCrime;
     // 标题
@@ -32,6 +35,8 @@ public class CrimeFragment extends Fragment{
     private Button mDateButton;
     // is解决
     private CheckBox mSolvedCheckBox;
+
+
 
 
     /*
@@ -94,8 +99,15 @@ public class CrimeFragment extends Fragment{
         // 设置显示时间
         SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         mDateButton.setText(sDateFormat.format(mCrime.getDate()));
-        // 禁用按钮
-        mDateButton.setEnabled(false);
+        // 点击按钮显示日期对话框
+        mDateButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = new DatePickerFragment();
+                dialog.show(manager,DIALOG_DATE);
+            }
+        });
 
         // 设置监听用于更新Crime的mSolved变量值
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
