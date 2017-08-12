@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,7 +93,8 @@ public class CrimeListFragment extends Fragment {
         public void bindCrime(Crime crime){
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+            mDateTextView.setText(sDateFormat.format(mCrime.getDate()));
             mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
 
@@ -111,7 +113,6 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v){
             //  启动CrimeActivity
-//            Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getId());
             Intent intent = CrimePagerActivity.newIntent(getActivity(),mCrime.getId());
             startActivity(intent);
         }
@@ -144,7 +145,7 @@ public class CrimeListFragment extends Fragment {
 
         /*
         *
-        * 该方法会把ViewHolder的View视图和模型层数据绑定起来。收到ViewHolder和列表项咋数据集中的索引位置后，我们通过索引位置找到要显示的
+        * 该方法会把ViewHolder的View视图和模型层数据绑定起来。收到ViewHolder和列表项数据集中的索引位置后，我们通过索引位置找到要显示的
         * 数据进行绑定。绑定完毕，刷新显示View视图。
         * 所谓索引位置，实际上就是数组中Crime的位置。取出目标数据后，通过发送crime标题给ViewHolder的TextView视图，我们就完成了Crime数据和View视图的绑定。
         *

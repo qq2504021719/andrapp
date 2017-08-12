@@ -1,6 +1,8 @@
 package com.bignerdranch.android.criminalintent;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -27,6 +30,8 @@ public class CrimeFragment extends Fragment{
     private static final String ARG_CRIME_ID = "crime_id";
     // DatePickerFragment 标签
     private static final String DIALOG_DATE = "DialogDate";
+
+    private static final int REQUEST_DATE = 0;
 
     private Crime mCrime;
     // 标题
@@ -96,15 +101,16 @@ public class CrimeFragment extends Fragment{
         });
 
         mDateButton = (Button)v.findViewById(R.id.crime_data);
-        // 设置显示时间
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        mDateButton.setText(sDateFormat.format(mCrime.getDate()));
+        UpdateButtonText();
         // 点击按钮显示日期对话框
         mDateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 FragmentManager manager = getFragmentManager();
-                DatePickerFragment dialog = new DatePickerFragment();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                // 将CrimeFragment设置成DatePickerFragment的目标fragment,DatePickerFragment回传数据给CrimeFragment
+                dialog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);
+                // 显示日历选择器
                 dialog.show(manager,DIALOG_DATE);
             }
         });
@@ -122,6 +128,30 @@ public class CrimeFragment extends Fragment{
         });
 
         return v;
+    }
+
+    /*
+    * 设置button显示时间
+    * */
+    private void UpdateButtonText(){
+        // 设置显示时间
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        mDateButton.setText(sDateFormat.format(mCrime.getDate()));
+    }
+
+    /*
+    * 覆盖onActivityResult方法,从extra中获取数据
+    * */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        if(requestCode == REQUEST_DATE){
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(date);
+            UpdateButtonText();
+        }
     }
 
 
