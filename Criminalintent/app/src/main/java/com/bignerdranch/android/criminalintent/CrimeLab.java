@@ -1,6 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +26,6 @@ public class CrimeLab {
 
     private CrimeLab(Context context){
         mCrimes = new ArrayList<>();
-        for(int i = 0;i<100;i++){
-            Crime crime = new Crime();
-            crime.setTitle("Crime #"+i);
-            crime.setSolved(i % 2 == 0);
-            mCrimes.add(crime);
-        }
     }
 
     /*
@@ -50,5 +45,25 @@ public class CrimeLab {
             }
         }
         return null;
+    }
+
+    /*
+    *
+    * 添加信息Crime
+    * */
+    public void addCrime(Crime c){
+        mCrimes.add(c);
+    }
+
+    /*
+    *
+    * 删除信息
+    * */
+    public void deleteCrime(UUID id){
+        for(int i =0;i<mCrimes.size();i++){
+            if(mCrimes.get(i).getId().equals(id)){
+                mCrimes.remove(i);
+            }
+        }
     }
 }

@@ -3,10 +3,14 @@ package com.bignerdranch.android.criminalintent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -28,12 +32,27 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
 
     private CrimeAdapter mAdapter;
+    // 切换菜单项标题状态
+    private boolean mSubtitleVisible;
 
-    private UUID onClickMcrimId;
+    // 保存菜单项标题状态
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        // 让FragmentManager知道CrimeListFragment需接收选项菜单方法回调
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_crime_list,container,false);
+
+        // 接收菜单项标题状态, 显示犯罪 隐藏犯罪
+        if(savedInstanceState != null){
+            mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
+        }
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -60,11 +79,89 @@ public class CrimeListFragment extends Fragment {
 
     /*
     *
+    * activity状态改变是保存值
+    * */
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE,mSubtitleVisible);
+    }
+
+    /*
+    *
+    * 实例化fragment_crime_list.xml中定义的菜单。将布局文件中定义的菜单项目填充到Menu实例中
+    * */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.fragment_crime_list,menu);
+
+        // 设置菜单项对应id显示的文字
+        MenuItem subtitleItem  = menu.findItem(R.id.menu_itme_show_subtitle);
+        if(mSubtitleVisible){
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        }else{
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
+    }
+
+    /*
+    *
+    * 用户点击菜单中的菜单项目时,fragment会收到onOptionsItemSelected(MenuItem)方法的回调请求。
+    * 传入该方法的参数是一个描述用户选择的MenuItem实例
+    *
+    * 当前菜单仅有一个菜单项,但菜单通常包含多个菜单项。通过检查菜单项ID,可确定被选中的是哪个菜单项,
+    * 然后做出相应的响应。这个ID实际就是在菜单定义文件中赋予菜单项的资源ID。
+    *
+    * 响应菜单项的选择事件。在该方法中,创建新的Crime实例，并将其添加到CrimeLab，然后启动CrimePagerActivity实例，
+    * 让用户可以编辑创建的Crime记录
+    * */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.menu_item_new_crime:
+                Crime crime = new Crime();
+                CrimeLab.get(getActivity()).addCrime(crime);
+                Intent intent = CrimePagerActivity
+                        .newIntent(getActivity(),crime.getId());
+                startActivity(intent);
+                return true;
+            case R.id.menu_itme_show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
+                // 更新犯罪数量
+                updateSubtitle();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*
+    *
+    * 更新犯罪数量
+    * */
+    private void updateSubtitle(){
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        String crimeCount = String.valueOf(crimeLab.getCrimes().size());
+        String subtitle = getString(R.string.subtitle_format,crimeCount);
+
+        if(!mSubtitleVisible){
+            subtitle = null;
+        }
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subtitle);
+    }
+
+    /*
+    *
     * 创建CrimeAdapter,然后设置给RecyclerView
     *
     * 如果已经配置好了CrimeAdapter,就会调用notifyDataSetChanged()方法来修改updateUI()方法
     * */
     private void updateUI(){
+
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
 
@@ -76,6 +173,9 @@ public class CrimeListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
 //            mAdapter.notifyItemChanged(onClickMcrimId);
         }
+
+        // 更新犯罪数量
+        updateSubtitle();
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -93,7 +193,7 @@ public class CrimeListFragment extends Fragment {
         public void bindCrime(Crime crime){
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
             mDateTextView.setText(sDateFormat.format(mCrime.getDate()));
             mSolvedCheckBox.setChecked(mCrime.isSolved());
         }

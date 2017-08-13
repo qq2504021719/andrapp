@@ -8,13 +8,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +45,12 @@ public class CrimeFragment extends Fragment{
     private Button mDateButton;
     // is解决
     private CheckBox mSolvedCheckBox;
+    // 时间
+    private EditText mDateedittext;
+    // 保存按钮,返回列表页
+    private Button mcrimesaveButton;
+    // 当前UUID
+    private UUID crimeId;
 
 
 
@@ -63,8 +74,12 @@ public class CrimeFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        // 让FragmentManager知道CrimeFragment需接收选项菜单方法回调
+        setHasOptionsMenu(true);
+
         // 获取用户点击列的id
-        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         // 根据列id获取详细信息
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
@@ -101,9 +116,22 @@ public class CrimeFragment extends Fragment{
         });
 
         mDateButton = (Button)v.findViewById(R.id.crime_data);
-        UpdateButtonText();
         // 点击按钮显示日期对话框
-        mDateButton.setOnClickListener(new View.OnClickListener(){
+//        mDateButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                FragmentManager manager = getFragmentManager();
+//                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+//                // 将CrimeFragment设置成DatePickerFragment的目标fragment,DatePickerFragment回传数据给CrimeFragment
+//                dialog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);
+//                // 显示日历选择器
+//                dialog.show(manager,DIALOG_DATE);
+//            }
+//        });
+
+        mDateedittext = (EditText) v.findViewById(R.id.crime_data_edittext);
+        // 点击显示日期对话框
+        mDateedittext.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 FragmentManager manager = getFragmentManager();
@@ -114,6 +142,8 @@ public class CrimeFragment extends Fragment{
                 dialog.show(manager,DIALOG_DATE);
             }
         });
+        UpdateButtonText();
+
 
         // 设置监听用于更新Crime的mSolved变量值
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
@@ -127,7 +157,43 @@ public class CrimeFragment extends Fragment{
             }
         });
 
+        // 保存按钮,返回
+        mcrimesaveButton = (Button)v.findViewById(R.id.crime_save);
+        mcrimesaveButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                getActivity().finish();
+            }
+        });
+
         return v;
+    }
+
+    /*
+    *
+    * 将布局文件中的菜单项目填充到menu中
+    *
+    * */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.fragment_crime,menu);
+    }
+
+    /*
+    *
+    * 点击菜单栏
+    * */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.menu_item_crime_delete:
+                CrimeLab.get(getActivity()).deleteCrime(crimeId);
+                getActivity().finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /*
@@ -135,8 +201,9 @@ public class CrimeFragment extends Fragment{
     * */
     private void UpdateButtonText(){
         // 设置显示时间
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-        mDateButton.setText(sDateFormat.format(mCrime.getDate()));
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+//        mDateButton.setText(sDateFormat.format(mCrime.getDate()));
+        mDateedittext.setText(sDateFormat.format(mCrime.getDate()));
     }
 
     /*
