@@ -119,7 +119,8 @@ public class ShangPingListFragment extends Fragment {
         @Override
         public void onClick(View v){
             // 启动 ShangPingPagerActivity
-//            Intent intent =
+            Intent intent = ShangPingPageActivity.newIntent(getActivity(),mShangPing.getId());
+            startActivity(intent);
         }
 
     }

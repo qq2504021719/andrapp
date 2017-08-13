@@ -5,6 +5,6 @@
     <string name="shangping_title_hint">输入商品标题。</string>
     <string name="shangping_title_label">标题</string>
     <string name="shangping_details_label">细节</string>
-    <string name="shangping_solved_label">喜欢</string>
+    <string name="shangping_isxihuan_label">喜欢</string>
     <string name="date_picker_title">时间</string>
 </resources>

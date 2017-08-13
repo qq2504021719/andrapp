@@ -30,7 +30,7 @@ public class CrimeFragment extends Fragment{
     private static final String ARG_CRIME_ID = "crime_id";
     // DatePickerFragment 标签
     private static final String DIALOG_DATE = "DialogDate";
-
+    // 设置子fragment标识
     private static final int REQUEST_DATE = 0;
 
     private Crime mCrime;
@@ -47,7 +47,7 @@ public class CrimeFragment extends Fragment{
     /*
     *
     * 要附加argument bundle给fragment,需要调用Fragment.setArguments(Bundle)方法。而且，
-    * 还不洗在fragment创建后,添加给activity前完成
+    * 还要在fragment创建后,添加给activity前完成
     *
     * 托管activity需要fragment实例时,会调用newInstance()方法,而非直接调用其构造方法。
     * */
