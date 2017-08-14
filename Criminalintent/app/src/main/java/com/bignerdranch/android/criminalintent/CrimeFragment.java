@@ -85,6 +85,20 @@ public class CrimeFragment extends Fragment{
     }
 
     /*
+    *
+    *
+    * 用户可能会在CrimeFragment中修改Crime实例，修改完成后,我们需要刷新CrimeLab中的Crime数据,这可以通过在CrimeFragment.java中
+    * 覆盖CrimeFragment.onPause()方法完成
+    *
+    * */
+    @Override
+    public void onPause(){
+        super.onPause();
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
+    }
+
+    /*
     * 创建视图 等同于Activity.onCreate()的方法处理
     * */
     @Override

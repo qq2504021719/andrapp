@@ -13,9 +13,9 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
 
-    public Crime(){
+    public Crime(UUID id){
         // 独特的标识符生成
-        mId = UUID.randomUUID();
+        mId = id;
         mDate = new Date();
     }
 
