@@ -43,6 +43,11 @@ public class CrimeLab {
 
     /*
     * 返回list集合
+    *
+    * 从cursor中取出数据,首先要调用moveToFirst()方法移动虚拟手指指向第一个元素,
+    * 读取行记录后,再调用moveToNext()方法,读取下一行记录,知道isAfterLast()告诉我们
+    * 没有数据为止.
+    * 最后,别忘了调用Cursor的close()方法关闭它,否则,后果很严重:轻则报错,重则导致应用崩溃
     * */
     public List<Crime> getCrimes(){
         List<Crime> crimes = new ArrayList<>();
@@ -88,6 +93,7 @@ public class CrimeLab {
         values.put(CrimeDbSchema.CrimeTable.Cols.TITLE,crime.getTitle());
         values.put(CrimeDbSchema.CrimeTable.Cols.DATE,crime.getDate().getTime());
         values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED,crime.isSolved()?1:0);
+        values.put(CrimeDbSchema.CrimeTable.Cols.SUSPECT,crime.getSuspect());
         return values;
     }
 
@@ -133,10 +139,10 @@ public class CrimeLab {
     * 删除信息
     * */
     public void deleteCrime(UUID id){
-//        for(int i =0;i<mCrimes.size();i++){
-//            if(mCrimes.get(i).getId().equals(id)){
-//                mCrimes.remove(i);
-//            }
-//        }
+        mDatabase.delete(
+                CrimeDbSchema.CrimeTable.NAME,
+                CrimeDbSchema.CrimeTable.Cols.UUID+"=?",
+                new String[] {id.toString()}
+                );
     }
 }

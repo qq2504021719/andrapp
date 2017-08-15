@@ -21,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -41,8 +42,6 @@ public class CrimeFragment extends Fragment{
     private Crime mCrime;
     // 标题
     private EditText mTitleField;
-    // 时间
-    private Button mDateButton;
     // is解决
     private CheckBox mSolvedCheckBox;
     // 时间
@@ -51,6 +50,8 @@ public class CrimeFragment extends Fragment{
     private Button mcrimesaveButton;
     // 当前UUID
     private UUID crimeId;
+    // 发送短信
+    private Button mReportButton;
 
 
 
@@ -129,20 +130,6 @@ public class CrimeFragment extends Fragment{
             }
         });
 
-        mDateButton = (Button)v.findViewById(R.id.crime_data);
-        // 点击按钮显示日期对话框
-//        mDateButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                FragmentManager manager = getFragmentManager();
-//                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-//                // 将CrimeFragment设置成DatePickerFragment的目标fragment,DatePickerFragment回传数据给CrimeFragment
-//                dialog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);
-//                // 显示日历选择器
-//                dialog.show(manager,DIALOG_DATE);
-//            }
-//        });
-
         mDateedittext = (EditText) v.findViewById(R.id.crime_data_edittext);
         // 点击显示日期对话框
         mDateedittext.setOnClickListener(new View.OnClickListener(){
@@ -168,6 +155,19 @@ public class CrimeFragment extends Fragment{
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked){
                 // 设置crime的solved的变量值
                 mCrime.setSolved(isChecked);
+            }
+        });
+
+        // 监听发送短信按钮
+        mReportButton = (Button)v.findViewById(R.id.crime_report);
+        mReportButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                // 隐试Intent启动短信
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT,getCrimeReport());
+                i.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.crime_report_subject));
+                startActivity(i);
             }
         });
 
@@ -233,6 +233,38 @@ public class CrimeFragment extends Fragment{
             mCrime.setDate(date);
             UpdateButtonText();
         }
+    }
+
+    /**
+     * 评接消息模板
+     */
+    private String getCrimeReport(){
+        // 是否解决
+        String solvedString = null;
+        if(mCrime.isSolved()){
+            solvedString = getString(R.string.crime_report_solved);
+        }else{
+            solvedString = getString(R.string.crime_report_unsolved);
+        }
+
+        // 发送时间
+        String dateFormat = "yyyy年MM月dd日";
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(dateFormat);
+        String dateString = sDateFormat.format(mCrime.getDate());
+
+        // 嫌疑人
+        String suspect = mCrime.getSuspect();
+        if (suspect == null){
+            suspect = getString(R.string.crime_report_no_suspect);
+        }else{
+            suspect = getString(R.string.crime_report_suspect,suspect);
+        }
+
+        // 标题
+        String report = getString(R.string.crime_report,mCrime.getTitle(),
+                dateString,suspect,solvedString);
+
+        return report;
     }
 
 

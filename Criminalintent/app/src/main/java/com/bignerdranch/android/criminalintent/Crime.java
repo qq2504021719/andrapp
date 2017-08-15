@@ -12,11 +12,20 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+    private String mSuspect;
 
     public Crime(UUID id){
         // 独特的标识符生成
         mId = id;
         mDate = new Date();
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
+    }
+
+    public String getSuspect() {
+        return mSuspect;
     }
 
     public void setDate(Date date) {

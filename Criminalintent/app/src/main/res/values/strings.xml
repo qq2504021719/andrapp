@@ -11,4 +11,14 @@
     <string name="show_subtitle">显示犯罪</string>
     <string name="hide_subtitle">隐藏犯罪</string>
     <string name="subtitle_format">%1$s 条犯罪记录</string>
+    <string name="crime_suspect_text">选取嫌疑人</string>
+    <string name="crime_report_text">发送短信</string>
+
+    <string name="crime_report">标题:%1$s。时间:%2$s。嫌疑人:%3$s。状态:%4$s!</string>
+    <string name="crime_report_solved">这个案件解决了</string>
+    <string name="crime_report_unsolved">这个案件还没有解决</string>
+    <string name="crime_report_no_suspect">没有嫌疑</string>
+    <string name="crime_report_suspect">嫌疑人 %s.</string>
+    <string name="crime_report_subject">criminalintentApp犯罪报告</string>
+    <string name="send_report">发送犯罪报告</string>
 </resources>

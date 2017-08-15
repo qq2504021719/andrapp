@@ -120,7 +120,7 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.menu_item_new_crime:
-                Crime crime = new Crime();
+                Crime crime = new Crime(UUID.randomUUID());
                 CrimeLab.get(getActivity()).addCrime(crime);
                 Intent intent = CrimePagerActivity
                         .newIntent(getActivity(),crime.getId());
@@ -169,9 +169,9 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         }else{
-//            Toast.makeText(getActivity(),"点击了id"+onClickMcrimId,Toast.LENGTH_SHORT).show();
+            // 刷新模型层数据
+            mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged();
-//            mAdapter.notifyItemChanged(onClickMcrimId);
         }
 
         // 更新犯罪数量
@@ -259,6 +259,14 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount(){
             return mCrimes.size();
+        }
+
+        /**
+         * 刷新CrimeAdapter的数据
+         * @param crimes
+         */
+        public void setCrimes(List<Crime> crimes){
+            mCrimes = crimes;
         }
 
     }
