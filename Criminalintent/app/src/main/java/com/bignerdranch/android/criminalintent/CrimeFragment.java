@@ -166,10 +166,15 @@ public class CrimeFragment extends Fragment{
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_TEXT,getCrimeReport());
-                i.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.crime_report_subject));
+                i.putExtra(Intent.EXTRA_SUBJECT,R.string.crime_report_subject);
+                // 有多个可选择的话,始终出现列表让用户选择
+                i = Intent.createChooser(i,getString(R.string.send_report));
                 startActivity(i);
             }
         });
+
+        // 监听获取联系人列表
+
 
         // 保存按钮,返回
         mcrimesaveButton = (Button)v.findViewById(R.id.crime_save);
