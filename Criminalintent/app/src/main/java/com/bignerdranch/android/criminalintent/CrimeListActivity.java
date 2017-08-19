@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 
 /**
@@ -15,6 +16,11 @@ public class CrimeListActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment(){
         return new CrimeListFragment();
+    }
+
+    @LayoutRes
+    protected int getLayoutResId(){
+        return R.layout.activity_twopane;
     }
 
 }

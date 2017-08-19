@@ -7,6 +7,6 @@
 #### 2:显示答案添加了动画，但没有效果。102页的代码
 
 ## CriminalIntent应用 详细记录办公室陋习,随手将脏盘子丢在休息室水槽,以及打印完自己的文件便径直走开,不管打印机有没有缺纸。能记录陋习的标题、日期以及照片，也支持在联系人中查找当事人,通过E-mail、Twitter、Facebook或其他应用提出抗议。把陋习处理完后。
-## 所用技术:(EditText) (UI fragment) (fragment) (RecyclerView、Adapter、ViewHolder) (AlertDialog) (ViewPage) (同一个Activity托管的fragment传递数据,子fragment返回数据给父Fragment) (工具栏/菜单栏,层级式导航) (SQLite使用增删改查)
+## 所用技术:(EditText) (UI fragment) (fragment) (RecyclerView、Adapter、ViewHolder) (AlertDialog) (ViewPage) (同一个Activity托管的fragment传递数据,子fragment返回数据给父Fragment) (工具栏/菜单栏,层级式导航) (SQLite使用增删改查)(隐式Intent调用其他应用，照片保存,照片生成缩略图)
 
 ## 练习App LianXi (主要练习"CriminalIntent应用"所学的技术)

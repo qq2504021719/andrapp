@@ -13,11 +13,20 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
     private String mSuspect;
+    private String mPhone;
 
     public Crime(UUID id){
         // 独特的标识符生成
         mId = id;
         mDate = new Date();
+    }
+
+    public String getPhone() {
+        return mPhone;
+    }
+
+    public void setPhone(String phone) {
+        mPhone = phone;
     }
 
     public void setSuspect(String suspect) {
@@ -54,5 +63,12 @@ public class Crime {
 
     public String getTitle() {
         return mTitle;
+    }
+
+    /**
+     * 文件获取获取方法
+     */
+    public String getPhotoFilename(){
+        return "IMG_"+getId().toString()+".jpg";
     }
 }

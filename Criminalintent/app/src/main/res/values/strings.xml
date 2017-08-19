@@ -21,4 +21,8 @@
     <string name="crime_report_suspect">嫌疑人 %s.</string>
     <string name="crime_report_subject">criminalintentApp犯罪报告</string>
     <string name="send_report">发送犯罪报告</string>
+
+
+    <string name="crime_phone_cuo_wu">电话号码错误</string>
+    <string name="dialog_photo_title">犯罪证据:</string>
 </resources>

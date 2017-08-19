@@ -3,9 +3,17 @@ package com.bignerdranch.android.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,12 +23,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,8 +49,14 @@ public class CrimeFragment extends Fragment{
     private static final String ARG_CRIME_ID = "crime_id";
     // DatePickerFragment 标签
     private static final String DIALOG_DATE = "DialogDate";
-    // 设置子fragment标识
+    // 请求代码常量 短信
     private static final int REQUEST_DATE = 0;
+    // 请求代码常量 获取联系人
+    private static final int REQUEST_CONTACT = 1;
+    // 请求代码常量 获取联系人电话
+    private static final int REQUEST_PHONE = 2;
+    // 请求代码常量 相机拍照
+    private static final int REQUEST_PHOTO = 3;
 
     private Crime mCrime;
     // 标题
@@ -52,6 +71,21 @@ public class CrimeFragment extends Fragment{
     private UUID crimeId;
     // 发送短信
     private Button mReportButton;
+    // 获取联系人
+    private Button mSuspectButton;
+    // 拨打联系人电话
+    private Button mPhoneButton;
+    // 显示值
+    private String phoneNumber = "未找到嫌疑人号码";
+    // 选择图片按钮
+    private ImageButton mPhotoButton;
+    // 图片缩略图显示
+    private ImageView mPhotoView;
+    // 图片弹出显示
+    private ImageView mDialogPhotoView;
+    // 图片存储位置
+    private File mPhotoFile;
+
 
 
 
@@ -83,6 +117,8 @@ public class CrimeFragment extends Fragment{
         crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         // 根据列id获取详细信息
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        // 获取图片存储位置
+        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
     }
 
     /*
@@ -97,6 +133,11 @@ public class CrimeFragment extends Fragment{
         super.onPause();
         CrimeLab.get(getActivity())
                 .updateCrime(mCrime);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     /*
@@ -129,6 +170,8 @@ public class CrimeFragment extends Fragment{
 
             }
         });
+
+
 
         mDateedittext = (EditText) v.findViewById(R.id.crime_data_edittext);
         // 点击显示日期对话框
@@ -174,7 +217,89 @@ public class CrimeFragment extends Fragment{
         });
 
         // 监听获取联系人列表
+        final Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        mSuspectButton = (Button) v.findViewById(R.id.crime_suspect);
+        mSuspectButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivityForResult(pickContact,REQUEST_CONTACT);
+            }
+        });
+        // 显示联系人 姓名
+        if(mCrime.getSuspect() != null){
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
 
+
+        // 联系嫌疑人
+        mPhoneButton = (Button)v.findViewById(R.id.crime_phone);
+        mPhoneButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mCrime.getPhone() != null && !mCrime.getPhone().equals(phoneNumber)){
+
+                    // 启动电话拨打界面
+                    Intent i = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mCrime.getPhone()));
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+
+                }else{
+                    Toast.makeText(getActivity(),R.string.crime_phone_cuo_wu,Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        // 显示联系人 电话
+        if(mCrime.getPhone() != null && !mCrime.getPhone().equals(phoneNumber)){
+            mPhoneButton.setText("拨打:"+mCrime.getPhone());
+        }
+
+
+        // android设备上安装了那些组件以及那些activity,PackageManager类全部都知道。调用resolveActivity(Intent,int)方法
+        // 我们可以找到匹配给定Intent任务的activity,flag标志MATCH_DEFAULT_ONLY限定只搜索带CATEGORY_DEFAULT标志的Activity
+        // 搜到目标,他会返回RESULVEInfo告诉你找到了哪个activity。如果找不到,必须禁用嫌疑人按钮,否则应用会崩溃
+        PackageManager packageManager = getActivity().getPackageManager();
+        // 查询是否拥有短信类应用,否则禁用发送短信
+        if (packageManager.resolveActivity(pickContact,PackageManager.MATCH_DEFAULT_ONLY) == null){
+            mSuspectButton.setEnabled(false);
+        }
+
+
+        // 细节
+        // 图片缩略图
+        mPhotoView = (ImageView)v.findViewById(R.id.crime_photo);
+        // 图片弹出显示
+        mDialogPhotoView = (ImageView)v.findViewById(R.id.dialog_crime_photo);
+        // 刷新显示图片
+        updatePhotoView();
+        // 点击查看大图
+        mPhotoView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                updateDialogPhotoView();
+
+            }
+        });
+
+        // 图片选择按钮
+        mPhotoButton = (ImageButton)v.findViewById(R.id.crime_camera);
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 文件存储地址不能为空,相机类应用不能为空
+        boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
+        mPhotoButton.setEnabled(canTakePhoto);
+
+        if(canTakePhoto){
+            Uri uri = Uri.fromFile(mPhotoFile);
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
+        }
+
+        mPhotoButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // 启动相机应用
+                startActivityForResult(captureImage,REQUEST_PHOTO);
+            }
+        });
 
         // 保存按钮,返回
         mcrimesaveButton = (Button)v.findViewById(R.id.crime_save);
@@ -221,7 +346,6 @@ public class CrimeFragment extends Fragment{
     private void UpdateButtonText(){
         // 设置显示时间
         SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-//        mDateButton.setText(sDateFormat.format(mCrime.getDate()));
         mDateedittext.setText(sDateFormat.format(mCrime.getDate()));
     }
 
@@ -233,10 +357,72 @@ public class CrimeFragment extends Fragment{
         if(resultCode != Activity.RESULT_OK){
             return;
         }
+        // 日期弹出返回用户选择日期
         if(requestCode == REQUEST_DATE){
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             UpdateButtonText();
+        // 联系人选择列表返回一个uri数据定位符,指向用户所选联系人
+        }else if(requestCode == REQUEST_CONTACT && data != null){
+            //创建一天查询语句,要求返回全部联系人的名字,然后查询联系人数据库,获得一个可用的Cursor。
+            // 因为已经知道Cursor只包含一条记录,所有将Cursor移动到第一条记录并获取它的字符串形式。
+            // 该字符串即为嫌疑人的姓名。然后。使用它设置Crime嫌疑人,并显示在CHOOSE SUSPECT按钮上。
+
+
+            Uri contactUri = data.getData();
+            // 查询联系人名称
+            String[] queryFields = new String[]{
+                    // 查询选择的联系人的名称
+                    ContactsContract.Contacts.DISPLAY_NAME,
+                    ContactsContract.Contacts._ID
+            };
+            Cursor c = getActivity().getContentResolver().query(contactUri,queryFields,null,null,null);
+
+
+            try{
+                if(c.getCount() == 0){
+                    return;
+                }
+
+
+
+                c.moveToFirst();
+                // 获得联系人名称
+                String suspect = c.getString(0);
+                // 保存联系人名称
+                mCrime.setSuspect(suspect);
+                // 显示联系人名称
+                mSuspectButton.setText(suspect);
+
+
+                Cursor cp = getActivity().getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID+" =?",
+                    new String[]{c.getString(1)},
+                    null);
+                String phoneNumbers = phoneNumber;
+                // 获取手机号码
+                if(cp.moveToFirst()){
+                    // 获取电话号码
+                    phoneNumbers = cp.getString(cp.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                }
+                // 保存电话号码
+                mCrime.setPhone(phoneNumbers);
+                // 显示电话号码
+                if(phoneNumbers.equals(phoneNumber)){
+                    mPhoneButton.setText(phoneNumbers);
+                }else{
+                    mPhoneButton.setText("拨打:"+phoneNumbers);
+                }
+                cp.close();
+            }finally {
+                c.close();
+            }
+        // 启动相机Activity返回
+        }else if(requestCode == REQUEST_PHOTO){
+            // 刷新显示图片
+            updatePhotoView();
         }
     }
 
@@ -272,5 +458,38 @@ public class CrimeFragment extends Fragment{
         return report;
     }
 
+    /**
+     * 刷新mPhotoView的值方法
+     */
+    private void updatePhotoView(){
+        if(mPhotoFile == null || !mPhotoFile.exists()){
+            mPhotoView.setImageDrawable(null);
+        }else{
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(),getActivity());
+            mPhotoView.setImageBitmap(bitmap);
+        }
+    }
 
+    /**
+     * 点击缩略图显示大图
+     */
+    public void updateDialogPhotoView(){
+        // 获取模板
+        View vLayout = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_image,null);
+
+        mDialogPhotoView = (ImageView)vLayout.findViewById(R.id.dialog_crime_photo);
+
+        // 设置图片
+        Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(),getActivity());
+        mDialogPhotoView.setImageBitmap(bitmap);
+
+        // 弹出显示
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.dialog_photo_title)
+                .setView(vLayout)
+                .setPositiveButton(android.R.string.ok,null)
+                .create();
+        alertDialog.show();
+
+    }
 }
