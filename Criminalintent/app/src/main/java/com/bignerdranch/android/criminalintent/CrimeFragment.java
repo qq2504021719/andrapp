@@ -85,7 +85,15 @@ public class CrimeFragment extends Fragment{
     private ImageView mDialogPhotoView;
     // 图片存储位置
     private File mPhotoFile;
+    // 回调函数存储变量
+    private Callbacks mCallbacks;
 
+    /**
+     * 实现回调接口
+     */
+    public interface Callbacks{
+        void onCrimeUpdated(Crime crime);
+    }
 
 
 
@@ -104,6 +112,12 @@ public class CrimeFragment extends Fragment{
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
     }
 
     @Override
@@ -136,6 +150,12 @@ public class CrimeFragment extends Fragment{
     }
 
     @Override
+    public void onDetach(){
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
     }
@@ -163,6 +183,8 @@ public class CrimeFragment extends Fragment{
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mCrime.setTitle(charSequence.toString());
+
+                updateCrime();
             }
 
             @Override
@@ -198,6 +220,7 @@ public class CrimeFragment extends Fragment{
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked){
                 // 设置crime的solved的变量值
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
 
@@ -361,6 +384,7 @@ public class CrimeFragment extends Fragment{
         if(requestCode == REQUEST_DATE){
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
+            updateCrime();
             UpdateButtonText();
         // 联系人选择列表返回一个uri数据定位符,指向用户所选联系人
         }else if(requestCode == REQUEST_CONTACT && data != null){
@@ -415,15 +439,27 @@ public class CrimeFragment extends Fragment{
                 }else{
                     mPhoneButton.setText("拨打:"+phoneNumbers);
                 }
+                updateCrime();
                 cp.close();
             }finally {
                 c.close();
             }
         // 启动相机Activity返回
         }else if(requestCode == REQUEST_PHOTO){
+            updateCrime();
             // 刷新显示图片
             updatePhotoView();
         }
+    }
+
+    /**
+     * 在详情页中,如果标题,日期，是否解决有变动,则调用此方法。刷新列表页的数据
+     * 在crimeLab中保存mCrime
+     * 调用mCallbacks.onCrimeUpdated(Crime)
+     */
+    private void updateCrime(){
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,9 +35,23 @@ public class CrimeListFragment extends Fragment {
     private CrimeAdapter mAdapter;
     // 切换菜单项标题状态
     private boolean mSubtitleVisible;
-
+    // 存放实现Callbacks接口的对象
+    private Callbacks mCallbacks;
     // 保存菜单项标题状态
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+
+    /**
+     * 犯罪的界面
+     */
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        mCallbacks = (Callbacks) activity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -87,6 +102,12 @@ public class CrimeListFragment extends Fragment {
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE,mSubtitleVisible);
     }
 
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        mCallbacks = null;
+    }
+
     /*
     *
     * 实例化fragment_crime_list.xml中定义的菜单。将布局文件中定义的菜单项目填充到Menu实例中
@@ -122,9 +143,8 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime(UUID.randomUUID());
                 CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity
-                        .newIntent(getActivity(),crime.getId());
-                startActivity(intent);
+                // 调用接口启动犯罪详情页
+                mCallbacks.onCrimeSelected(crime);
                 return true;
             case R.id.menu_itme_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -160,7 +180,7 @@ public class CrimeListFragment extends Fragment {
     *
     * 如果已经配置好了CrimeAdapter,就会调用notifyDataSetChanged()方法来修改updateUI()方法
     * */
-    private void updateUI(){
+    public void updateUI(){
 
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
@@ -212,9 +232,8 @@ public class CrimeListFragment extends Fragment {
         * */
         @Override
         public void onClick(View v){
-            //  启动CrimeActivity
-            Intent intent = CrimePagerActivity.newIntent(getActivity(),mCrime.getId());
-            startActivity(intent);
+            //  调用接口启动详情页
+            mCallbacks.onCrimeSelected(mCrime);
         }
 
     }
