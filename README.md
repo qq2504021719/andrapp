@@ -11,5 +11,5 @@
 
 ## 练习App LianXi (主要练习"CriminalIntent应用"所学的技术)
 
-##BeatBox (Assets微型文件系统)
+##BeatBox (Assets微型文件系统) (SoundPool播放音频) (样式继承) (shape drawable 按钮样式背景设置) (state list drawable 默认状态按钮样式,点击状态按钮样式) (layer list drawable 对应样式加边框) (9-patch 图像)
 ## 所有技术
