@@ -11,5 +11,8 @@
 
 ## 练习App LianXi (主要练习"CriminalIntent应用"所学的技术)
 
-##BeatBox (Assets微型文件系统) (SoundPool播放音频) (样式继承) (shape drawable 按钮样式背景设置) (state list drawable 默认状态按钮样式,点击状态按钮样式) (layer list drawable 对应样式加边框) (9-patch 图像)
-## 所有技术
+##BeatBox  声音播放应用 
+## 所用技术 (Assets微型文件系统) (SoundPool播放音频) (样式继承) (shape drawable 按钮样式背景设置) (state list drawable 默认状态按钮样式,点击状态按钮样式) (layer list drawable 对应样式加边框) (9-patch 图像)
+
+##NerdLauncher 用NerdLauncher应用作为设备主屏幕,能列出设备上的其他应用。点选任意列表项会启动相应应用
+## 所用技术 (RecyclerView、Adapter、ViewHolder) (通过定义 AndroidManifest-category的HOME、DEFAULT NerdLauncher应用的activity会成为可选的主界面)
