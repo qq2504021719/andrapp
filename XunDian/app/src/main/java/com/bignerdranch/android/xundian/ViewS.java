@@ -1,0 +1,42 @@
+package com.bignerdranch.android.xundian;
+
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/9/1.
+ */
+
+public class ViewS {
+
+    public List<Viewd> mViews;
+
+    public Viewd mViewd;
+
+    public void init(){
+        mViews = new ArrayList<>();
+        for(int i = 1;i<=3;i++){
+            mViewd = new Viewd();
+            mViewd.setViewid(i);
+            mViewd.setViewString("页面"+i);
+            mViews.add(mViewd);
+        }
+    }
+
+    /**
+     * 根据id获取Viewd
+     * @param id
+     * @return
+     */
+    public Viewd getViewd(int id) {
+
+        for(Viewd viewd:mViews){
+            if(viewd.getViewid() == id){
+                return viewd;
+            }
+        }
+        return null;
+    }
+}
