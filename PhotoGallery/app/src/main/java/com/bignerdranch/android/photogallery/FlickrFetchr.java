@@ -105,9 +105,8 @@ public class FlickrFetchr {
         } catch (JSONException je){
             Log.i(TAG,"json: "+je);
         } catch (IOException ioe){
-            Log.i(TAG,"json: "+ioe);
+            Log.i(TAG,"ioe: "+ioe);
         }
-        Log.i(TAG,String.valueOf(items.size()));
         return items;
     }
 
@@ -119,7 +118,6 @@ public class FlickrFetchr {
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws IOException,JSONException{
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
         JSONArray photoJsonArray = photosJsonObject.getJSONArray("photo");
-        Log.i(TAG,"parseItems: ");
         for(int i = 0; i< photoJsonArray.length();i++){
 
             JSONObject photoJsonObject = photoJsonArray.getJSONObject(i);
@@ -128,14 +126,13 @@ public class FlickrFetchr {
 
             item.setId(photoJsonObject.getString("id"));
             item.setCaption(photoJsonObject.getString("title"));
-            Log.i(TAG,"title: "+item.toString());
-            if(!photoJsonObject.has("url_s")){
-                continue;
-            }
 
-            item.setUrl(photoJsonObject.getString("url_s"));
+            if(photoJsonObject.has("url_s")){
+                item.setUrl(photoJsonObject.getString("url_s"));
+            }
             items.add(item);
         }
+
     }
 
 }
