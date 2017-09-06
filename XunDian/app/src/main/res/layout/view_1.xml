@@ -6,6 +6,7 @@
     <TextView
         android:id="@+id/text_view_view_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="view1"/>
+
 </LinearLayout>

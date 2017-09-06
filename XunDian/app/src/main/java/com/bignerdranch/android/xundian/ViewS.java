@@ -17,12 +17,16 @@ public class ViewS {
 
     public void init(){
         mViews = new ArrayList<>();
-        for(int i = 1;i<=3;i++){
+        for(int i = 1;i<=4;i++){
             mViewd = new Viewd();
             mViewd.setViewid(i);
             mViewd.setViewString("页面"+i);
             mViews.add(mViewd);
         }
+    }
+
+    public List<Viewd> getViewS(){
+        return mViews;
     }
 
     /**
