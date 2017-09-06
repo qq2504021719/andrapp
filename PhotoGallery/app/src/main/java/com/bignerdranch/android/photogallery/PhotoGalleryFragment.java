@@ -1,8 +1,11 @@
 package com.bignerdranch.android.photogallery;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +49,21 @@ public class PhotoGalleryFragment extends Fragment {
         // execute() 方法会启动AsyncTask,继而触发后台线程并调用 doInbackground(...)
         new FetchItemsTask().execute();
 
-        mThumbnailDownloader = new ThumbnailDownloader<>();
+        // Handler默认与当前线程的Looper相关联。这个Handler是在onCreate()方法中创建的,因此它会与主线程的Looper相关联。
+        Handler responseHandler = new Handler();
+        mThumbnailDownloader = new ThumbnailDownloader<>(responseHandler);
+        mThumbnailDownloader.setThumbnailDownloadListener(
+                new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>(){
+                    @Override
+                    public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap){
+                        Drawable drawable = new BitmapDrawable(getResources(),bitmap);
+                        Log.i(TAG,"图片设置");
+                        photoHolder.bindDrawable(drawable);
+                    }
+                }
+        );
+
+
         mThumbnailDownloader.start();
         mThumbnailDownloader.getLooper();
         Log.i(TAG,"后台线程开始");
@@ -70,6 +87,13 @@ public class PhotoGalleryFragment extends Fragment {
         super.onDestroy();
         mThumbnailDownloader.quit();
         Log.i(TAG,"后台线程销毁");
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        // 清除队列中的所有请求
+        mThumbnailDownloader.clearQueue();
     }
 
     private void setupAdapter(){

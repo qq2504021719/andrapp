@@ -10,10 +10,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Administrator on 2017/8/31.
@@ -118,6 +120,32 @@ public class FlickrFetchr {
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws IOException,JSONException{
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
         JSONArray photoJsonArray = photosJsonObject.getJSONArray("photo");
+
+        String[] ArrayPath = new String[20];
+        ArrayPath[0] = "http://img2.touxiang.cn/file/20170116/e3f4f0653247e80dee72d0b2f786d5d4.jpg";
+        ArrayPath[1] = "http://imgtu.5011.net/uploads/content/20170405/9451221491362999.jpg";
+        ArrayPath[2] = "http://img2.touxiang.cn/file/20170116/2ccfd7f01153c7787aa0e11fa2b0a0cd.jpg";
+        ArrayPath[3] = "http://tu.jianbihua.cc/tu/allimg/2016/11/25/rsrrpcxyojs4623.jpg";
+        ArrayPath[4] = "http://www.qq745.com/uploads/allimg/150422/1-1504220P418.jpg";
+        ArrayPath[5] = "http://img2.touxiang.cn/file/20170116/bdf146ffa2ab3397176ddc7ce5ee9be5.jpg";
+        ArrayPath[6] = "http://img1.touxiang.cn/uploads/allimg/111127/1339323027-26.jpg";
+        ArrayPath[7] = "http://img.qqai.net/uploads/i_2_557855787x3694515767_21.jpg";
+        ArrayPath[8] = "http://img2.imgtn.bdimg.com/it/u=3323762770,2268214025&fm=214&gp=0.jpg";
+        ArrayPath[9] = "http://www.soideas.cn/uploads/allimg/120522/3-www.soideas.cn1205220K234.jpg";
+        ArrayPath[10] = "http://diy.qqjay.com/u/files/2012/0529/01c5d44984aa327f0c9307e546491a5d.jpg";
+        ArrayPath[11] = "http://img2.touxiang.cn/file/20170116/29d68c618d557a5c3595f103136cae2b.jpg";
+        ArrayPath[12] = "http://www.shishanghezi.com/data/attachment/forum/201312/30/16351115e2me1em2ezyz2u.png";
+        ArrayPath[13] = "http://img2.touxiang.cn/file/20170116/2980273105fddd05e47a9152685b0027.jpg";
+        ArrayPath[14] = "http://www.duoziwang.com/uploads/1512/1-1512262334320-L.jpg";
+        ArrayPath[15] = "http://i2.sanwen.net/doc/1608/704-160Q20T151-50.jpg";
+        ArrayPath[16] = "http://img2.touxiang.cn/file/20170116/6bbfca20efa0170651fa4467b6fca4b1.jpg";
+        ArrayPath[17] = "http://imgtu.5011.net/uploads/content/20170405/3668891491362998.jpg";
+        ArrayPath[18] = "http://img3.imgtn.bdimg.com/it/u=2669509840,4120877081&fm=214&gp=0.jpg";
+        ArrayPath[19] = "http://img1.touxiang.cn/uploads/allimg/111127/1339322614-18.jpg";
+
+
+
+
         for(int i = 0; i< photoJsonArray.length();i++){
 
             JSONObject photoJsonObject = photoJsonArray.getJSONObject(i);
@@ -127,9 +155,9 @@ public class FlickrFetchr {
             item.setId(photoJsonObject.getString("id"));
             item.setCaption(photoJsonObject.getString("title"));
 
-            if(photoJsonObject.has("url_s")){
-                item.setUrl(photoJsonObject.getString("url_s"));
-            }
+            Random random = new Random();
+            item.setUrl(ArrayPath[random.nextInt(19)]);
+
             items.add(item);
         }
 
