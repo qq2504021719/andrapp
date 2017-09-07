@@ -1,11 +1,60 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <!--工作中心 开始-->
+    <style name="GongZuoZhongXin"></style>
+    <!--1LinearLayout-->
+    <style name="GongZuoZhongXin.1LinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+    <!--2LinearLayout-->
+    <style name="GongZuoZhongXin.2LinearLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/gong_zuo_zhong_xin_button</item>
+    </style>
+    <!--3LinearLayout 按钮点击时效果 -->
+    <style name="GongZuoZhongXin.3LinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    <!--TextView样式-->
+    <style name="GongZuoZhongXin.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+    <!--ImageView-->
+    <style name="GongZuoZhongXin.ImageView">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <!--工作中心 结束-->
+
+
 
 </resources>

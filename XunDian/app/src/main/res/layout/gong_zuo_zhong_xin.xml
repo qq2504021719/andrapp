@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/GongZuoZhongXin.1LinearLayout"
+        android:paddingTop="20dp">
+
+        <LinearLayout
+            style="@style/GongZuoZhongXin.2LinearLayout"
+            android:layout_marginRight="15dp">
+            <LinearLayout
+                android:id="@+id/xun_dian_guan_li_LinearLayout"
+                style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/xun_dian_guan_li"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="巡店管理"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/GongZuoZhongXin.2LinearLayout">
+            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/xun_dian_guan_li"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="巡店计划"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/GongZuoZhongXin.1LinearLayout"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:id="@+id/kao_qing_linearLayout"
+            style="@style/GongZuoZhongXin.2LinearLayout"
+            android:layout_marginRight="15dp">
+            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/xun_dian_guan_li"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="考勤"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/shu_ju_yu_shen_he_linearLayout"
+            style="@style/GongZuoZhongXin.2LinearLayout">
+            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/xun_dian_guan_li"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="数据与审核"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/GongZuoZhongXin.1LinearLayout"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="20dp">
+        <LinearLayout
+            android:id="@+id/ke_hu_yu_tuo_zhan_linearLayout"
+            style="@style/GongZuoZhongXin.2LinearLayout"
+            android:layout_marginRight="15dp">
+            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/xun_dian_guan_li"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="客户拓展"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/GongZuoZhongXin.2LinearLayout">
+            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/xun_dian_guan_li"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="供应链管理"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

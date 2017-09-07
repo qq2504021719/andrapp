@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-                                   android:id="@+id/activity_main_page_view_page"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="match_parent">
-</android.support.v4.view.ViewPager>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorAccent">
+
+    <!--头部-->
+    <include layout="@layout/title"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_main_page_view_page"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </android.support.v4.view.ViewPager>
+
+    <!--底部四个按钮,使用RadioGroup来实现-->
+    <include layout="@layout/bar"/>
+</LinearLayout>

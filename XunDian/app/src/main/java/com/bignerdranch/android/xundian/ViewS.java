@@ -1,5 +1,6 @@
 package com.bignerdranch.android.xundian;
 
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -20,7 +21,12 @@ public class ViewS {
         for(int i = 1;i<=4;i++){
             mViewd = new Viewd();
             mViewd.setViewid(i);
-            mViewd.setViewString("页面"+i);
+            if(i == 1){
+                mViewd.setViewFragment(new GongZuoZhongXinFragment());
+            }else{
+                mViewd.setViewString("页面"+i);
+                mViewd.setViewFragment(MainFragment.newInstance(i));
+            }
             mViews.add(mViewd);
         }
     }

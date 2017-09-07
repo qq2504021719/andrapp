@@ -45,10 +45,6 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.view_1,container,false);
 
-
-
-
-
         mTextViewView1 = (TextView)view.findViewById(R.id.text_view_view_1);
         mViewS = new ViewS();
         mViewS.init();

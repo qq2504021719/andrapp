@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:id="@+id/rg"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:background="@drawable/buttonstyle"
+            >
 
     <RadioButton
         android:id="@+id/rb_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bar_selector"
+        android:textColor="@drawable/bar_selector"
         android:layout_weight="1"
         android:drawableTop="@android:drawable/ic_menu_camera"
         android:button="@null"
         android:gravity="center"
         android:paddingLeft="0dp"
-        android:text="工作中心"/>
+        android:text="@string/footer_bar_1"/>
 
     <RadioButton
         android:id="@+id/rb_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableTop="@android:drawable/ic_btn_speak_now"
-        android:background="@drawable/bar_selector"
+        android:textColor="@drawable/bar_selector"
         android:layout_weight="1"
         android:button="@null"
         android:gravity="center"
         android:paddingLeft="0dp"
-        android:text="巡店进度"/>
+        android:text="@string/footer_bar_2"/>
 
     <RadioButton
         android:id="@+id/rb_3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bar_selector"
+        android:textColor="@drawable/bar_selector"
         android:drawableTop="@android:drawable/ic_dialog_alert"
         android:layout_weight="1"
         android:button="@null"
         android:gravity="center"
         android:paddingLeft="0dp"
-        android:text="通知公告"/>
+        android:text="@string/footer_bar_3"/>
 
     <RadioButton
         android:id="@+id/rb_4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableTop="@android:drawable/ic_input_add"
-        android:background="@drawable/bar_selector"
+        android:textColor="@drawable/bar_selector"
         android:layout_weight="1"
         android:button="@null"
         android:gravity="center"
         android:paddingLeft="0dp"
-        android:text="我的信息"/>
+        android:text="@string/footer_bar_4"/>
 
 </RadioGroup>
