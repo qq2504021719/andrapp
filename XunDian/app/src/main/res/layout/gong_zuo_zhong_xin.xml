@@ -20,7 +20,7 @@
                     />
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
-                    android:text="巡店管理"
+                    android:text="@string/gong_zuo_zhong_xin_xun_dian_guan_li"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -34,7 +34,7 @@
                     />
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
-                    android:text="巡店计划"
+                    android:text="@string/gong_zuo_zhong_xin_xun_dian_ji_hua"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -54,7 +54,7 @@
                     />
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
-                    android:text="考勤"
+                    android:text="@string/gong_zuo_zhong_xin_kao_qing"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -70,7 +70,7 @@
                     />
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
-                    android:text="数据与审核"
+                    android:text="@string/gong_zuo_zhong_xin_shu_ju_yu_shen_he"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -91,7 +91,7 @@
                     />
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
-                    android:text="客户拓展"
+                    android:text="@string/gong_zuo_zhong_xin_ke_hu_tuo_zhan"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -105,7 +105,7 @@
                     />
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
-                    android:text="供应链管理"
+                    android:text="@string/gong_zuo_zhong_xin_gong_ying_lian_guan_li"
                     />
             </LinearLayout>
         </LinearLayout>

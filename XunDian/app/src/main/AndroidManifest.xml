@@ -29,11 +29,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="297aKrc6Pavg0pC8IfZ5a0QINQMYh87m" />
+        <activity android:name=".TestActivity">
 
+        </activity>
         <activity android:name=".MainPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -41,7 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".XunDianGuanLiActivity"></activity>
+        <activity android:name=".xundianguanli.XunDianGuanLiActivity"></activity>
     </application>
 
 </manifest>

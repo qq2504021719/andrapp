@@ -1,19 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollContent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadeScrollbars="true"
+    android:fillViewport="true" >
+<LinearLayout
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/colorAccent">
 
     <include layout="@layout/title_nei_ye"/>
 
     <LinearLayout
-        style="@style/GongZuoZhongXin.1LinearLayout">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:background="@drawable/gong_zuo_zhong_xin_button">
 
         <com.baidu.mapapi.map.MapView
             android:id="@+id/bmapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true" />
+            android:clickable="true"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/mSearchPlate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
+
+        <SearchView
+            android:id="@+id/men_dian_ming_cheng_searchview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="请输入门店名称/门店店号"
+            android:background="@drawable/gong_zuo_zhong_xin_button"
+            ></SearchView>
+
+        <Button
+            android:id="@+id/xuan_zhe_men_dian_ping_pai_button"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择门店品牌"
+            android:paddingLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:background="@drawable/gong_zuo_zhong_xin_button"
+            android:onClick="showListAlertDialogp"/>
+
+        <Button
+            android:id="@+id/xuan_zhe_men_dian_button"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择门店"
+            android:paddingLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:background="@drawable/gong_zuo_zhong_xin_button"
+            android:onClick="showListAlertDialog"/>
+
+
+
+
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

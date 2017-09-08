@@ -4,4 +4,14 @@
     <string name="footer_bar_2">巡店进度</string>
     <string name="footer_bar_3">通知公告</string>
     <string name="footer_bar_4">我的信息</string>
+
+    <string name="gong_zuo_zhong_xin_xun_dian_guan_li">巡店管理</string>
+    <string name="gong_zuo_zhong_xin_xun_dian_ji_hua">巡店计划</string>
+    <string name="gong_zuo_zhong_xin_kao_qing">考勤</string>
+    <string name="gong_zuo_zhong_xin_shu_ju_yu_shen_he">数据与审核</string>
+    <string name="gong_zuo_zhong_xin_ke_hu_tuo_zhan">客户拓展</string>
+    <string name="gong_zuo_zhong_xin_gong_ying_lian_guan_li">供应链管理</string>
+
+
+    <string name="xun_dian_ding_wei">巡店定位</string>
 </resources>

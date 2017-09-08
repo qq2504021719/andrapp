@@ -3,11 +3,11 @@ package com.bignerdranch.android.xundian;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
 
 /**
  * Created by Administrator on 2017/9/7.

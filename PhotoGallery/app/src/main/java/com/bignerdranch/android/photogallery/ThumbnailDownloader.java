@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Administrator on 2017/9/5.
+ * 图片下载
  */
 
 public class ThumbnailDownloader<T> extends HandlerThread {
