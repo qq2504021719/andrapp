@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorAccent"
+              android:paddingTop="20dp"
+              android:paddingBottom="5dp">
+    <TextView
+        android:id="@+id/title_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/huise6"
+        android:textSize="18dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:background="@drawable/title_background"/>
+
+    <TextView
+        android:id="@+id/content_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:scrollbars = "vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/fan_hui_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="关闭"
+        android:background="@drawable/gong_zuo_zhong_xin_button"/>
+    </LinearLayout>
+</LinearLayout>

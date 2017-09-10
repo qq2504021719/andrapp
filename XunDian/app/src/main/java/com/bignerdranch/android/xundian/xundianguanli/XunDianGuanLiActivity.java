@@ -26,6 +26,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
+import com.bignerdranch.android.xundian.comm.TitleNeiYeActivity;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -38,7 +39,9 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
 
     private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity";
 
-    private TextView mTitle_nei_ye; // title
+    // 标题Activity
+    private TitleNeiYeActivity mTitleNeiYeActivity = new TitleNeiYeActivity();
+
 
     private Button mXuan_zhe_men_dian_ping_pai_button; //选择门店品牌
     private Button mXuan_zhe_men_dian_button; //选择门店
@@ -99,20 +102,25 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
      * 组件初始化
      */
     public void ZhuJianInit(){
-        mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         mXuan_zhe_men_dian_ping_pai_button = (Button)findViewById(R.id.xuan_zhe_men_dian_ping_pai_button);
         mXuan_zhe_men_dian_button = (Button)findViewById(R.id.xuan_zhe_men_dian_button);
         mMen_dian_ming_cheng_searchview = (SearchView)findViewById(R.id.men_dian_ming_cheng_searchview);
 
     }
 
-
-
     /**
-     * 组件操作
+     * 点击返回
+     * @param v
+     */
+    public void DianJiFanHui(View v){
+        finish();
+    }
+    /**
+     * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
-        mTitle_nei_ye.setText(R.string.gong_zuo_zhong_xin_xun_dian_guan_li);
+        // 设置标题
+        mTitleNeiYeActivity.setSetTitle(R.string.gong_zuo_zhong_xin_xun_dian_guan_li);
 
         // 搜索框边框优化
         if (mMen_dian_ming_cheng_searchview != null) {

@@ -11,10 +11,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.jauker.widget.BadgeView;
 
 import java.util.List;
 
@@ -42,7 +45,6 @@ public class MainPageActivity extends FragmentActivity{
     private TextView mTextViewTitle;
     private RadioGroup mRgroup;
 
-
     private FragmentManager mManager;
 
     public static Intent newIntent(Context packageContext, int viewId){
@@ -57,7 +59,16 @@ public class MainPageActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_page_view_page);
+        // 组件初始化
+        ZhuJianInit();
+        // 组件操作, 操作
+        ZhuJianCaoZhuo();
+    }
 
+    /**
+     * 组件初始化
+     */
+    public void ZhuJianInit(){
         /*
          * 初始化按钮
          */
@@ -67,7 +78,14 @@ public class MainPageActivity extends FragmentActivity{
         mRb4 = (RadioButton)findViewById(R.id.rb_4);
         mTextViewTitle = (TextView)findViewById(R.id.title);
         mRgroup = (RadioGroup)findViewById(R.id.rg);
+    }
 
+    /**
+     * 组件操作, 操作
+     */
+    public void ZhuJianCaoZhuo(){
+        // 设置底部通知公告红点
+        SetHongDian(mRb3,15);
         /*
          * 为四个按钮添加监听
          */
@@ -96,7 +114,6 @@ public class MainPageActivity extends FragmentActivity{
             }
         });
 
-
         /*
          * 默认选中第一个
          */
@@ -108,11 +125,8 @@ public class MainPageActivity extends FragmentActivity{
         mViewS.init();
         mViewds = mViewS.getViewS();
 
-
         mManager = getSupportFragmentManager();
         showFragment(mViewId);
-
-
     }
 
     public void showFragment(int viewId){
@@ -193,6 +207,18 @@ public class MainPageActivity extends FragmentActivity{
                 break;
         }
         mTextViewTitle.setText(titles);
+    }
+
+    /**
+     * 设置红点数字
+     * @param button 设置按钮
+     * @param num   数字
+     */
+    public void SetHongDian(View button, int num){
+        BadgeView bageView = new BadgeView(this);
+        bageView.setTargetView(button);
+        bageView.setBadgeMargin(0,0,0,0);
+        bageView.setBadgeCount(num);
     }
 
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/title_background">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tong_zhi_title_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/huise6"
+                        android:layout_marginTop="15dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textStyle="bold"
+                        android:text="巡店达人管理系统手机操作端苹果IOS版"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="9">
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:layout_weight="15">
+            <View
+                android:id="@+id/tong_zhi_ischakan_view"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/yuan"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tong_zhi_shi_jian_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/huise"
+        android:layout_marginBottom="15dp"
+        android:text="2017-06-14 14:42:07"/>
+
+</LinearLayout>
