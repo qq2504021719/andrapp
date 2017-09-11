@@ -17,4 +17,13 @@
 
 
     <string name="xun_dian_ding_wei">巡店定位</string>
+
+    <string name="zhang_hao">账号</string>
+    <string name="shu_ru_zhang_hao">输入账号</string>
+    <string name="shu_ru_mi_ma">输入密码</string>
+    <string name="mi_ma">密码</string>
+    <string name="deng_lu">登录</string>
+    <string name="ji_zhu_zhang_hao">  记住账号</string>
+    <string name="tui_chu_deng_lu">退出登录</string>
+    <string name="zhang_mi_bu">账号密码不能为空</string>
 </resources>

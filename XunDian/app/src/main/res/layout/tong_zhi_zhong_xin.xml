@@ -14,32 +14,50 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/tong_zhi_button"
-                android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@color/zhuti">
+            <TextView
+                android:id="@+id/tong_zhi_textview"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:textSize="16dp"
+                android:gravity="center"
                 android:text="@string/tong_zhi"
                 android:textColor="@color/colorAccent"
-                android:background="@color/zhuti"/>
+                android:background="@null"/>
+            <View
+                android:id="@+id/tong_zhi_yuan_view"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/yuan"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/gong_gao_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@color/huise">
 
-            <Button
-                android:id="@+id/gong_gao_button"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/gong_gao_textview"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:textSize="16dp"
+                android:gravity="center"
                 android:text="@string/gong_gao"
                 android:textColor="@color/colorAccent"
-                android:background="@color/huise"/>
+                android:background="@null"/>
+
+            <View
+                android:id="@+id/gong_gao_yuan_view"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/yuan"/>
         </LinearLayout>
 
     </LinearLayout>

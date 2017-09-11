@@ -7,53 +7,85 @@
             android:paddingTop="5dp"
             android:background="@drawable/buttonstyle"
             >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <RadioButton
+            android:id="@+id/rb_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/bar_selector"
+            android:layout_weight="1"
+            android:drawableTop="@android:drawable/ic_menu_camera"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="@string/footer_bar_1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <RadioButton
+            android:id="@+id/rb_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@android:drawable/ic_btn_speak_now"
+            android:textColor="@drawable/bar_selector"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="@string/footer_bar_2"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <RadioButton
+            android:id="@+id/rb_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/bar_selector"
+            android:drawableTop="@android:drawable/ic_dialog_alert"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="@string/footer_bar_3"/>
 
-    <RadioButton
-        android:id="@+id/rb_1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@drawable/bar_selector"
-        android:layout_weight="1"
-        android:drawableTop="@android:drawable/ic_menu_camera"
-        android:button="@null"
-        android:gravity="center"
-        android:paddingLeft="0dp"
-        android:text="@string/footer_bar_1"/>
+        <View
+            android:id="@+id/bar_yuan_view"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:background="@drawable/yuan"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <RadioButton
+            android:id="@+id/rb_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@android:drawable/ic_input_add"
+            android:textColor="@drawable/bar_selector"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="@string/footer_bar_4"/>
+    </LinearLayout>
 
-    <RadioButton
-        android:id="@+id/rb_2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableTop="@android:drawable/ic_btn_speak_now"
-        android:textColor="@drawable/bar_selector"
-        android:layout_weight="1"
-        android:button="@null"
-        android:gravity="center"
-        android:paddingLeft="0dp"
-        android:text="@string/footer_bar_2"/>
 
-    <RadioButton
-        android:id="@+id/rb_3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@drawable/bar_selector"
-        android:drawableTop="@android:drawable/ic_dialog_alert"
-        android:layout_weight="1"
-        android:button="@null"
-        android:gravity="center"
-        android:paddingLeft="0dp"
-        android:text="@string/footer_bar_3"/>
 
-    <RadioButton
-        android:id="@+id/rb_4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableTop="@android:drawable/ic_input_add"
-        android:textColor="@drawable/bar_selector"
-        android:layout_weight="1"
-        android:button="@null"
-        android:gravity="center"
-        android:paddingLeft="0dp"
-        android:text="@string/footer_bar_4"/>
+
+
+
+
+
+
+
 
 </RadioGroup>

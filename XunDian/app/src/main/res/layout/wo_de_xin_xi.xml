@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.bignerdranch.android.xundian.ui.BounceScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorAccent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/id_scrollView">
+
+<LinearLayout
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorAccent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center">
+
+        <com.gigamole.library.ShadowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:sl_shadow_angle="45"
+            app:sl_shadow_color="#000"
+            android:id="@+id/sl"
+            app:sl_shadow_distance="30dp"
+            app:sl_shadow_radius="20dp"
+            app:sl_shadowed="true">
+
+            <com.bignerdranch.android.xundian.ui.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/timg" />
+
+        </com.gigamole.library.ShadowLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="姓名 : 小郑"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="公司 : 上海叮叮食品有限公司"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="工号 : DD1001"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="职务 : 业务员"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="手机 : 18017217207"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="通知公告"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="请假明细"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:text="关于巡店达人"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            style="@style/WoDeXinXiTextView"
+            android:background="@drawable/buttonstyle"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"/>
+
+        <com.gigamole.library.ShadowLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:sl_shadow_angle="45"
+            app:sl_shadow_color="#000"
+            android:id="@+id/sl_button"
+            app:sl_shadow_distance="30dp"
+            app:sl_shadow_radius="20dp"
+            app:sl_shadowed="true"
+            android:layout_weight="1">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/tui_chu_deng_lu"
+            android:textSize="18dp"
+            android:background="@color/zhuti"
+            android:textColor="@color/colorAccent"/>
+        </com.gigamole.library.ShadowLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+</com.bignerdranch.android.xundian.ui.BounceScrollView>

@@ -85,6 +85,7 @@ public class CrimeFragment extends Fragment{
     private ImageView mDialogPhotoView;
     // 图片存储位置
     private File mPhotoFile;
+    
     // 回调函数存储变量
     private Callbacks mCallbacks;
 

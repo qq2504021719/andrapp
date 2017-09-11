@@ -4,20 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.jauker.widget.BadgeView;
 
 import java.util.List;
 
@@ -25,7 +20,7 @@ import java.util.List;
  * Created by Administrator on 2017/9/1.
  */
 
-public class MainPageActivity extends FragmentActivity{
+public class MainPageActivity extends AppCompatActivity implements TongZhiZhongXinFragment.Callbacks{
 
     private static final String EXTRA_VIEW_ID = "com.bignerdranch.android.MainPageActivity.xundian.view_id";
 
@@ -46,6 +41,14 @@ public class MainPageActivity extends FragmentActivity{
     private RadioGroup mRgroup;
 
     private FragmentManager mManager;
+
+    // 通知公告红点提示
+    public View mBar_yuan_view;
+
+
+
+
+
 
     public static Intent newIntent(Context packageContext, int viewId){
         Intent i = new Intent(packageContext,MainPageActivity.class);
@@ -78,14 +81,18 @@ public class MainPageActivity extends FragmentActivity{
         mRb4 = (RadioButton)findViewById(R.id.rb_4);
         mTextViewTitle = (TextView)findViewById(R.id.title);
         mRgroup = (RadioGroup)findViewById(R.id.rg);
+
+        mBar_yuan_view = (View)findViewById(R.id.bar_yuan_view);
     }
 
     /**
      * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
-        // 设置底部通知公告红点
-        SetHongDian(mRb3,15);
+        // 设置红点
+        TongZhiZhongXinFragment tongZhiZhongXinFragment = new TongZhiZhongXinFragment();
+        tongZhiZhongXinFragment.shanChuHongDian();
+
         /*
          * 为四个按钮添加监听
          */
@@ -127,6 +134,10 @@ public class MainPageActivity extends FragmentActivity{
 
         mManager = getSupportFragmentManager();
         showFragment(mViewId);
+
+        // 通知公告红点浮动,不占据位置
+        mBar_yuan_view.bringToFront();
+
     }
 
     public void showFragment(int viewId){
@@ -140,6 +151,7 @@ public class MainPageActivity extends FragmentActivity{
                 Viewd viewd = mViewds.get(position);
                 return viewd.getViewFragment();
             }
+
 
             @Override
             public int getCount() {
@@ -209,16 +221,11 @@ public class MainPageActivity extends FragmentActivity{
         mTextViewTitle.setText(titles);
     }
 
-    /**
-     * 设置红点数字
-     * @param button 设置按钮
-     * @param num   数字
-     */
-    public void SetHongDian(View button, int num){
-        BadgeView bageView = new BadgeView(this);
-        bageView.setTargetView(button);
-        bageView.setBadgeMargin(0,0,0,0);
-        bageView.setBadgeCount(num);
+    public void IsHong(int num){
+        // 通知公告回调
+        if(num == 1){
+            // 隐藏通知公告红点
+            mBar_yuan_view.setVisibility(View.INVISIBLE);
+        }
     }
-
 }

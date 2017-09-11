@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scrollContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:fillViewport="true" >
+<LinearLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorAccent">
+
+    <include layout="@layout/title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:padding="10dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/gong_zuo_zhong_xin_button"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!--<TextView-->
+                    <!--android:layout_width="40dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:textSize="16dp"-->
+                    <!--android:text="@string/zhang_hao"-->
+                    <!--android:gravity="center"/>-->
+
+                <EditText
+                    android:id="@+id/zhang_hao_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="@string/shu_ru_zhang_hao"
+                    android:paddingBottom="3dp"
+                    android:textSize="16dp"
+                    android:textCursorDrawable="@drawable/edit_cursor_color"
+                    android:background="@drawable/login_border"
+                    android:inputType="textVisiblePassword"
+                    android:digits="0123456789zxcvbnmasdfghjklqwertyuiop"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
+                <!--<TextView-->
+                    <!--android:layout_width="40dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:text="@string/mi_ma"-->
+                    <!--android:textSize="16dp"-->
+                    <!--android:gravity="center"/>-->
+                <EditText
+                    android:id="@+id/mi_ma_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="@string/shu_ru_mi_ma"
+                    android:paddingBottom="3dp"
+                    android:textSize="16dp"
+                    android:textCursorDrawable="@drawable/edit_cursor_color"
+                    android:background="@drawable/login_border"
+                    android:inputType="textPassword"
+                    android:digits="0123456789zxcvbnmasdfghjklqwertyuiop"/>/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"> 
+            
+            <CheckBox
+                android:id="@+id/ji_zhu_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:textSize="16dp"
+                android:text="@string/ji_zhu_zhang_hao"
+                android:button="@drawable/checkbox"/>
+
+            <Button
+                android:id="@+id/deng_lu_button"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/deng_lu"
+                android:textSize="18dp"
+                android:background="@color/zhuti"
+                android:textColor="@color/colorAccent"/>
+            
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="3"></LinearLayout>-->
+
+</LinearLayout>
+</ScrollView>
