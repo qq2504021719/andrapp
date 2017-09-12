@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.bignerdranch.android.xundian">
-    
-
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <!-- 这个权限用于访问GPS定位-->
@@ -41,7 +39,7 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="297aKrc6Pavg0pC8IfZ5a0QINQMYh87m" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".MainPageActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -50,9 +48,9 @@
         </activity>
         <activity android:name=".TestActivity">
         </activity>
-        <activity android:name=".MainPageActivity">
+        <!--<activity android:name=".MainPageActivity">-->
 
-        </activity>
+        <!--</activity>-->
         <activity android:name=".xundianguanli.XunDianGuanLiActivity"></activity>
         <activity android:name=".xundianguanli.XunDianActivity"></activity>
     </application>
