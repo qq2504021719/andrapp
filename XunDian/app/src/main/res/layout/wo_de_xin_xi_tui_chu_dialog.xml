@@ -6,40 +6,22 @@
               android:background="@color/colorAccent"
               android:paddingTop="20dp"
               android:paddingBottom="5dp">
-    <TextView
-        android:id="@+id/title_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/huise6"
-        android:textSize="18dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=" "
-        android:background="@drawable/title_background"/>
-
-    <WebView
-        android:id="@+id/content_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:scrollbars = "vertical"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
     <Button
-        android:id="@+id/fan_hui_dialog"
+        android:id="@+id/tui_chu_dialog_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="@string/guan_bi"
+        android:text="@string/tui_chu_ying_yiong"
         android:background="@drawable/gong_zuo_zhong_xin_button"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/qie_huan_dialog_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/qie_huan_zhang_hao"
+        android:background="@drawable/gong_zuo_zhong_xin_button"/>
 </LinearLayout>

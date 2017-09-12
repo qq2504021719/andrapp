@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
 import com.jauker.widget.BadgeView;
 
@@ -52,6 +53,8 @@ public class GongZuoZhongXinFragment extends Fragment{
         mXun_dian_guan_li_LinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 存储容器
+                AtyContainer.addActivity(getActivity());
                 Intent i = XunDianGuanLiActivity.newIntent(getActivity(),1);
                 startActivity(i);
             }

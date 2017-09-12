@@ -23,7 +23,10 @@ public class LoginBaseHelper extends SQLiteOpenHelper {
                 "_id integer primary key autoincrement, "+
                 LoginTable.Cols.ID+", "+
                 LoginTable.Cols.TOKEN+", "+
-                LoginTable.Cols.TIME+")"
+                LoginTable.Cols.TIME+", "+
+                LoginTable.Cols.ZHANGHAO+", "+
+                LoginTable.Cols.MIMA+", "+
+                LoginTable.Cols.ISBAOCUN+")"
         );
     }
 

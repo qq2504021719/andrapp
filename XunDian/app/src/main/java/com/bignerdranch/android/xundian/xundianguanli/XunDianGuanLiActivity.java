@@ -1,15 +1,21 @@
 package com.bignerdranch.android.xundian.xundianguanli;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -26,34 +32,48 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
-import com.bignerdranch.android.xundian.comm.TitleNeiYeActivity;
+import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
+import com.google.gson.Gson;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/9/7.
  */
 
-public class XunDianGuanLiActivity extends AppCompatActivity{
+public class XunDianGuanLiActivity extends NeiYeCommActivity {
 
     private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity";
 
-    // 标题Activity
-    private TitleNeiYeActivity mTitleNeiYeActivity = new TitleNeiYeActivity();
 
+    private Context mContext;
 
     private Button mXuan_zhe_men_dian_ping_pai_button; //选择门店品牌
     private Button mXuan_zhe_men_dian_button; //选择门店
+    private Button mKai_shi_xun_dian_button; // 开始巡店
     private String mMen_Dian_ping_pai; // 门店品牌
     private String mMen_Dian;// 门店
 
     private SearchView mMen_dian_ming_cheng_searchview; // 门店搜索框
 
     // 门店品牌数据
-    public String[] mMengDianPingPaiData = {"伍缘","可的便利","喜士多便利","好德便利","快客便利","罗森便利"};
+    private String mMengDianPingpaiJsonData = "{\"1\":\"\\u4f0d\\u7f18\",\"2\":\"\\u53ef\\u7684\\u4fbf\\u5229\",\"3\":\"\\u559c\\u58eb\\u591a\\u4fbf\\u5229\",." +
+            "\"4\":\"\\u597d\\u5fb7\\u4fbf\\u5229\",\"5\":\"\\u5feb\\u5ba2\\u4fbf\\u5229\",\"6\":\"\\u7f57\\u68ee\\u4fbf\\u5229\"}";
+    public List<String> mMengDianPingPaiData = new ArrayList<String>();
+
     // 门店数据
-    public String[] mMengDianData = {"快客便利*836*天北店(直营)","快客便利*845*福良店(直营)","快客便利*952*丰新(直营)","快客便利*980*金沙店(直营)"};
+    public String mMengDianJsonData = "{\"1\":\"\\u5feb\\u5ba2\\u4fbf\\u5229*836*\\u5929\\u5317\\u5e97(\\u76f4\\u8425)\",\"2\":\"\\u5feb\\u5ba2\\" +
+            "u4fbf\\u5229*845*\\u798f\\u826f\\u5e97(\\u76f4\\u8425)\",\"3\":\"\\u5feb\\u5ba2\\u4fbf\\u5229*952*\\u4e30\\u65b0(\\u76f4\\u8425)\",\"4\":\"\\" +
+            "u5feb\\u5ba2\\u4fbf\\u5229*980*\\u91d1\\u6c99\\u5e97(\\u76f4\\u8425)\"}";
+    public List<String> mMengDianData = new ArrayList<String>();
 
     private LocationBaiDu mLocationBaiDu = new LocationBaiDu(); //定位信息存储
 
@@ -64,6 +84,9 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
     public MyLocationListenner myListener = new MyLocationListenner();
     boolean isFirstLoc = true; // 是否首次定位
     public boolean mIsDingWeiChengGong = false; // 定位是否成功
+
+    private AlertDialog alertDialog1;
+
 
     /**
      * 封装创建Intent对象,并传入参数
@@ -85,15 +108,62 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
         // 注意该方法要再setContentView方法之前实现
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.xun_dian_guan_li);
-
+        // 设置选择数据
+        setData(mMengDianPingpaiJsonData,mMengDianPingPaiData);
+        setData(mMengDianJsonData,mMengDianData);
+        mContext = this;
         // 组件初始化
         ZhuJianInit();
 
         // 组件操作
         ZhuJianCaoZhuo();
 
-        // 百度地图定位调用
+        // 百度地图定位调用 mMengDianPingpaiJsonData
         BaiDuDingWeiDiaoYong();
+
+    }
+
+    /**
+     * 将 string的值设置到对应strings中
+     * @param string
+     * @param strings
+     */
+    public void setData(String string,List<String> strings){
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            Iterator inter =  jsonObject.keys();
+            while(inter.hasNext()){
+                String a = (String)inter.next();
+//                int i = Integer.parseInt(a);
+                strings.add(jsonObject.getString(a));
+            }
+        }catch (JSONException e){
+
+        }
+    }
+
+    /**
+     * 将string转为JSON对象,匹配string1，返回对应的id
+     * @param string
+     * @param string1
+     * @return
+     */
+    public int ChanKanId(String string,String string1){
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            int i = 0;
+            Iterator inter =  jsonObject.keys();
+            while(inter.hasNext()){
+                String a = (String)inter.next();
+                if(jsonObject.getString(a).equals(string1)){
+                    return Integer.parseInt(a);
+                }
+            }
+            return 0;
+        }catch (JSONException e){
+
+        }
+        return 0;
     }
 
 
@@ -105,22 +175,16 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
         mXuan_zhe_men_dian_ping_pai_button = (Button)findViewById(R.id.xuan_zhe_men_dian_ping_pai_button);
         mXuan_zhe_men_dian_button = (Button)findViewById(R.id.xuan_zhe_men_dian_button);
         mMen_dian_ming_cheng_searchview = (SearchView)findViewById(R.id.men_dian_ming_cheng_searchview);
-
+        mKai_shi_xun_dian_button = (Button)findViewById(R.id.kai_shi_xun_dian_button);
+        mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
     }
 
-    /**
-     * 点击返回
-     * @param v
-     */
-    public void DianJiFanHui(View v){
-        finish();
-    }
     /**
      * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
         // 设置标题
-        mTitleNeiYeActivity.setSetTitle(R.string.gong_zuo_zhong_xin_xun_dian_guan_li);
+        mTitle_nei_ye.setText(R.string.gong_zuo_zhong_xin_xun_dian_guan_li);
 
         // 搜索框边框优化
         if (mMen_dian_ming_cheng_searchview != null) {
@@ -133,16 +197,35 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
                 View mView = (View) ownField.get(mMen_dian_ming_cheng_searchview);
                 //--设置背景
                 mView.setBackgroundResource(R.drawable.search_view_border);
+                // 设置光标颜色
+                ownField.set(mMen_dian_ming_cheng_searchview, R.color.heise);
+
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        // 开始巡店
+        mKai_shi_xun_dian_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mLocationBaiDu.getMenDianId() == 0){
+                    tiShi(mContext,"请选择门店");
+                }else if(mIsDingWeiChengGong == false){
+                    tiShi(mContext,"定位失败");
+                }else{
+                    String string = mGson.toJson(mLocationBaiDu);
+                    // 存储容器
+                    Intent i = XunDianActivity.newIntent(XunDianGuanLiActivity.this,string);
+                    startActivity(i);
+                }
+            }
+        });
     }
 
 
 
-    private AlertDialog alertDialog1;
 
     /**
      * 选择门店品牌
@@ -150,15 +233,22 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
      */
     public void showListAlertDialogp(View view){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
+
+        final String[] strings = new String[mMengDianPingPaiData.size()];
+        for (int i = 0;i<mMengDianPingPaiData.size();i++){
+            strings[i] = mMengDianPingPaiData.get(i);
+        }
+
+        alertBuilder.setItems(strings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int index) {
                 // 清除搜索框焦点
                 mMen_dian_ming_cheng_searchview.clearFocus();
-                mMen_Dian_ping_pai = mMengDianPingPaiData[index];
-                mXuan_zhe_men_dian_ping_pai_button.setText(mMengDianPingPaiData[index]);
+                mMen_Dian_ping_pai = strings[index];
+                mXuan_zhe_men_dian_ping_pai_button.setText(strings[index]);
+                // 更新用户选择门店品牌
+                mLocationBaiDu.setMenDianPingPaiId(ChanKanId(mMengDianPingpaiJsonData,strings[index]));
                 alertDialog1.dismiss();
-
             }
         });
         alertDialog1 = alertBuilder.create();
@@ -171,13 +261,19 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
      */
     public void showListAlertDialog(View view){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setItems(mMengDianData, new DialogInterface.OnClickListener() {
+        final String[] strings = new String[mMengDianData.size()];
+        for (int i = 0;i<mMengDianData.size();i++){
+            strings[i] = mMengDianData.get(i);
+        }
+        alertBuilder.setItems(strings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int index) {
                 // 清除搜索框焦点
                 mMen_dian_ming_cheng_searchview.clearFocus();
-                mMen_Dian = mMengDianData[index];
-                mXuan_zhe_men_dian_button.setText(mMengDianData[index]);
+                mMen_Dian = strings[index];
+                mXuan_zhe_men_dian_button.setText(strings[index]);
+                // 更新用户选择门店
+                mLocationBaiDu.setMenDianId(ChanKanId(mMengDianJsonData,strings[index]));
                 alertDialog1.dismiss();
 
             }
@@ -347,5 +443,11 @@ public class XunDianGuanLiActivity extends AppCompatActivity{
         mMapView.onPause();
     }
 
-
+    /**
+     * 提示
+     * @param context
+     */
+    public static void tiShi(Context context,String string){
+        Toast.makeText(context,string, Toast.LENGTH_SHORT).show();
+    }
 }

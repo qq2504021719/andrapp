@@ -114,6 +114,7 @@
             android:layout_weight="1">
 
         <Button
+            android:id="@+id/tui_chu_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="@string/tui_chu_deng_lu"

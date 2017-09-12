@@ -101,9 +101,12 @@ public class LoginModel {
      */
     public static ContentValues getContentValues(Login login){
         ContentValues values = new ContentValues();
-        values.put(LoginTable.Cols.ID,login.getId());
+        values.put(LoginTable.Cols.ID,String.valueOf(login.getId()));
         values.put(LoginTable.Cols.TOKEN,login.getToken());
         values.put(LoginTable.Cols.TIME,login.getTime());
+        values.put(LoginTable.Cols.ZHANGHAO,login.getZhangHao());
+        values.put(LoginTable.Cols.MIMA,login.getMiMa());
+        values.put(LoginTable.Cols.ISBAOCUN,login.getIsBaoCun());
         return values;
     }
 

@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
             android:queryHint="请输入门店名称/门店店号"
+            android:textCursorDrawable="@drawable/edit_gong_cursor_color"
             android:background="@drawable/gong_zuo_zhong_xin_button"
             ></SearchView>
 
@@ -71,8 +72,15 @@
             android:background="@drawable/gong_zuo_zhong_xin_button"
             android:onClick="showListAlertDialog"/>
 
-
-
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/kai_shi_xun_dian_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/kai_shi_xun_dian"
+            android:textSize="18dp"
+            android:background="@color/zhuti"
+            android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
 

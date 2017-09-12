@@ -14,6 +14,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
+import com.bignerdranch.android.xundian.comm.AtyContainer;
+
 import java.util.List;
 
 /**
@@ -62,6 +64,10 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_page_view_page);
+
+        // 销毁其余容器
+        AtyContainer.finishAllActivity();
+
         // 组件初始化
         ZhuJianInit();
         // 组件操作, 操作

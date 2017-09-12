@@ -4,7 +4,7 @@
     android:layout_height="45dp"
     android:layout_alignParentTop="true"
     android:orientation="horizontal"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/title_background"
     >
 
     <LinearLayout
@@ -13,14 +13,13 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/imageButton"
+        <ImageView
+            android:id="@+id/image_fan_nei_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/fan_hui"
+            android:src="@drawable/fan_hui_hei"
             android:onClick="DianJiFanHui"/>
-
 
     </LinearLayout>
 

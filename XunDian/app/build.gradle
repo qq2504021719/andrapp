@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.bignerdranch.android.xundian"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -43,4 +43,7 @@ dependencies {
     compile files('libs/badgeview.jar')
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'com.github.devlight.shadowlayout:library:1.0.2'
+    compile files('libs/okhttp-3.9.0.jar')
+    compile files('libs/okio-1.13.0.jar')
+    compile files('libs/gson-1.6.jar')
 }

@@ -27,6 +27,28 @@ public class LocationBaiDu {
     // 语义化结果
     private String mLocationDescribe;
 
+    // 用户选择门店id
+    private int mMenDianId;
+    // 用户选择品牌id
+    private int mMenDianPingPaiId;
+
+
+    public int getMenDianId() {
+        return mMenDianId;
+    }
+
+    public int getMenDianPingPaiId() {
+        return mMenDianPingPaiId;
+    }
+
+    public void setMenDianId(int menDianId) {
+        mMenDianId = menDianId;
+    }
+
+    public void setMenDianPingPaiId(int menDianPingPaiId) {
+        mMenDianPingPaiId = menDianPingPaiId;
+    }
+
     public void setDingQeiTime(String dingQeiTime) {
         mDingQeiTime = dingQeiTime;
     }

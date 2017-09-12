@@ -14,6 +14,9 @@ public class LoginDbSchema {
             public static final String ID = "id";
             public static final String TOKEN = "token";
             public static final String TIME = "time";
+            public static final String ZHANGHAO = "zhanghao";
+            public static final String MIMA ="mima";
+            public static final String ISBAOCUN = "isbaocun";
         }
     }
 
