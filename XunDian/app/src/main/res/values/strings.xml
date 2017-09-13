@@ -32,4 +32,13 @@
     <string name="tui_chu_ying_yiong">退出应用</string>
     <string name="qie_huan_zhang_hao">切换账号</string>
     <string name="kai_shi_xun_dian">开始巡店</string>
+
+    <string name="biao_ti">标题</string>
+    <string name="wen_ben">文本</string>
+    <string name="shu_zi">数字</string>
+    <string name="ri_qi">日期</string>
+    <string name="xun_ze_qi">选择器</string>
+    <string name="pai_zhao">拍照</string>
+    <string name="xin">*</string>
+    <string name="bao_cun">保存</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.bignerdranch.android.xundian.comm;
 
+import com.bignerdranch.android.xundian.LoginActivity;
+import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
+
 /**
  * Created by Administrator on 2017/9/8.
  */
@@ -104,4 +107,6 @@ public class LocationBaiDu {
     public String getLocationDescribe() {
         return mLocationDescribe;
     }
+
+
 }

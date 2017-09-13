@@ -64,4 +64,111 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <!--巡店管理-->
+
+    <style name="XunDianButton">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:background">@color/zhuti</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="XunDianLinearLayout">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+
+
+    <style name="XunDian">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:background">@drawable/login_border</item>
+    </style>
+
+    <style name="XunDianEditText" parent="XunDian">
+        <item name="android:textCursorDrawable">@drawable/edit_cursor_color</item>
+    </style>
+
+    <style name="XunDianTextView" parent="XunDian">
+        <item name="android:textColor">@color/heise</item>
+    </style>
+    <!--时间-->
+    <style name="XunDianTimeTextView" parent="XunDianTextView">
+        <item name="android:hint">@string/ri_qi</item>
+    </style>
+    <!--文本-->
+    <style name="XunDianTextTextView" parent="XunDianEditText">
+        <item name="android:hint">@string/wen_ben</item>
+    </style>
+    <!--选择器-->
+    <style name="XunDianSelectTextView" parent="XunDianTextView">
+        <item name="android:hint">@string/xun_ze_qi</item>
+    </style>
+    <!--数字-->
+    <style name="XunDianNumEditText" parent="XunDianEditText">
+        <item name="android:hint">@string/shu_zi</item>
+        <item name="android:digits">0123456789</item>
+        <item name="android:inputType">number</item>
+    </style>
+    <!--标题-->
+    <style name="XunDianTitleLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="XunDianTitleTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">17dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/biao_ti</item>
+    </style>
+
+    <style name="XunDianTitleTextView1">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/hongse</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:text">@string/xin</item>
+    </style>
+    
+    <!--照片-->
+    <style name="XunDianZhaoPianLinearLayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="XunDianZhaoPianLinearLayout1">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/xun_dian_img_border</item>
+    </style>
+    <style name="XunDianZhaoPianFrameLayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="XunDianZhaoPianImageView">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:cropToPadding">true</item>
+    </style>
+    <style name="XunDianZhaoPianImageView1">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:onClick">true</item>
+        <item name="android:src">@drawable/xun_dian_img_add</item>
+    </style>
+
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/XunDianLinearLayout">
+    <LinearLayout
+        style="@style/XunDianZhaoPianLinearLayout">
+        <LinearLayout
+            style="@style/XunDianZhaoPianLinearLayout1">
+            <FrameLayout
+                style="@style/XunDianZhaoPianFrameLayout">
+                <ImageView
+                    android:id="@+id/xun_dian_show_imageview"
+                    style="@style/XunDianZhaoPianImageView">
+                </ImageView>
+                <ImageView
+                    android:id="@+id/xun_dian_pai_imageview"
+                    style="@style/XunDianZhaoPianImageView1">
+                </ImageView>
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

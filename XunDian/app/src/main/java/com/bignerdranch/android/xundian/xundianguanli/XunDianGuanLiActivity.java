@@ -123,6 +123,12 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity {
         // 百度地图定位调用 mMengDianPingpaiJsonData
         BaiDuDingWeiDiaoYong();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getPersimmions();
+        }else{
+            BaiDuDingWeiDiaoYong();
+        }
+
     }
 
     /**
@@ -234,13 +240,11 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity {
      * @param view
      */
     public void showListAlertDialogp(View view){
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-
         final String[] strings = new String[mMengDianPingPaiData.size()];
         for (int i = 0;i<mMengDianPingPaiData.size();i++){
             strings[i] = mMengDianPingPaiData.get(i);
         }
-
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setItems(strings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int index) {
@@ -289,7 +293,6 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity {
      */
     public void BaiDuDingWeiDiaoYong(){
         // after andrioid m,must request Permiision on runtime
-        getPersimmions();
         mCurrentMode = LocationMode.NORMAL;
         mMapView = (MapView) findViewById(R.id.bmapView); //找到我们的地图控件
         mBaiduMap = mMapView.getMap(); //获得地图
@@ -358,7 +361,8 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         // TODO Auto-generated method stub
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        Log.i("定位","定位");
+        BaiDuDingWeiDiaoYong();
     }
     /**
      * 百度定位

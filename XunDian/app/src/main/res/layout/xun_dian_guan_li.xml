@@ -73,14 +73,9 @@
             android:onClick="showListAlertDialog"/>
 
         <Button
-            android:layout_marginTop="10dp"
+            style="@style/XunDianButton"
             android:id="@+id/kai_shi_xun_dian_button"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/kai_shi_xun_dian"
-            android:textSize="18dp"
-            android:background="@color/zhuti"
-            android:textColor="@color/colorAccent"/>
+            android:text="@string/kai_shi_xun_dian"/>
 
     </LinearLayout>
 

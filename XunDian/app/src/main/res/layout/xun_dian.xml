@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -8,17 +7,33 @@
     android:background="@color/colorAccent">
 
     <include layout="@layout/title_nei_ye"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
         <com.bignerdranch.android.xundian.ui.BounceScrollView
             android:background="@color/colorAccent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/xun_dian_bounce">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/xun_dian_bounce_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                </LinearLayout>
+                <Button
+                    android:id="@+id/xun_dian_bc_button"
+                    android:text="@string/bao_cun"
+                    style="@style/XunDianButton"/>
+            </LinearLayout>
 
         </com.bignerdranch.android.xundian.ui.BounceScrollView>
     </LinearLayout>
