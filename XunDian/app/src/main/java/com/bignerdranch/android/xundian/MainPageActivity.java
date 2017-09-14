@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
+import com.bignerdranch.android.xundian.model.LoginModel;
 
 import java.util.List;
 
@@ -57,7 +58,8 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         i.putExtra(EXTRA_VIEW_ID,viewId);
         return i;
     }
-
+    // LoginModel 登录模型
+    private static LoginModel mLoginModel;
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -72,6 +74,9 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         ZhuJianInit();
         // 组件操作, 操作
         ZhuJianCaoZhuo();
+
+//        mLoginModel = LoginModel.get(this);
+//        mLoginModel.chaxbiao();
     }
 
     /**

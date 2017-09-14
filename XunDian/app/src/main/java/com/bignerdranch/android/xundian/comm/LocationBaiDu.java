@@ -34,7 +34,16 @@ public class LocationBaiDu {
     private int mMenDianId;
     // 用户选择品牌id
     private int mMenDianPingPaiId;
+    // 门店名称
+    private String mMenDianMingCheng;
 
+    public void setMenDianMingCheng(String menDianMingCheng) {
+        mMenDianMingCheng = menDianMingCheng;
+    }
+
+    public String getMenDianMingCheng() {
+        return mMenDianMingCheng;
+    }
 
     public int getMenDianId() {
         return mMenDianId;

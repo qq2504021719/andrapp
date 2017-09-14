@@ -4,11 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bignerdranch.android.xundian.comm.Login;
-import com.bignerdranch.android.xundian.database.LoginBaseHelper;
-import com.bignerdranch.android.xundian.database.LoginCursorWrapper;
-import com.bignerdranch.android.xundian.database.LoginDbSchema.LoginTable;
+import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.database.BaseHelper;
+import com.bignerdranch.android.xundian.database.DbCursorWrapper;
+import com.bignerdranch.android.xundian.database.DbSchema;
+import com.bignerdranch.android.xundian.database.DbSchema.LoginTable;
 
 /**
  * Created by Administrator on 2017/9/11.
@@ -16,9 +19,9 @@ import com.bignerdranch.android.xundian.database.LoginDbSchema.LoginTable;
 
 public class LoginModel {
 
-    private Context mContext;
-    private SQLiteDatabase mDatabase;
-    private static LoginModel SloginModel;
+    public Context mContext;
+    public SQLiteDatabase mDatabase;
+    public static LoginModel SloginModel;
 
     public static LoginModel get(Context context){
         if(SloginModel == null){
@@ -30,15 +33,17 @@ public class LoginModel {
     private LoginModel(Context context){
         // 创建数据库
         mContext = context.getApplicationContext();
-        mDatabase= new LoginBaseHelper(mContext).getWritableDatabase();
+        mDatabase= new BaseHelper(mContext).getWritableDatabase();
     }
+
+
 
     /**
      *
      * 查询数据
      * @param
      */
-    private LoginCursorWrapper queryLogin(String whereClause, String[] whereArgs){
+    private DbCursorWrapper queryLogin(String whereClause, String[] whereArgs){
         Cursor cursor = mDatabase.query(
                 LoginTable.NAME,
                 null,
@@ -48,7 +53,7 @@ public class LoginModel {
                 null, // habing
                 null // orderBy
         );
-        return new LoginCursorWrapper(cursor);
+        return new DbCursorWrapper(cursor);
     }
 
     /**
@@ -57,7 +62,7 @@ public class LoginModel {
      * @return
      */
     public Login getLogin(int id){
-        LoginCursorWrapper cursor = queryLogin(
+        DbCursorWrapper cursor = queryLogin(
                 LoginTable.Cols.ID +" = ?",
                 new String[] {String.valueOf(id)}
         );

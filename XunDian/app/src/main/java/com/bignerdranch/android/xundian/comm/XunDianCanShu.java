@@ -1,17 +1,21 @@
 package com.bignerdranch.android.xundian.comm;
 
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.LoginActivity;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by Administrator on 2017/9/12.
  */
 
-public class XunDianCanShu {
-
+public class XunDianCanShu implements Serializable{
+    private static final long serialVersionUID = 1L;
     // 标题
     private String mName;
     // 填写方式
@@ -28,14 +32,94 @@ public class XunDianCanShu {
     private String mValue;
     // 本地图片存储地址
     private File mPhotoFile;
-    // 图片显示View
-    private View mImageView;
+    // 图片二进制
+    private byte[] mPhotoByte;
+    // 图片显示ImageView
+    private ImageView mImageView;
+    // 加号ImageView
+    private ImageView MImageViewj;
+    // 存储TextView
+    private TextView mTextView;
+    // 存储EditText
+    private EditText mEditText;
+    // 下标id
+    private int mXiaBiao;
+    // 用户选择门店id
+    private int mMenDianId;
+    // 用户选择品牌id
+    private int mMenDianPingPaiId;
+    // 门店名称
+    private String mMenDianMingCheng;
 
-    public View getImageView() {
+    public void setMenDianId(int menDianId) {
+        mMenDianId = menDianId;
+    }
+
+    public void setMenDianPingPaiId(int menDianPingPaiId) {
+        mMenDianPingPaiId = menDianPingPaiId;
+    }
+
+    public void setMenDianMingCheng(String menDianMingCheng) {
+        mMenDianMingCheng = menDianMingCheng;
+    }
+
+    public int getMenDianId() {
+        return mMenDianId;
+    }
+
+    public int getMenDianPingPaiId() {
+        return mMenDianPingPaiId;
+    }
+
+    public String getMenDianMingCheng() {
+        return mMenDianMingCheng;
+    }
+
+    public void setXiaBiao(int xiaBiao) {
+        mXiaBiao = xiaBiao;
+    }
+
+    public int getXiaBiao() {
+        return mXiaBiao;
+    }
+
+    public byte[] getPhotoByte() {
+        return mPhotoByte;
+    }
+
+    public void setPhotoByte(byte[] photoByte) {
+        mPhotoByte = photoByte;
+    }
+
+    public void setTextView(TextView textView) {
+        mTextView = textView;
+    }
+
+    public void setEditText(EditText editText) {
+        mEditText = editText;
+    }
+
+    public TextView getTextView() {
+        return mTextView;
+    }
+
+    public EditText getEditText() {
+        return mEditText;
+    }
+
+    public ImageView getMImageViewj() {
+        return MImageViewj;
+    }
+
+    public void setMImageViewj(ImageView MImageViewj) {
+        this.MImageViewj = MImageViewj;
+    }
+
+    public ImageView getImageView() {
         return mImageView;
     }
 
-    public void setImageView(View imageView) {
+    public void setImageView(ImageView imageView) {
         mImageView = imageView;
     }
 

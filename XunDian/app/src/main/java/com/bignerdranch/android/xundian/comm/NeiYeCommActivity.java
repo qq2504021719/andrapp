@@ -1,11 +1,13 @@
 package com.bignerdranch.android.xundian.comm;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -104,5 +106,15 @@ public class NeiYeCommActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return new String[0];
+    }
+
+    /**
+     * 把字节图片转为位图,并显示在ImageView上
+     * @param view
+     * @param bytes
+     */
+    public void ImageViewByteShow(ImageView view,byte[] bytes){
+        Bitmap bitmap = PictureUtils.getScaledBitmap(bytes,this);
+        view.setImageBitmap(bitmap);
     }
 }

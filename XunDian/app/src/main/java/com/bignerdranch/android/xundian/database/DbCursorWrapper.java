@@ -2,18 +2,25 @@ package com.bignerdranch.android.xundian.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 import com.bignerdranch.android.xundian.comm.Login;
-import com.bignerdranch.android.xundian.database.LoginDbSchema.LoginTable;
-
+import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.database.DbSchema.LoginTable;
+import com.bignerdranch.android.xundian.database.DbSchema.XunDianTable;
 /**
  * Created by Administrator on 2017/9/11.
  */
 
-public class LoginCursorWrapper extends CursorWrapper {
-    public LoginCursorWrapper(Cursor cursor) {
+public class DbCursorWrapper extends CursorWrapper {
+    public DbCursorWrapper(Cursor cursor) {
         super(cursor);
     }
+
+    /**
+     * 获取login数据
+     * @return
+     */
 
     public Login getLogin(){
 
@@ -33,6 +40,20 @@ public class LoginCursorWrapper extends CursorWrapper {
         login.setIsBaoCun(isbaocun);
 
         return login;
+    }
+
+    /**
+     * 巡店数据查询
+     * @return
+     */
+    public XunDianCanShu getXundian(){
+        String values = getString(getColumnIndex(XunDianTable.Cols.VALUES));
+        byte[] phone = getBlob(getColumnIndex(XunDianTable.Cols.PHONE));
+        XunDianCanShu xunDianCanShu = new XunDianCanShu();
+        xunDianCanShu.setValue(values);
+        xunDianCanShu.setPhotoByte(phone);
+
+        return xunDianCanShu;
     }
 
 }

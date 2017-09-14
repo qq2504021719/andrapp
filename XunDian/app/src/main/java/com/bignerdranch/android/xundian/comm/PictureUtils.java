@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Administrator on 2017/9/13.
@@ -21,6 +24,12 @@ public class PictureUtils {
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(size);
         return getScaledBitmap(path,size.x,size.y);
+    }
+
+    public static Bitmap getScaledBitmap(byte[] bytes,Activity activity){
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        return getScaledBitmap(bytes,size.x,size.y);
     }
 
     /**
@@ -54,5 +63,59 @@ public class PictureUtils {
 
         // 读取原图并创建最终的缩略图
         return BitmapFactory.decodeFile(path,options);
+    }
+
+    public static Bitmap getScaledBitmap(byte[] bytes,int destWidth,int destHeight){
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(bytes,0,bytes.length,options);
+
+        // 获取原图宽高
+        float srcWidth = options.outWidth;
+        float srcHeight = options.outHeight;
+
+        // 计算原图尺寸相对于设置下降了多少比例
+        int inSampleSize = 1;
+        if(srcHeight > destHeight || srcWidth > destWidth){
+            if(srcWidth > srcHeight){
+                inSampleSize = Math.round(srcHeight / destHeight);
+            }else{
+                inSampleSize = Math.round(srcWidth / destWidth);
+            }
+        }
+
+        options = new BitmapFactory.Options();
+        options.inSampleSize = inSampleSize;
+
+        // 读取原图并创建最终的缩略图
+        return BitmapFactory.decodeByteArray(bytes,0,bytes.length,options);
+    }
+
+    /**
+     * 图片转为字节
+     * @param path
+     * @return
+     */
+    public static byte[] BitmapZhuanByte(String path){
+
+        Bitmap bm = BitmapFactory.decodeFile(path);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
+    }
+
+    /**
+     * 图片字节转为位图
+     * @param bytes
+     * @return
+     */
+    public static Bitmap ByteZhuanBitmap(byte[] bytes){
+        if (bytes.length != 0) {
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } else {
+            return null;
+        }
     }
 }

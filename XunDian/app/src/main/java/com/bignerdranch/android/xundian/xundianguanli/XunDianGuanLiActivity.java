@@ -278,8 +278,10 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity {
                 mMen_dian_ming_cheng_searchview.clearFocus();
                 mMen_Dian = strings[index];
                 mXuan_zhe_men_dian_button.setText(strings[index]);
-                // 更新用户选择门店
+                // 存储选择门店id
                 mLocationBaiDu.setMenDianId(ChanKanId(mMengDianJsonData,strings[index]));
+                // 存储用户选择门店
+                mLocationBaiDu.setMenDianMingCheng(strings[index]);
                 alertDialog1.dismiss();
 
             }

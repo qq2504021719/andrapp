@@ -41,16 +41,16 @@
             android:value="297aKrc6Pavg0pC8IfZ5a0QINQMYh87m" />
         <activity
             android:name=".MainPageActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name=".TestActivity">
         </activity>
         <activity android:name=".LoginActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".xundianguanli.XunDianGuanLiActivity"></activity>
         <activity android:name=".xundianguanli.XunDianActivity"

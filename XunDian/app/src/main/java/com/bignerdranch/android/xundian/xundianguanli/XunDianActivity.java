@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,15 +28,21 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.LoginActivity;
 import com.bignerdranch.android.xundian.R;
-import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.PictureUtils;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.model.LoginModel;
+import com.bignerdranch.android.xundian.model.XunDianModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,7 +60,7 @@ public class XunDianActivity extends NeiYeCommActivity {
     private static final int REQUEST_PHOTO = 3;
 
     // 巡店定位信息,店铺id
-    public String mXunDian;
+    public JSONObject mXunDian;
 
     public String mXunDianJSONData = "[{\"id\":1,\"name\":\"\\u996e\\u6599\\u6392\\u9762\\u62cd\\u7167\",\"tian_xie_fang_shi\":\"\\u6587\\u672c\",\"is_pai_zhao\":\"\\u662f\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":2,\"name\":\"\\u996e\\u6599\\u6570\\u91cf\",\"tian_xie_fang_shi\":\"\\u6570\\u5b57\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":3,\"name\":\"\\u65e0\\u6cd5\\u8ba2\\u8d27\\u5546\\u54c1\",\"tian_xie_fang_shi\":\"\\u9009\\u62e9\\u5668\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":[\"\\u6e20\\u9053\\u65e0\\u8d27\",\"\\u5176\\u4ed6\\u539f\\u56e0\"],\"is_bi_tian\":1},{\"id\":4,\"name\":\"\\u996e\\u6599\\u51b0\\u67dc\\u62cd\\u7167\",\"tian_xie_fang_shi\":\"\\u6587\\u672c\",\"is_pai_zhao\":\"\\u662f\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":5,\"name\":\"\\u9175\\u6bcd\\u9762\\u5305\\u5e93\\u5b58\",\"tian_xie_fang_shi\":\"\\u6570\\u5b57\",\"is_pai_zhao\":\"\\u662f\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":0},{\"id\":6,\"name\":\"\\u9999\\u98d8\\u98d8\\u5355\\u676f\\u5e93\\u5b58\",\"tian_xie_fang_shi\":\"\\u6570\\u5b57\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":7,\"name\":\"\\u767e\\u4e8b\\u7f3a\\u8d27\\u65e5\\u671f\",\"tian_xie_fang_shi\":\"\\u65e5\\u671f\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1}]";
 
@@ -70,14 +75,6 @@ public class XunDianActivity extends NeiYeCommActivity {
     // LinearLayout 公共样式
     public static LinearLayout.LayoutParams mLayoutParam;
 
-    private TextView mRi_qi_textview;
-    private TextView mSelect_textview;
-    // 图片点击
-    private ImageView mXun_dian_pai_imageview;
-    // 图片显示
-    private ImageView mXun_dian_show_imageview;
-    // 图片存储位置
-    private File mPhotoFile;
     // 弹出选择器
     private AlertDialog alertDialog1;
 
@@ -85,8 +82,16 @@ public class XunDianActivity extends NeiYeCommActivity {
     public LinearLayout mXun_dian_bounce_linearlayout;
     // 保存
     private Button mXun_dian_bc_button;
-    // 当前下标
-    public final int mDnagqian = 0;
+
+
+    // 图片点击id
+    public static int mTuPianDianJi;
+
+    // this
+    public static XunDianActivity mContext;
+    // LoginModel 登录模型
+    private static XunDianModel mXunDianModel;
+
 
     public static Intent newIntent(Context packageContext, String string){
         Intent i = new Intent(packageContext,XunDianActivity.class);
@@ -101,7 +106,13 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         setContentView(R.layout.xun_dian);
 
-        mXunDian = getIntent().getStringExtra(TAG);
+        mContext = this;
+
+        // 连接数据库
+        mXunDianModel = XunDianModel.get(mContext);
+
+        // 值接收处理
+        values();
 
         // 组件初始化
         ZhuJianInit();
@@ -110,12 +121,31 @@ public class XunDianActivity extends NeiYeCommActivity {
         ZhuJianCaoZhuo();
 
         // 位置信息,店铺基本信息
-//        Log.i("巡店",mXunDian);
+        Log.i("巡店",mXunDian.toString());
 
         // 添加组件
         addView(mXunDianJSONData);
+
+
     }
 
+    /**
+     * 值接收处理
+     */
+    public void values(){
+        String XunDian = getIntent().getStringExtra(TAG);
+        try {
+            mXunDian = new JSONObject(XunDian);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 根据巡店参数 jsonString 创建View
+     * @param jsonString
+     */
     public void addView(String jsonString){
         mXun_dian_bounce_linearlayout = (LinearLayout)findViewById(R.id.xun_dian_bounce_linearlayout);
 
@@ -128,8 +158,15 @@ public class XunDianActivity extends NeiYeCommActivity {
             mXunDianJson = new JSONArray(jsonString);
             for(int i = 0;i<mXunDianJson.length();i++){
 
-
                 mXunDianCanShu = new XunDianCanShu();
+                // 店铺id
+                mXunDianCanShu.setMenDianId(Integer.valueOf(mXunDian.getString("mMenDianId")));
+                // 品牌id
+                mXunDianCanShu.setMenDianPingPaiId(Integer.valueOf(mXunDian.getString("mMenDianPingPaiId")));
+                // 店铺名称
+                mXunDianCanShu.setMenDianMingCheng(mXunDian.getString("mMenDianMingCheng"));
+                // 下标
+                mXunDianCanShu.setXiaBiao(i);
                 // id
                 mXunDianCanShu.setId(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("id")));
                 // 名称
@@ -142,6 +179,9 @@ public class XunDianActivity extends NeiYeCommActivity {
                 mXunDianCanShu.setXuan_ze_qi(mXunDianJson.getJSONObject(i).getString("xuan_ze_qi"));
                 // 是否必填
                 mXunDianCanShu.setIs_bi_tian(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")));
+
+                // 查询数据库是否有值
+                ChaKanFuZhi();
 
                 // 创建标题
                 CreateBiaoTi(mXunDianCanShu.getName(),mXunDianCanShu.getIs_bi_tian());
@@ -168,7 +208,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         LinearLayout ll = new LinearLayout(this);
         // 设置宽高
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0,50,0,0);
+        layoutParams.setMargins(0,80,0,0);
         ll.setLayoutParams(layoutParams);
         // 设置方向
         ll.setOrientation(LinearLayout.HORIZONTAL);
@@ -184,7 +224,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         LinearLayout.LayoutParams layoutParamtv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         titleTv.setLayoutParams(layoutParamtv);
         // 设置字体大小
-        titleTv.setTextSize(16);
+        titleTv.setTextSize(18);
         titleTv.setText(title);
         // 添加到父布局
         ll.addView(titleTv);
@@ -267,6 +307,12 @@ public class XunDianActivity extends NeiYeCommActivity {
         editText.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         // 设置editText类型
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        // 设置数据库值
+        if(mXunDianCanShu.getValue() != null){
+            editText.setText(mXunDianCanShu.getValue());
+        }
+        // 存储
+        mXunDianCanShu.setEditText(editText);
         // 唯一id
         final int editTextId = XiaBiao;
         // 输入值存储
@@ -302,6 +348,8 @@ public class XunDianActivity extends NeiYeCommActivity {
             public void afterTextChanged(Editable editable) {
                 // 设置值
                 mXunDianCanShus.get(id).setValue(String.valueOf(editable));
+                // 写入数据库
+                mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
             }
         });
 
@@ -335,6 +383,12 @@ public class XunDianActivity extends NeiYeCommActivity {
         }
         // 设置默认提示
         editText.setHint(R.string.wen_ben);
+        // 存储
+        mXunDianCanShu.setEditText(editText);
+        // 设置数据库值
+        if(mXunDianCanShu.getValue() != null){
+            editText.setText(mXunDianCanShu.getValue());
+        }
         // 唯一id
         final int editTextId = XiaBiao;
         // 输入值存储
@@ -370,6 +424,8 @@ public class XunDianActivity extends NeiYeCommActivity {
             public void afterTextChanged(Editable editable) {
                 // 设置值
                 mXunDianCanShus.get(id).setValue(String.valueOf(editable));
+                // 写入数据库
+                mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
             }
         });
 
@@ -397,7 +453,13 @@ public class XunDianActivity extends NeiYeCommActivity {
         // 设置颜色
         textView.setTextColor(getResources().getColor(R.color.heise));
         // 设置默认显示
-        textView.setText(R.string.xun_ze_qi);
+        textView.setHint(R.string.xun_ze_qi);
+        // 存储
+        mXunDianCanShu.setTextView(textView);
+        // 设置数据库值
+        if(mXunDianCanShu.getValue() != null){
+            textView.setText(mXunDianCanShu.getValue());
+        }
         // 唯一id
         final int editTextId = XiaBiao;
 
@@ -421,6 +483,8 @@ public class XunDianActivity extends NeiYeCommActivity {
                             // 存储值
                             if(strings[index] != null){
                                 mXunDianCanShus.get(id).setValue(strings[index]);
+                                // 写入数据库
+                                mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
                             }
                             alertDialog1.dismiss();
                         }
@@ -454,8 +518,14 @@ public class XunDianActivity extends NeiYeCommActivity {
         textView.setHint(R.string.wen_ben);
         // 设置颜色
         textView.setTextColor(getResources().getColor(R.color.heise));
+        // 存储
+        mXunDianCanShu.setTextView(textView);
         // 设置默认显示
-        textView.setText(R.string.ri_qi);
+        textView.setHint(R.string.ri_qi);
+        // 设置数据库值
+        if(mXunDianCanShu.getValue() != null){
+            textView.setText(mXunDianCanShu.getValue());
+        }
         // 唯一id
         final int editTextId = XiaBiao;
         // 点击事件
@@ -473,6 +543,8 @@ public class XunDianActivity extends NeiYeCommActivity {
                         // 数据存储
                         if(string != null){
                             mXunDianCanShus.get(id).setValue(string);
+                            // 写入数据库
+                            mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
                         }
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
@@ -490,10 +562,10 @@ public class XunDianActivity extends NeiYeCommActivity {
     public void CreateZhaoPian(LinearLayout ll,int XiaBiao){
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout linearLayout1 = new LinearLayout(this);
-        FrameLayout frameLayout = new FrameLayout(this);
+        final FrameLayout frameLayout = new FrameLayout(this);
         final ImageView imageViewShow = new ImageView(this);
         final ImageView imageViewDian = new ImageView(this);
-        LinearLayout.LayoutParams layoutParamls = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        final LinearLayout.LayoutParams layoutParamls = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams layoutParaml = new LinearLayout.LayoutParams(250,300);
         layoutParamls.setMargins(0,20,0,0);
         linearLayout.setLayoutParams(layoutParamls);
@@ -506,7 +578,7 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         linearLayout1.setLayoutParams(layoutParaml);
         // 设置背景
-        linearLayout1.setBackgroundResource(R.drawable.xun_dian_img_border);
+
         linearLayout1.setGravity(Gravity.CENTER);
         // 添加父组件
         linearLayout.addView(linearLayout1);
@@ -519,6 +591,8 @@ public class XunDianActivity extends NeiYeCommActivity {
         // 图片显示组件
         LinearLayout.LayoutParams layoutParamI = new LinearLayout.LayoutParams(250,300);
         imageViewShow.setLayoutParams(layoutParamI);
+        imageViewShow.setBackgroundResource(R.drawable.xun_dian_img_border);
+        imageViewShow.setPadding(0,10,0,10);
         // 添加父组件
         frameLayout.addView(imageViewShow);
 
@@ -527,6 +601,12 @@ public class XunDianActivity extends NeiYeCommActivity {
         imageViewDian.setImageResource(R.drawable.xun_dian_img_add);
         // 添加父组件
         frameLayout.addView(imageViewDian);
+        // 显示数据库图片
+        if(mXunDianCanShu.getPhotoByte() != null){
+            Log.i("巡店","");
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mXunDianCanShu.getPhotoByte(),this);
+            imageViewShow.setImageBitmap(bitmap);
+        }
 
         // 唯一id
         final int editTextId = XiaBiao;
@@ -535,11 +615,11 @@ public class XunDianActivity extends NeiYeCommActivity {
         // 相机
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 获取文件存储地址
-        mPhotoFile = getPhotoFile();
+        final File mPhotoFile = getPhotoFile();
 
         // 文件存储地址不能为空,相机类应用不能为空
         final boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
-        mXun_dian_pai_imageview.setEnabled(canTakePhoto);
+        imageViewShow.setEnabled(canTakePhoto);
         if(canTakePhoto){
             Uri uri = Uri.fromFile(mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
@@ -551,6 +631,11 @@ public class XunDianActivity extends NeiYeCommActivity {
             public void onClick(View view) {
                 startActivityForResult(captureImage,REQUEST_PHOTO);
                 if(canTakePhoto){
+                    // 点击id
+                    mTuPianDianJi = id;
+                    // 存储加号View
+                    mXunDianCanShus.get(id).setMImageViewj(imageViewDian);
+                    // 存储值
                     mXunDianCanShus.get(id).setImageView(imageViewShow);
                     mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
                 }
@@ -566,10 +651,6 @@ public class XunDianActivity extends NeiYeCommActivity {
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         // 保存
         mXun_dian_bc_button = (Button)findViewById(R.id.xun_dian_bc_button);
-//        mRi_qi_textview = (TextView)findViewById(R.id.ri_qi_textview);
-//        mSelect_textview = (TextView)findViewById(R.id.select_textview);
-//        mXun_dian_pai_imageview = (ImageView)findViewById(R.id.xun_dian_pai_imageview);
-//        mXun_dian_show_imageview = (ImageView)findViewById(R.id.xun_dian_show_imageview);
     }
 
 
@@ -591,53 +672,6 @@ public class XunDianActivity extends NeiYeCommActivity {
                 }
             }
         });
-        // 日期选择
-//        mRi_qi_textview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showDatePickerDialog();
-//            }
-//        });
-//
-//        // 选择器
-//        mSelect_textview.setOnClickListener(new View.OnClickListener() {
-//            String[] strings = {"供应商无货","其他原因"};
-//            @Override
-//            public void onClick(View view) {
-//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(XunDianActivity.this);
-//                alertBuilder.setItems(strings, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface arg0, int index) {
-//                        // 清除搜索框焦点
-//                        mSelect_textview.setText(strings[index]);
-//                        // 更新用户选择门店品牌
-//                        alertDialog1.dismiss();
-//                    }
-//                });
-//                alertDialog1 = alertBuilder.create();
-//                alertDialog1.show();
-//            }
-//        });
-//
-//        PackageManager packageManager = this.getPackageManager();
-//        // 相机
-//        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//        // 文件存储地址不能为空,相机类应用不能为空
-//        boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
-//        mXun_dian_pai_imageview.setEnabled(canTakePhoto);
-//        if(canTakePhoto){
-//            Uri uri = Uri.fromFile(mPhotoFile);
-//            captureImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-//        }
-//        mXun_dian_pai_imageview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // 启动相机应用
-//                startActivityForResult(captureImage,REQUEST_PHOTO);
-//            }
-//        });
-
     }
 
     /**
@@ -661,19 +695,6 @@ public class XunDianActivity extends NeiYeCommActivity {
 
 
 
-    /**
-     * 展示日期选择对话框
-     */
-    public void showDatePickerDialog() {
-        Calendar c = Calendar.getInstance();
-        new DatePickerDialog(XunDianActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                // TODO Auto-generated method stub
-                mRi_qi_textview.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth);
-            }
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-    }
 
     /**
      * 启动其他Activity返回方法
@@ -692,17 +713,47 @@ public class XunDianActivity extends NeiYeCommActivity {
     }
 
     /**
-     * 刷新图片
+     * 显示对应图片
      */
     private void updatePhotoView(){
+        File PhotoFile = mXunDianCanShus.get(mTuPianDianJi).getPhotoFile();
+        ImageView view =mXunDianCanShus.get(mTuPianDianJi).getImageView();
+        ImageView imageViewDian = mXunDianCanShus.get(mTuPianDianJi).getMImageViewj();
 
-        if(mPhotoFile == null || !mPhotoFile.exists()){
-            mXun_dian_show_imageview.setImageDrawable(null);
-        }else{
-            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(),this);
-            mXun_dian_show_imageview.setImageBitmap(bitmap);
+        if(PhotoFile != null && view != null){
+            if(PhotoFile == null || !PhotoFile.exists()){
+                view.setImageDrawable(null);
+            }else{
+                // 隐藏加号
+                imageViewDian.setVisibility(View.GONE);
+                // 显示图片
+                Bitmap bitmap = PictureUtils.getScaledBitmap(PhotoFile.getPath(),this);
+                view.setImageBitmap(bitmap);
+
+                // 存储图片
+                byte[] bmByte = PictureUtils.BitmapZhuanByte(PhotoFile.getPath());
+                // 存入对象
+                mXunDianCanShus.get(mTuPianDianJi).setPhotoByte(bmByte);
+                // 写入数据库
+                mXunDianModel.addIsUpdate(mXunDianCanShus.get(mTuPianDianJi));
+            }
         }
     }
 
+
+    /**
+     * 查询对应巡店是否有值,有值则赋值
+     */
+    public void ChaKanFuZhi(){
+
+        XunDianCanShu xunDianCanShu = mXunDianModel.getXunDian(
+                String.valueOf(mXunDianCanShu.getMenDianId()),
+                String.valueOf(mXunDianCanShu.getXiaBiao())
+        );
+        if(xunDianCanShu != null){
+            mXunDianCanShu.setValue(xunDianCanShu.getValue());
+            mXunDianCanShu.setPhotoByte(xunDianCanShu.getPhotoByte());
+        }
+    }
 
 }
