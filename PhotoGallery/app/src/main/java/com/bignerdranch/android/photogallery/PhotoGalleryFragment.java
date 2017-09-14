@@ -1,5 +1,6 @@
 package com.bignerdranch.android.photogallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +61,7 @@ public class PhotoGalleryFragment extends Fragment {
                     public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap){
                         Drawable drawable = new BitmapDrawable(getResources(),bitmap);
                         Log.i(TAG,"图片设置");
-                        photoHolder.bindDrawable(drawable);
+//                        photoHolder.bindDrawable(drawable);
                     }
                 }
         );
@@ -67,6 +70,11 @@ public class PhotoGalleryFragment extends Fragment {
         mThumbnailDownloader.start();
         mThumbnailDownloader.getLooper();
         Log.i(TAG,"后台线程开始");
+
+        // 启动后台服务
+        PollService.setServiceAlarm(getActivity(),true);
+        Intent i = PollService.newIntent(getActivity());
+        getActivity().startService(i);
     }
 
     @Override
@@ -111,8 +119,8 @@ public class PhotoGalleryFragment extends Fragment {
             mItemImageView = (ImageView) itemView.findViewById(R.id.fragment_photo_gallery_image_view);
         }
 
-        public void bindDrawable(Drawable drawable){
-            mItemImageView.setImageDrawable(drawable);
+        public void bindDrawable(String url){
+            Picasso.with(getActivity()).load(url).into(mItemImageView);
         }
     }
 
@@ -134,9 +142,9 @@ public class PhotoGalleryFragment extends Fragment {
         public void onBindViewHolder(PhotoHolder photoHolder,int position){
             GalleryItem galleryItem = mGalleryItems.get(position);
             Drawable placeholder = getResources().getDrawable(R.drawable.bill_up_close);
-            photoHolder.bindDrawable(placeholder);
+            photoHolder.bindDrawable(galleryItem.getUrl());
             // 调用线程的 queueThumbnail方法,传入PhotoHolder和GalleryItem的URL
-            mThumbnailDownloader.queueThumbnail(photoHolder,galleryItem.getUrl());
+//            mThumbnailDownloader.queueThumbnail(photoHolder,galleryItem.getUrl());
         }
 
         @Override

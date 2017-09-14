@@ -18,4 +18,4 @@
 ### 所用技术 (RecyclerView、Adapter、ViewHolder) (通过定义 AndroidManifest-category的HOME、DEFAULT NerdLauncher应用的activity会成为可选的主界面)
 
 ## PhotoGallery 网络图片请求,显示
-### 所用技术 (创建新的线程请求网络图片) (AsyncTask 创建新的线程) (onPostExecute 后台线程请求完成刷新数据) (消息队列 RecyclerView只下载需要显示的图片)
+### 所用技术 (创建新的线程请求网络图片) (AsyncTask 创建新的线程) (onPostExecute 后台线程请求完成刷新数据) (消息队列 RecyclerView只下载需要显示的图片)(RecyclerView 九宫格布局)(IntentService 后台服务)
