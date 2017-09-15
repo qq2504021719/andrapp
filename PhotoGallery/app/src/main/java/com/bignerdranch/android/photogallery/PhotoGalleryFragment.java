@@ -1,5 +1,8 @@
 package com.bignerdranch.android.photogallery;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -72,9 +75,8 @@ public class PhotoGalleryFragment extends Fragment {
         Log.i(TAG,"后台线程开始");
 
         // 启动后台服务
-        PollService.setServiceAlarm(getActivity(),true);
-        Intent i = PollService.newIntent(getActivity());
-        getActivity().startService(i);
+//        Intent i = PollService.newIntent(getActivity());
+//        getActivity().startService(i);
     }
 
     @Override
@@ -87,7 +89,22 @@ public class PhotoGalleryFragment extends Fragment {
 
         setupAdapter();
 
+        NaoZhang(getActivity());
+
         return v;
+    }
+
+    private static final int POLL_INTERVAL = 1000*61;
+
+    public static void NaoZhang(Context context){
+        Intent i = PollService.newIntent(context);
+        PendingIntent pi = PendingIntent.getBroadcast(context,0,i,0);
+
+        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
+                0,
+                POLL_INTERVAL, pi);
     }
 
     @Override

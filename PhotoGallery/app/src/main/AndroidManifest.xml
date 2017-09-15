@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".PollService"/>
+        <service
+            android:name=".PollService"
+            android:exported="false"/>
     </application>
 
 </manifest>
