@@ -14,8 +14,7 @@ import java.io.Serializable;
  * Created by Administrator on 2017/9/12.
  */
 
-public class XunDianCanShu implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class XunDianCanShu{
     // 标题
     private String mName;
     // 填写方式
@@ -32,10 +31,12 @@ public class XunDianCanShu implements Serializable{
     private String mValue;
     // 本地图片存储地址
     private File mPhotoFile;
-    // 图片二进制
-    private byte[] mPhotoByte;
     // 图片显示ImageView
     private ImageView mImageView;
+    // 图片存储地址
+    private String mPhontPath;
+    //
+    private String mServerPhotoPath;
     // 加号ImageView
     private ImageView MImageViewj;
     // 存储TextView
@@ -50,6 +51,22 @@ public class XunDianCanShu implements Serializable{
     private int mMenDianPingPaiId;
     // 门店名称
     private String mMenDianMingCheng;
+
+    public void setServerPhotoPath(String serverPhotoPath) {
+        mServerPhotoPath = serverPhotoPath;
+    }
+
+    public String getServerPhotoPath() {
+        return mServerPhotoPath;
+    }
+
+    public void setPhontPath(String phontPath) {
+        mPhontPath = phontPath;
+    }
+
+    public String getPhontPath() {
+        return mPhontPath;
+    }
 
     public void setMenDianId(int menDianId) {
         mMenDianId = menDianId;
@@ -81,14 +98,6 @@ public class XunDianCanShu implements Serializable{
 
     public int getXiaBiao() {
         return mXiaBiao;
-    }
-
-    public byte[] getPhotoByte() {
-        return mPhotoByte;
-    }
-
-    public void setPhotoByte(byte[] photoByte) {
-        mPhotoByte = photoByte;
     }
 
     public void setTextView(TextView textView) {

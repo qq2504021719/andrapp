@@ -55,8 +55,6 @@
         <activity android:name=".xundianguanli.XunDianGuanLiActivity"></activity>
         <activity android:name=".xundianguanli.XunDianActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden" ></activity>
-        <service
-            android:name=".xundianguanli.PollService"/>
     </application>
 
 

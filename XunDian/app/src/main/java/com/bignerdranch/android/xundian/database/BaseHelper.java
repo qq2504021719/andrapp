@@ -41,7 +41,7 @@ public class BaseHelper extends SQLiteOpenHelper {
                 XunDianTable.Cols.ID+", "+
                 XunDianTable.Cols.XIABIAO+", "+
                 XunDianTable.Cols.VALUES+", "+
-                XunDianTable.Cols.PHONE+" BLOB);"
+                XunDianTable.Cols.PHONE+");"
         );
     }
 

@@ -26,11 +26,7 @@ public class PictureUtils {
         return getScaledBitmap(path,size.x,size.y);
     }
 
-    public static Bitmap getScaledBitmap(byte[] bytes,Activity activity){
-        Point size = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(size);
-        return getScaledBitmap(bytes,size.x,size.y);
-    }
+
 
     /**
      * 图片压缩方法
@@ -65,32 +61,6 @@ public class PictureUtils {
         return BitmapFactory.decodeFile(path,options);
     }
 
-    public static Bitmap getScaledBitmap(byte[] bytes,int destWidth,int destHeight){
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(bytes,0,bytes.length,options);
-
-        // 获取原图宽高
-        float srcWidth = options.outWidth;
-        float srcHeight = options.outHeight;
-
-        // 计算原图尺寸相对于设置下降了多少比例
-        int inSampleSize = 1;
-        if(srcHeight > destHeight || srcWidth > destWidth){
-            if(srcWidth > srcHeight){
-                inSampleSize = Math.round(srcHeight / destHeight);
-            }else{
-                inSampleSize = Math.round(srcWidth / destWidth);
-            }
-        }
-
-        options = new BitmapFactory.Options();
-        options.inSampleSize = inSampleSize;
-
-        // 读取原图并创建最终的缩略图
-        return BitmapFactory.decodeByteArray(bytes,0,bytes.length,options);
-    }
 
     /**
      * 图片转为字节

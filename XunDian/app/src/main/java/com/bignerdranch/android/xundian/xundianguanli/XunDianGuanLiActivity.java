@@ -131,21 +131,6 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity {
             BaiDuDingWeiDiaoYong();
         }
 
-        NaoZhang(this);
-
-    }
-
-    private static final int POLL_INTERVAL = 1000*60;
-
-    public static void NaoZhang(Context context){
-        Intent i = PollService.newIntent(context);
-        PendingIntent pi = PendingIntent.getService(context,0,i,0);
-
-        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                0,
-                POLL_INTERVAL, pi);
     }
 
     /**

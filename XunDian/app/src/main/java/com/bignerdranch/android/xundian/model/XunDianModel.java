@@ -12,6 +12,9 @@ import com.bignerdranch.android.xundian.database.DbCursorWrapper;
 import com.bignerdranch.android.xundian.database.DbSchema;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/9/14.
  */
@@ -54,36 +57,11 @@ public class XunDianModel {
         return new DbCursorWrapper(cursor);
     }
 
-    /**
-     * XunDianTable.Cols.ID +" = ? and "+XunDianTable.Cols.XIABIAO +" = ?",
-     new String[] {id,xiao},
-     * @return String id,String xiao
-     */
-    public void chaxbiao(){
-        Log.i("巡店","1");
-//        Cursor cursor=mDatabase.rawQuery(
-//                "SELECT * FROM "+DbSchema.XunDianTable.NAME+" where "+XunDianTable.Cols.ID +" = ? and "+XunDianTable.Cols.XIABIAO +" = ?"
-//                ,new String[] {id,xiao});
-//        while(cursor.moveToNext()){
-//        }
-//        cursor.close();
-    }
-
-//    public XunDianCanShu getXundian(){
-//        String values = getString(getColumnIndex(XunDianTable.Cols.VALUES));
-//        byte[] phone = getBlob(getColumnIndex(XunDianTable.Cols.PHONE));
-//
-//        XunDianCanShu xunDianCanShu = new XunDianCanShu();
-//        xunDianCanShu.setValue(values);
-//        xunDianCanShu.setPhotoByte(phone);
-//
-//        return xunDianCanShu;
-//    }
 
     /**
      * 查询数据
      * @param id 店铺id xiaBiao
-     * @param xiaBiao 下标id  and "+XunDianTable.Cols.XIABIAO +" = ?
+     * @param xiaBiao
      * @return
      */
     public XunDianCanShu getXunDian(String id,String xiaBiao){
@@ -105,6 +83,41 @@ public class XunDianModel {
             }
         }
         return null;
+    }
+
+    /**
+     * 根据店铺id查询店铺所有数据
+     * @param id 门店id
+     */
+    public List<XunDianCanShu> ChaXunDian(String id){
+        List<XunDianCanShu> list = new ArrayList<XunDianCanShu>();
+
+        Cursor cursor = mDatabase.query(
+                DbSchema.XunDianTable.NAME,
+                null,
+                XunDianTable.Cols.ID +" = ?",
+                new String[] {id},
+                null, // groupBy
+                null, // habing
+                null // orderBy
+        );
+        try{
+            if(cursor.getCount() == 0){
+                return null;
+            }
+            while(cursor.moveToNext())
+            {
+//                XunDianCanShu xunDianCanShu= cursor.getXundian();
+//                list.add(xunDianCanShu);
+                String value = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.VALUES));
+                Log.i("巡店",value);
+            }
+        }finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
+        return list;
     }
 
     /**
@@ -138,8 +151,8 @@ public class XunDianModel {
         values.put(XunDianTable.Cols.ID,String.valueOf(xunDianCanShu.getMenDianId()));
         values.put(XunDianTable.Cols.XIABIAO,String.valueOf(xunDianCanShu.getXiaBiao()));
         values.put(XunDianTable.Cols.VALUES,xunDianCanShu.getValue());
-        if(xunDianCanShu.getPhotoByte() != null){
-            values.put(XunDianTable.Cols.PHONE,xunDianCanShu.getPhotoByte());
+        if(xunDianCanShu.getPhontPath() != null){
+            values.put(XunDianTable.Cols.PHONE,xunDianCanShu.getPhontPath());
         }
         return values;
     }

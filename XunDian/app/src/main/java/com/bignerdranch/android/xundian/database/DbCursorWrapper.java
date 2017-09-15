@@ -48,10 +48,10 @@ public class DbCursorWrapper extends CursorWrapper {
      */
     public XunDianCanShu getXundian(){
         String values = getString(getColumnIndex(XunDianTable.Cols.VALUES));
-        byte[] phone = getBlob(getColumnIndex(XunDianTable.Cols.PHONE));
+        String phone = getString(getColumnIndex(XunDianTable.Cols.PHONE));
         XunDianCanShu xunDianCanShu = new XunDianCanShu();
         xunDianCanShu.setValue(values);
-        xunDianCanShu.setPhotoByte(phone);
+        xunDianCanShu.setPhontPath(phone);
 
         return xunDianCanShu;
     }

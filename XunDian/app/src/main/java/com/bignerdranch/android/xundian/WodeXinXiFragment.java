@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -17,6 +19,11 @@ import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.model.LoginModel;
 import com.gigamole.library.ShadowLayout;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
@@ -39,21 +46,85 @@ public class WodeXinXiFragment extends Fragment {
     // 登录对象
     private static Login mLogin;
 
+    // Token
+    private String mToken;
+
+    //
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.wo_de_xin_xi, container, false);
+
+        // 值操作 set get值
+        values();
 
         // 组件初始化
         ZhuJianInit();
         // 组件操作, 操作
         ZhuJianCaoZhuo();
 
-        // new登录模型
-        mLoginModel = LoginModel.get(getActivity());
+
 
 
         return mView;
     }
+
+
+    /**
+     * 值操作 set get值
+     */
+    public void values() {
+        // new登录模型
+        mLoginModel = LoginModel.get(getActivity());
+        // Token查询,赋值
+        mLogin = mLoginModel.getLogin(1);
+        mToken = mLogin.getToken();
+    }
+        /**
+         * Handler
+         */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             * 请求回调
+             */
+            if(msg.what==1){
+                // 参数请求回调
+            }
+        }
+    };
+
+//    public void getRenXin(){
+//        if(mToken != null){
+//            final OkHttpClient client = new OkHttpClient();
+//            //3, 发起新的请求,获取返回信息
+//            RequestBody body = new FormBody.Builder()
+//                    .build();
+//            final Request request = new Request.Builder()
+//                    .addHeader("Authorization","Bearer "+mToken)
+//                    .url(mCanShuURL+mMenDianID)
+//                    .post(body)
+//                    .build();
+//            //新建一个线程，用于得到服务器响应的参数
+//            mThread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Response response = null;
+//                    try {
+//                        //回调
+//                        response = client.newCall(request).execute();
+//                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+//                        mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            mThread.start();
+//        }
+//    }
 
     /**
      * 组件初始化

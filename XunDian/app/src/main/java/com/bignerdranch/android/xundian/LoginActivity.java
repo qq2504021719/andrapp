@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final String CLIENT_SECRET = "S4rOJxiKfd4Ch3SuOPaq6ZBNTMg9ixuoehEMVEsg";
     private static final String MURL = "http://xd.trc-demo.com:3002/oauth/token";
 
+    public static String TOKEN = null;
+
     public EditText mZhang_hao_edittext;
     public EditText mMi_ma_edittext;
     public CheckBox mJi_zhu_checkbox;
@@ -230,6 +232,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
             if(i == 1){
+                TOKEN = jsonObject.getString("access_token");
+//                Log.i("登录",TOKEN);
                 // 添加入库
                 Login login = new Login();
                 login.setId(1);
