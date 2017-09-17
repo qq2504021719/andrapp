@@ -85,50 +85,16 @@ public class XunDianModel {
         return null;
     }
 
-    /**
-     * 根据店铺id查询店铺所有数据
-     * @param id 门店id
-     */
-    public List<XunDianCanShu> ChaXunDian(String id){
-        List<XunDianCanShu> list = new ArrayList<XunDianCanShu>();
-
-        Cursor cursor = mDatabase.query(
-                DbSchema.XunDianTable.NAME,
-                null,
-                XunDianTable.Cols.ID +" = ?",
-                new String[] {id},
-                null, // groupBy
-                null, // habing
-                null // orderBy
-        );
-        try{
-            if(cursor.getCount() == 0){
-                return null;
-            }
-            while(cursor.moveToNext())
-            {
-//                XunDianCanShu xunDianCanShu= cursor.getXundian();
-//                list.add(xunDianCanShu);
-                String value = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.VALUES));
-                Log.i("巡店",value);
-            }
-        }finally {
-            if(cursor != null){
-                cursor.close();
-            }
-        }
-        return list;
-    }
 
     /**
      * 根据id删除记录
      * @param id
      */
-    public void deleteXunDian(int id){
+    public void deleteXunDian(String id){
         mDatabase.delete(
                 DbSchema.XunDianTable.NAME,
                 DbSchema.XunDianTable.Cols.ID+"=?",
-                new String[] {String.valueOf(id)}
+                new String[] {id}
         );
     }
 

@@ -24,6 +24,9 @@ public class ViewS {
             if(i == 1){
                 mViewd.setViewFragment(new GongZuoZhongXinFragment());
                 mViewd.setViewString("工作中心");
+            }else if(i == 2){
+                mViewd.setViewFragment(new XunDianJingDu());
+                mViewd.setViewString("巡店进度");
             }else if(i == 3){
                 mViewd.setViewFragment(new TongZhiZhongXinFragment());
                 mViewd.setViewString("通知中心");

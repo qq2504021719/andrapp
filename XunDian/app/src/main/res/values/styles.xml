@@ -8,6 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- my loading dialog -->
+    <style name="MyDialogStyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <!-- popup window 显示消失动画-->
+    <style name="PopWindowAnimStyle">
+        <item name="android:windowShowAnimation">@anim/dialog_enter</item>
+        <!-- 指定显示的动画xml  -->
+        <item name="android:windowHideAnimation">@anim/dialog_exit</item>
+        <!-- 指定消失的动画xml  -->
+    </style>
+
     <!--工作中心 开始-->
     <style name="GongZuoZhongXin"></style>
     <!--1LinearLayout-->
@@ -41,6 +60,7 @@
     </style>
     <!--TextView样式-->
     <style name="GongZuoZhongXin.TextView">
+        <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>

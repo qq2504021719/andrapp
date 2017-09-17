@@ -29,11 +29,11 @@
             app:sl_shadowed="true">
 
             <com.bignerdranch.android.xundian.ui.CircleImageView
+                android:id="@+id/wo_img"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/timg" />
+                android:layout_centerInParent="true"/>
 
         </com.gigamole.library.ShadowLayout>
 
@@ -47,41 +47,48 @@
         >
 
         <TextView
+            android:id="@+id/wo_xing_ming"
             style="@style/WoDeXinXiTextView"
-            android:text="姓名 : 小郑"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_gong_si"
             style="@style/WoDeXinXiTextView"
             android:text="公司 : 上海叮叮食品有限公司"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_gong_hao"
             style="@style/WoDeXinXiTextView"
             android:text="工号 : DD1001"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_zhi_wu"
             style="@style/WoDeXinXiTextView"
             android:text="职务 : 业务员"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_shou_ji"
             style="@style/WoDeXinXiTextView"
             android:text="手机 : 18017217207"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_tong_zhi"
             style="@style/WoDeXinXiTextView"
             android:text="通知公告"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_qing_jia"
             style="@style/WoDeXinXiTextView"
             android:text="请假明细"
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/wo_guan_yu"
             style="@style/WoDeXinXiTextView"
             android:text="关于巡店达人"
             android:background="@drawable/buttonstyle"/>

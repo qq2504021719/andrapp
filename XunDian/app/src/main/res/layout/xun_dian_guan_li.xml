@@ -40,15 +40,18 @@
         android:focusableInTouchMode="true"
         >
 
-        <SearchView
-            android:id="@+id/men_dian_ming_cheng_searchview"
+        <EditText
+            android:id="@+id/men_dian_ming_cheng"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
-            android:queryHint="请输入门店名称/门店店号"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:hint="请输入门店名称/门店店号"
             android:textCursorDrawable="@drawable/edit_gong_cursor_color"
             android:background="@drawable/gong_zuo_zhong_xin_button"
-            ></SearchView>
+            />
 
         <Button
             android:id="@+id/xuan_zhe_men_dian_ping_pai_button"
@@ -58,8 +61,7 @@
             android:text="选择门店品牌"
             android:paddingLeft="10dp"
             android:gravity="left|center_vertical"
-            android:background="@drawable/gong_zuo_zhong_xin_button"
-            android:onClick="showListAlertDialogp"/>
+            android:background="@drawable/gong_zuo_zhong_xin_button"/>
 
         <Button
             android:id="@+id/xuan_zhe_men_dian_button"

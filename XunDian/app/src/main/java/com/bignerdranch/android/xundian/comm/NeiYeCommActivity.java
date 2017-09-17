@@ -3,6 +3,7 @@ package com.bignerdranch.android.xundian.comm;
 import android.content.Context;
 import android.database.Observable;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.model.LoginModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -37,9 +39,29 @@ public class NeiYeCommActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
+    // Token
+    public String mToken;
+
+    // LoginModel 登录模型
+    public static LoginModel mLoginModel;
+    // 登录对象
+    public static Login mLogin;
+
+    // 开启线程
+    public static Thread mThread;
 
     // json转换
     public Gson mGson = new Gson();
+
+
+
+    public void setToken(Context context){
+        // 登录数据库连接
+        mLoginModel = LoginModel.get(context);
+        // Token查询,赋值
+        mLogin = mLoginModel.getLogin(1);
+        mToken = mLogin.getToken();
+    }
 
     /**
      * 点击返回
@@ -136,6 +158,16 @@ public class NeiYeCommActivity extends AppCompatActivity {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 检查网络是否完全连接 true 连接  false 没有连接
+     * @return
+     */
+    public boolean isNetworkAvailableAndConnected(Context context){
+        ConnectivityManager cm =(ConnectivityManager)context.getSystemService(CONNECTIVITY_SERVICE);
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+        boolean isNetworkConnected = isNetworkAvailable && cm.getActiveNetworkInfo().isConnected();
+        return isNetworkConnected;
+    }
 
 
 }
