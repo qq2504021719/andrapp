@@ -4,15 +4,12 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.bignerdranch.android.xundian"
-        minSdkVersion 21
+        applicationId "com.bignerdranch.android.test"
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk{
-            abiFilters 'armeabi','armeabi-v7a','armeabi-v8a','x86','x86_64','mips','mips64'
-        }
     }
     buildTypes {
         release {
@@ -20,29 +17,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-
-        }
-    }
 }
 
-
-
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile files('libs/BaiduLBS_Android.jar')
-    compile files('libs/badgeview.jar')
-    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
-    compile 'com.github.devlight.shadowlayout:library:1.0.2'
-    compile files('libs/gson-1.6.jar')
 }
