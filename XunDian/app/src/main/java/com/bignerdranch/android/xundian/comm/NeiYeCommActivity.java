@@ -39,6 +39,8 @@ public class NeiYeCommActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
+    public Context mContext;
+
     // Token
     public String mToken;
 

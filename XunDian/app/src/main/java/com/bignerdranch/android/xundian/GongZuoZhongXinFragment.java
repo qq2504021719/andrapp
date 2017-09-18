@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
-import com.jauker.widget.BadgeView;
 
 /**
  * Created by Administrator on 2017/9/7.
@@ -26,7 +25,7 @@ public class GongZuoZhongXinFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.gong_zuo_zhong_xin, container, false);
+        mView = inflater.inflate(R.layout.fragment_gong_zuo_zhong_xin, container, false);
 
         // 组件初始化
         ZhuJianInit();

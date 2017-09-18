@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -42,7 +40,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -61,7 +58,6 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     private final int SDK_PERMISSION_REQUEST = 127;
     private String permissionInfo;
 
-    private Context mContext;
 
     private Button mXuan_zhe_men_dian_ping_pai_button; //选择门店品牌
     private Button mXuan_zhe_men_dian_button; //选择门店
@@ -117,7 +113,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         // 在使用SDK各组件之前初始化context信息，传入ApplicationContext
         // 注意该方法要再setContentView方法之前实现
         SDKInitializer.initialize(getApplicationContext());
-        setContentView(R.layout.xun_dian_guan_li);
+        setContentView(R.layout.activity_xun_dian_guan_li);
 
 
 
@@ -127,7 +123,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
 
         // 组件操作
         ZhuJianCaoZhuo();
-
+        // 数据/值设置
         values();
         // 设置选择数据
         setData(mMengDianPingpaiJsonData,1);

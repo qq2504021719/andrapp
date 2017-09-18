@@ -70,7 +70,7 @@ public class TongZhiZhongXinFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.tong_zhi_zhong_xin, container, false);
+        mView = inflater.inflate(R.layout.fragment_tong_zhi_zhong_xin, container, false);
 
         // 组件初始化
         ZhuJianInit();

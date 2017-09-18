@@ -73,7 +73,7 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main_page_view_page);
+        setContentView(R.layout.activity_main_page_view_page);
 
         // 销毁其余容器
         AtyContainer.finishAllActivity();

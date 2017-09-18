@@ -3,11 +3,6 @@ package com.bignerdranch.android.xundian;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,15 +24,11 @@ import com.bignerdranch.android.xundian.ui.CircleImageView;
 import com.gigamole.library.ShadowLayout;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -88,7 +79,7 @@ public class WodeXinXiFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.wo_de_xin_xi, container, false);
+        mView = inflater.inflate(R.layout.fragment_wo_de_xin_xi, container, false);
 
         // 值操作 set get值
         values();

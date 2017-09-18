@@ -1,8 +1,5 @@
 package com.bignerdranch.android.xundian;
 
-import android.support.v4.app.Fragment;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class ViewS {
                 mViewd.setViewFragment(new GongZuoZhongXinFragment());
                 mViewd.setViewString("工作中心");
             }else if(i == 2){
-                mViewd.setViewFragment(new XunDianJingDu());
+                mViewd.setViewFragment(new XunDianJingDuFragment());
                 mViewd.setViewString("巡店进度");
             }else if(i == 3){
                 mViewd.setViewFragment(new TongZhiZhongXinFragment());
@@ -33,9 +30,6 @@ public class ViewS {
             }else if(i == 4){
                 mViewd.setViewFragment(new WodeXinXiFragment());
                 mViewd.setViewString("我的信息");
-            }else{
-                mViewd.setViewString("页面"+i);
-                mViewd.setViewFragment(MainFragment.newInstance(i));
             }
             mViews.add(mViewd);
         }
