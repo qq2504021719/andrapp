@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Test</string>
+    <string name="new_pictures_title">我是通知</string>
+    <string name="new_pictures_text">我是通知的内容,哈哈</string>
 </resources>

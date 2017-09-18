@@ -14,6 +14,10 @@ public class MainActivity extends AppCompatActivity {
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
 
+    public static Intent newIntent(Context context){
+        return new Intent(context,MainActivity.class);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,16 +32,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void DingShi(Context context){
 
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);//获取AlarmManager实例
+         alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);//获取AlarmManager实例
 
         int anHour =  4 * 1000 ;  // 6秒
 
-        long triggerAtTime = SystemClock.elapsedRealtime() + anHour;
-
         Intent intent2 = new Intent(context, AlarmReceiver.class);
 
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent2, 0);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent2, 0);
 
-        manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),anHour, pi);//开启提醒
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),anHour, alarmIntent);//开启提醒
     }
 }

@@ -21,4 +21,4 @@
 ### 所用技术 (创建新的线程请求网络图片) (AsyncTask 创建新的线程) (onPostExecute 后台线程请求完成刷新数据) (消息队列 RecyclerView只下载需要显示的图片)(RecyclerView 九宫格布局)
 
 ## Test 技术测试
-### 所用技术 (Server 服务)(Receiver 广播)(AlarmManager 定时任务)
+### 所用技术 (Server 服务)(Receiver 广播)(AlarmManager 定时任务) (notification 通知)
