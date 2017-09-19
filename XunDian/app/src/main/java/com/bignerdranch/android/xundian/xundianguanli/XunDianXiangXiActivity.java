@@ -98,12 +98,7 @@ public class XunDianXiangXiActivity extends NeiYeCommActivity {
      * ui更新
      */
     public void updateUI(){
-        if(mIsYeMian == 1){
-            getTongZhis("--巡店进度");
-        }else{
-            getTongZhis("--店铺");
-
-        }
+        getTongZhis();
         // 获取数据
         mAdapter = new XiangXiAdapter(mTongZhis);
         mTongZhiRecyclerView.setAdapter(mAdapter);
@@ -240,29 +235,39 @@ public class XunDianXiangXiActivity extends NeiYeCommActivity {
 
 
     /**
-     * 获取Tongzhis数据
+     * 获取Tongzhis数据 mIsYeMian
      */
-    public void getTongZhis(String str){
-
+    public void getTongZhis(){
+        JSONArray jsonArray = new JSONArray();
+        mTongZhis = new ArrayList<TongZhi>();
         try {
             JSONObject jsonObject = new JSONObject(mShowString);
-            Log.i("详细",jsonObject.getString("leixing").toString());
+            if(mIsYeMian == 1){
+                jsonArray = new JSONArray(jsonObject.getString("leixing").toString());
+            }else if(mIsYeMian == 2){
+                jsonArray = new JSONArray(jsonObject.getString("mendian").toString());
+            }
+            for(int i = 0;i<jsonArray.length();i++){
+                TongZhi tongZhi = new TongZhi();
+                tongZhi.setId(i);
+                tongZhi.setTitle(jsonArray.getString(i));
+                mTongZhis.add(tongZhi);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        mTongZhis = new ArrayList<TongZhi>();
-        for(int i = 0;i<30;i++){
-            TongZhi tongZhi = new TongZhi();
-            if(i%2 == 0){
-                tongZhi.setChaKan(false);
-            }else{
-                tongZhi.setChaKan(true);
-            }
-            tongZhi.setId(i);
-            tongZhi.setTitle(i+str+"DD-DS-DY-B 未完成8 已完成0");
-            mTongZhis.add(tongZhi);
-        }
+//        for(int i = 0;i<30;i++){
+//            TongZhi tongZhi = new TongZhi();
+//            if(i%2 == 0){
+//                tongZhi.setChaKan(false);
+//            }else{
+//                tongZhi.setChaKan(true);
+//            }
+//            tongZhi.setId(i);
+//            tongZhi.setTitle(i+str+"DD-DS-DY-B 未完成8 已完成0");
+//            mTongZhis.add(tongZhi);
+//        }
 
     }
 

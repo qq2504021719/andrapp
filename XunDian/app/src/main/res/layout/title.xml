@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:gravity="center"
-                android:background="@drawable/title_background" >
+                android:background="@drawable/bottom_border" >
 
     <TextView
         android:id="@+id/title"

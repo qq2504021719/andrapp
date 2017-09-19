@@ -39,6 +39,16 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         >
+        <Button
+            android:id="@+id/xun_dian_addr_button"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前地址 : "
+            android:paddingLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:background="@drawable/gong_zuo_zhong_xin_button"/>
+
 
         <EditText
             android:id="@+id/men_dian_ming_cheng"

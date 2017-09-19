@@ -27,7 +27,9 @@
 
         <LinearLayout
             style="@style/GongZuoZhongXin.2LinearLayout">
-            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+            <LinearLayout
+                android:id="@+id/button_ji_hua"
+                style="@style/GongZuoZhongXin.3LinearLayout">
                 <ImageView
                     style="@style/GongZuoZhongXin.ImageView"
                     android:src="@drawable/jihua"

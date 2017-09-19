@@ -5,6 +5,13 @@
     <string name="footer_bar_3">通知公告</string>
     <string name="footer_bar_4">我的信息</string>
 
+    <string name="xun_dian_ji_hua">巡店计划</string>
+    <string name="ji_hua_an_pai">计划安排</string>
+    <string name="wo_de_ri_cheng">我的日程</string>
+
+    <string name="tj_xun_dian_ji_hua">添加巡店计划</string>
+    <string name="bj_xun_dian_ji_hua">编辑巡店计划</string>
+
     <string name="tong_zhi">通知</string>
     <string name="gong_gao">公告</string>
 
@@ -41,4 +48,6 @@
     <string name="pai_zhao">拍照</string>
     <string name="xin">*</string>
     <string name="bao_cun">保存</string>
+
+    <string name="ti_jiao_gzb">提交工作表</string>
 </resources>

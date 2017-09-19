@@ -14,7 +14,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
         <com.bignerdranch.android.xundian.ui.BounceScrollView
             android:background="@color/colorAccent"
             android:layout_width="match_parent"
@@ -41,13 +43,21 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/xun_dian_bc_button"
-                    android:text="@string/bao_cun"
-                    style="@style/XunDianButton"/>
+
             </LinearLayout>
 
         </com.bignerdranch.android.xundian.ui.BounceScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_height="60dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
+        <Button
+            android:id="@+id/xun_dian_bc_button"
+            android:text="@string/bao_cun"
+            style="@style/XunDianButton"/>
     </LinearLayout>
 
 </LinearLayout>

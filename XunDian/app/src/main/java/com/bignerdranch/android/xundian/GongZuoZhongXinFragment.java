@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
+import com.bignerdranch.android.xundian.xundianjihua.JiHuaActivity;
 
 /**
  * Created by Administrator on 2017/9/7.
@@ -20,6 +22,9 @@ public class GongZuoZhongXinFragment extends Fragment{
     // 工作中心按钮
     // 巡店管理
     public View mXun_dian_guan_li_LinearLayout;
+
+    // 巡店计划
+    public LinearLayout mButton_ji_hua;
 
     private View mView;
 
@@ -41,6 +46,8 @@ public class GongZuoZhongXinFragment extends Fragment{
     public void ZhuJianInit(){
         // 初始化
         mXun_dian_guan_li_LinearLayout = mView.findViewById(R.id.xun_dian_guan_li_LinearLayout);
+
+        mButton_ji_hua = (LinearLayout)mView.findViewById(R.id.button_ji_hua);
     }
 
     /**
@@ -53,8 +60,17 @@ public class GongZuoZhongXinFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 // 存储容器
-                AtyContainer.addActivity(getActivity());
+//                AtyContainer.addActivity(getActivity());
                 Intent i = XunDianGuanLiActivity.newIntent(getActivity(),1);
+                startActivity(i);
+            }
+        });
+
+        // 巡店计划
+        mButton_ji_hua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = JiHuaActivity.newIntent(getActivity(),1);
                 startActivity(i);
             }
         });

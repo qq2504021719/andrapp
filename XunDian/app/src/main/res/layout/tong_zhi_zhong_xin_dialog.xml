@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=" "
-        android:background="@drawable/title_background"/>
+        android:background="@drawable/bottom_border"/>
 
     <WebView
         android:id="@+id/content_dialog"

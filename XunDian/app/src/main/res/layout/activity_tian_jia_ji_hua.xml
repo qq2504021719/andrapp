@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/IndexBuJuLinearLayout"
+              android:background="@color/colorAccent">
+
+    <include layout="@layout/title_nei_ye"/>
+
+    <LinearLayout
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_weight="1">
+        <com.bignerdranch.android.xundian.ui.BounceScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                style="@style/IndexBuJuLinearLayout"
+                android:paddingLeft="10dp">
+                <!--选择周-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_zhou"
+                        style="@style/TjJiHuaTextView"
+                        android:text="选择周"/>
+
+                    <TextView
+                        android:id="@+id/textview_zhou_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--日期-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_ri_qi"
+                        style="@style/TjJiHuaTextView"
+                        android:text="日期"/>
+
+                    <TextView
+                        android:id="@+id/textview_ri_qi_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--开始时间-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_shi_jian"
+                        style="@style/TjJiHuaTextView"
+                        android:text="开始时间"/>
+
+                    <TextView
+                        android:id="@+id/textview_shi_jian_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--结束时间-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_js_shi_jian"
+                        style="@style/TjJiHuaTextView"
+                        android:text="结束时间"/>
+
+                    <TextView
+                        android:id="@+id/textview_js_shi_jian_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--门店品牌-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_pin_pai"
+                        style="@style/TjJiHuaTextView"
+                        android:text="门店品牌"/>
+
+                    <TextView
+                        android:id="@+id/textview_pin_pai_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--门店名称-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_ming_cheng"
+                        style="@style/TjJiHuaTextView"
+                        android:text="门店名称"/>
+
+                    <TextView
+                        android:id="@+id/textview_ming_cheng_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--门店号-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_dian_hao"
+                        style="@style/TjJiHuaTextView"
+                        android:text="门店号"/>
+
+                    <TextView
+                        android:id="@+id/textview_dian_hao_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+                <!--工作录入-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="right">
+
+                    <Button
+                        android:id="@+id/button_gong_zuo"
+                        android:text="工作录入"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/xun_dian_button"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="130dp"
+                        android:layout_height="30dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </com.bignerdranch.android.xundian.ui.BounceScrollView>
+    </LinearLayout>
+
+    <!--提交-->
+    <LinearLayout
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_height="60dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
+        <Button
+            android:id="@+id/button_ti_jiao_gzb"
+            android:text="@string/ti_jiao_gzb"
+            style="@style/XunDianButton"/>
+    </LinearLayout>
+
+</LinearLayout>

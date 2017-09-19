@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.bignerdranch.android.xundian.database.DbSchema.LoginTable;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianTable;
+import com.bignerdranch.android.xundian.database.DbSchema.XunDianJiHuaTable;
 /**
  * Created by Administrator on 2017/9/11.
  */
@@ -42,6 +43,24 @@ public class BaseHelper extends SQLiteOpenHelper {
                 XunDianTable.Cols.XIABIAO+", "+
                 XunDianTable.Cols.VALUES+", "+
                 XunDianTable.Cols.PHONE+");"
+        );
+
+        /**
+         * 创建巡店计划表
+         */
+        db.execSQL("create table "+ XunDianJiHuaTable.NAME+"("+
+                "_id integer primary key autoincrement, "+
+                XunDianJiHuaTable.Cols.ID+", "+
+                XunDianJiHuaTable.Cols.ZHOU+", "+
+                XunDianJiHuaTable.Cols.RIQI+", "+
+                XunDianJiHuaTable.Cols.KSJIAN+", "+
+                XunDianJiHuaTable.Cols.JSJIAN+", "+
+                XunDianJiHuaTable.Cols.PPID+", "+
+                XunDianJiHuaTable.Cols.PINPAI+", "+
+                XunDianJiHuaTable.Cols.MDID+", "+
+                XunDianJiHuaTable.Cols.MDMINGC+", "+
+                XunDianJiHuaTable.Cols.MDHAO+");"
+
         );
     }
 

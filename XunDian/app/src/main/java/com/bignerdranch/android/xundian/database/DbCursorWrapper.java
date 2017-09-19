@@ -6,8 +6,10 @@ import android.util.Log;
 
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.comm.XunDianJiHua;
 import com.bignerdranch.android.xundian.database.DbSchema.LoginTable;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianTable;
+import com.bignerdranch.android.xundian.database.DbSchema.XunDianJiHuaTable;
 /**
  * Created by Administrator on 2017/9/11.
  */
@@ -54,6 +56,41 @@ public class DbCursorWrapper extends CursorWrapper {
         xunDianCanShu.setPhontPath(phone);
 
         return xunDianCanShu;
+    }
+
+    public XunDianJiHua getXunDianJiHua(){
+        // 周
+        String zhou = getString(getColumnIndex(XunDianJiHuaTable.Cols.ZHOU));
+        // 日期
+        String riqi = getString(getColumnIndex(XunDianJiHuaTable.Cols.RIQI));
+        // 开始时间
+        String kstime = getString(getColumnIndex(XunDianJiHuaTable.Cols.KSJIAN));
+        // 结束时间
+        String jstime = getString(getColumnIndex(XunDianJiHuaTable.Cols.JSJIAN));
+        // 品牌id
+        int ppid = getInt(getColumnIndex(XunDianJiHuaTable.Cols.PPID));
+        // 品牌
+        String pingpai = getString(getColumnIndex(XunDianJiHuaTable.Cols.PINPAI));
+        // 门店id
+        int mdid = getInt(getColumnIndex(XunDianJiHuaTable.Cols.MDID));
+        // 门店
+        String mendian = getString(getColumnIndex(XunDianJiHuaTable.Cols.MDMINGC));
+        // 门店编号
+        String bianhao = getString(getColumnIndex(XunDianJiHuaTable.Cols.MDHAO));
+
+        XunDianJiHua xunDianJiHua = new XunDianJiHua();
+
+        xunDianJiHua.setZhou(zhou);
+        xunDianJiHua.setRiQi(riqi);
+        xunDianJiHua.setShiJian(kstime);
+        xunDianJiHua.setJSShiJian(jstime);
+        xunDianJiHua.setPingPaiId(ppid);
+        xunDianJiHua.setPingPaiStr(pingpai);
+        xunDianJiHua.setMenDianId(mdid);
+        xunDianJiHua.setMenDianStr(mendian);
+        xunDianJiHua.setMenDianHao(bianhao);
+
+        return xunDianJiHua;
     }
 
 }

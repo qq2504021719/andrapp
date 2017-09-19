@@ -48,6 +48,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -84,7 +86,6 @@ public class XunDianActivity extends NeiYeCommActivity {
     // 巡店定位信息,店铺id
     public JSONObject mXunDian;
 
-//    public String mXunDianJSONData = "[{\"id\":1,\"name\":\"\\u996e\\u6599\\u6392\\u9762\\u62cd\\u7167\",\"tian_xie_fang_shi\":\"\\u6587\\u672c\",\"is_pai_zhao\":\"\\u662f\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":2,\"name\":\"\\u996e\\u6599\\u6570\\u91cf\",\"tian_xie_fang_shi\":\"\\u6570\\u5b57\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":3,\"name\":\"\\u65e0\\u6cd5\\u8ba2\\u8d27\\u5546\\u54c1\",\"tian_xie_fang_shi\":\"\\u9009\\u62e9\\u5668\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":[\"\\u6e20\\u9053\\u65e0\\u8d27\",\"\\u5176\\u4ed6\\u539f\\u56e0\"],\"is_bi_tian\":1},{\"id\":4,\"name\":\"\\u996e\\u6599\\u51b0\\u67dc\\u62cd\\u7167\",\"tian_xie_fang_shi\":\"\\u6587\\u672c\",\"is_pai_zhao\":\"\\u662f\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":5,\"name\":\"\\u9175\\u6bcd\\u9762\\u5305\\u5e93\\u5b58\",\"tian_xie_fang_shi\":\"\\u6570\\u5b57\",\"is_pai_zhao\":\"\\u662f\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":0},{\"id\":6,\"name\":\"\\u9999\\u98d8\\u98d8\\u5355\\u676f\\u5e93\\u5b58\",\"tian_xie_fang_shi\":\"\\u6570\\u5b57\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1},{\"id\":7,\"name\":\"\\u767e\\u4e8b\\u7f3a\\u8d27\\u65e5\\u671f\",\"tian_xie_fang_shi\":\"\\u65e5\\u671f\",\"is_pai_zhao\":\"\\u5426\",\"xuan_ze_qi\":\"\",\"is_bi_tian\":1}]";
     public String mXunDianJSONData;
 
     public XunDianCanShu mXunDianCanShu;
@@ -148,7 +149,7 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.xun_dian);
+        setContentView(R.layout.activity_xun_dian);
 
         mContext = this;
 
@@ -194,7 +195,11 @@ public class XunDianActivity extends NeiYeCommActivity {
                 if(msg.obj.toString().equals("上传成功")){
 //                    tiShi(mContext,msg.obj.toString());
                     // 删除数据
-                    deleteXunDianData();
+                    try {
+                        deleteXunDianData(mXunDian.getString("mMenDianId"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }else if(msg.what == 3){
                 String string = msg.obj.toString();
@@ -207,7 +212,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                         mCanShuYiTiJiao++;
                         if(mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))) != null){
                             mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).setServerPhotoPath(jsonObject.getString("path"));
-                            tiShi(mContext,"图片上传 : "+mCanShuYiTiJiao+"/"+mCanShuNums);
+//                            tiShi(mContext,"图片上传 : "+mCanShuYiTiJiao+"/"+mCanShuNums);
                         }
                         // 提交数据
                         if(mCanShuNums == mCanShuYiTiJiao){
@@ -320,11 +325,15 @@ public class XunDianActivity extends NeiYeCommActivity {
             }else{
                 file = new File(xunDianCanShu.getPhontPath());
             }
+            // 图片压缩
+            String pathPhoto = imgYaSuo(file.getPath(),Config.XunCanImgWidth,Config.XunCanImgHeight);
+            File files = new File(pathPhoto);
+
             // MediaType.parse() 里面是上传的文件类型。 MediaType.parse("image/*")
             body.addFormDataPart(
                     "photo",
                     getPhotoFilename(),
-                    RequestBody.create(MediaType.parse("image/jpeg"),file)
+                    RequestBody.create(MediaType.parse("image/jpeg"),files)
             );
 
         }
@@ -395,11 +404,9 @@ public class XunDianActivity extends NeiYeCommActivity {
             }
 
         }
-//        Log.i("巡店",jsonObjects.toStringokhttp3());
+//        Log.i("巡店",jsonObjects.toString());
         final OkHttpClient client = new OkHttpClient();
         //3, 发起新的请求,获取返回信息
-//        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
-//        body.addFormDataPart("body",jsonObjects.toString());
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonObjects.toString());
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
@@ -425,9 +432,19 @@ public class XunDianActivity extends NeiYeCommActivity {
         mThread.start();
     }
 
-    public void deleteXunDianData(){
+    /**
+     * 删除本地数据库对应信息,关闭loading
+     */
+    public void deleteXunDianData(String strid){
+        // 图片数量
+        mCanShuNums = 0;
+        // 图片已提交数量
+        mCanShuYiTiJiao = 0;
+        // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
-        mXunDianModel.deleteXunDian("3");
+        // 删除本地数据库数据
+        mXunDianModel.deleteXunDian(strid);
+        // 关闭当前activity
         finish();
     }
 
@@ -482,7 +499,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                 ChaKanFuZhi();
 
                 // 创建标题
-                CreateBiaoTi(mXunDianCanShu.getName(),mXunDianCanShu.getIs_bi_tian());
+                CreateBiaoTi(mXunDianCanShu.getName(),mXunDianCanShu.getIs_bi_tian(),i);
 
                 // 创建对应view
                 CreateView(mXunDianCanShu.getTian_xie_fang_shi(),mXunDianCanShu.getIs_pai_zhao(),id);
@@ -501,9 +518,10 @@ public class XunDianActivity extends NeiYeCommActivity {
      * 创建标题
      * @param title 标题
      * @param isXin 1 是显示*号 0 不显示*号
+     * @param xuHao 序号
      *
      */
-    public void CreateBiaoTi(String title,int isXin){
+    public void CreateBiaoTi(String title,int isXin,int xuHao){
         LinearLayout ll = new LinearLayout(this);
         // 设置宽高
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -524,7 +542,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         titleTv.setLayoutParams(layoutParamtv);
         // 设置字体大小
         titleTv.setTextSize(18);
-        titleTv.setText(title);
+        titleTv.setText((xuHao+1)+" : "+title);
         // 添加到父布局
         ll.addView(titleTv);
 
@@ -933,9 +951,12 @@ public class XunDianActivity extends NeiYeCommActivity {
                     mTuPianDianJi = id;
                     // 存储加号View
                     mXunDianCanShus.get(id).setMImageViewj(imageViewDian);
-                    // 存储值
+                    // 存储显示图片View
                     mXunDianCanShus.get(id).setImageView(imageViewShow);
+                    // 存储文件对象
                     mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
+                    // 存储图片路径
+                    mXunDianCanShus.get(id).setPhontPath(mPhotoFile.getPath());
                 }
             }
         });
@@ -966,18 +987,27 @@ public class XunDianActivity extends NeiYeCommActivity {
                 for(int i = 0;i<mXunDianCanShus.size();i++){
                     if(mXunDianCanShus.get(i) != null){
                         if(mXunDianCanShus.get(i).getIs_bi_tian() == 1){
+                            int c = (i+1);
+                            // 验证值
                             if(mXunDianCanShus.get(i).getValue() != null){
                                 String s = mXunDianCanShus.get(i).getValue().trim();
                                 if(s == null || "".equals(s)){
-                                    tiShi(mContext,mXunDianCanShus.get(i).getName()+"不能为空");
+                                    tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
                                     break;
                                 }else{
-                                    inWenTi ++;
+                                    // 验证图片
+                                    if(mXunDianCanShus.get(i).getPhontPath() == null){
+                                        tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"图片不能为空");
+                                        break;
+                                    }else{
+                                        inWenTi ++;
+                                    }
                                 }
                             }else{
-                                tiShi(mContext,mXunDianCanShus.get(i).getName()+"不能为空");
+                                tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
                                 break;
                             }
+
                         }
                     }
                 }
@@ -999,28 +1029,6 @@ public class XunDianActivity extends NeiYeCommActivity {
     public void LoadingStringEdit(String logingString){
         mWeiboDialog = WeiboDialogUtils.createLoadingDialog(mContext,logingString);
     }
-
-    /**
-     * 返回指向某个具体位置的File对象
-     */
-    public File getPhotoFile(String string){
-        File externalFilesDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        // 确认外部存储是否可用,如果不可用,返回null
-        if(externalFilesDir == null){
-            return null;
-        }
-        return new File(externalFilesDir,string);
-    }
-
-    /**
-     * 文件获取获取方法
-     */
-    public String getPhotoFilename(){
-        return "IMG_"+ LoginActivity.getTime()+".jpg";
-    }
-
-
-
 
     /**
      * 启动其他Activity返回方法

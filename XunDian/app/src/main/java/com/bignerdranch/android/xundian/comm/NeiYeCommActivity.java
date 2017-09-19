@@ -1,10 +1,15 @@
 package com.bignerdranch.android.xundian.comm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Observable;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,27 +18,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bignerdranch.android.xundian.LoginActivity;
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.TongZhiZhongXinFragment;
 import com.bignerdranch.android.xundian.model.LoginModel;
+import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/12.
  */
 
-public class NeiYeCommActivity extends AppCompatActivity {
+public class NeiYeCommActivity extends AppCompatActivity{
 
     public TextView mTitle_nei_ye; // 设置显示标题
 
@@ -56,6 +70,20 @@ public class NeiYeCommActivity extends AppCompatActivity {
     public Gson mGson = new Gson();
 
 
+    // 门店品牌数据
+    public String mMengDianPingpaiJsonData = "[{\"id\":2,\"name\":\"\\u4f0d\\u7f18\"},{\"id\":5,\"name\":\"\\u53ef\\u7684\\u4fbf\\u5229\"},{\"id\":10,\"name\":\"\\u597d\\u5fb7\\u4fbf\\u5229\"},{\"id\":12,\"name\":\"\\u7f57\\u68ee\\u4fbf\\u5229\"}]";
+    public String[] mMengDianPingPaiData;
+
+
+    // 门店数据
+    public String mMengDianJsonData = "";
+    public String[] mMengDianData;
+
+    public String mSearchString = ""; // 用户输入
+    public String mMen_Dian_ping_pai = "0"; // 门店品牌
+
+    // 门店搜索URl
+    public String mMenDianSearchURL = Config.URL+"/app/menDian";
 
     public void setToken(Context context){
         // 登录数据库连接
@@ -64,6 +92,19 @@ public class NeiYeCommActivity extends AppCompatActivity {
         mLogin = mLoginModel.getLogin(1);
         mToken = mLogin.getToken();
     }
+
+    // 回调函数存储变量
+    public Callbacks mCallbacks;
+
+
+    /**
+     * 实现回调接口
+     */
+    public interface Callbacks{
+        void shuJuHuiDiao(String string,int is);
+    }
+
+
 
     /**
      * 点击返回
@@ -160,6 +201,7 @@ public class NeiYeCommActivity extends AppCompatActivity {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 
+
     /**
      * 检查网络是否完全连接 true 连接  false 没有连接
      * @return
@@ -171,5 +213,186 @@ public class NeiYeCommActivity extends AppCompatActivity {
         return isNetworkConnected;
     }
 
+    /**
+     * 返回指向某个具体位置的File对象
+     */
+    public File getPhotoFile(String string){
+        File externalFilesDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // 确认外部存储是否可用,如果不可用,返回null
+        if(externalFilesDir == null){
+            return null;
+        }
+        return new File(externalFilesDir,string);
+    }
+
+    /**
+     * 文件获取获取方法
+     */
+    public String getPhotoFilename(){
+        return "IMG_"+ LoginActivity.getTime()+".jpg";
+    }
+
+    /**
+     *
+     * 图片压缩方法
+     * path 图片存储路径
+     * destWidth 压缩成多宽
+     * destHeight 压缩成多高
+     * @return 返回图片路径
+     */
+    public String imgYaSuo(String path,int destWidth,int destHeight){
+        // 压缩图片
+        Bitmap bitmap = PictureUtils.getScaledBitmap(path,destWidth,destHeight);
+        File f = getPhotoFile(getPhotoFilename());
+        try {
+            // 存储到本地
+            if (f.exists()) {
+                f.delete();
+            }
+            FileOutputStream out = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f.getPath();
+    }
+
+
+    /**
+     * 将string转为JSON对象,匹配string1，返回对应的id
+     * @param Jsonstring
+     * @param string
+     * @return
+     */
+    public int ChanKanId(String Jsonstring,String string){
+        try {
+            JSONArray jsonArray = new JSONArray(Jsonstring);
+            if(jsonArray.length() > 0){
+                for(int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    if(jsonObject.getString("name").equals(string)){
+                        return Integer.valueOf(jsonObject.getString("id"));
+                    }
+                }
+            }
+            return 0;
+        }catch (JSONException e){
+
+        }
+        return 0;
+    }
+
+    /**
+     * 将string转为JSON对象,匹配string1，返回对应的id
+     * @param Jsonstring
+     * @param string
+     * @param key 查询的key
+     * @return
+     */
+    public String ChanKanKey(String Jsonstring,String string,String key){
+        try {
+            JSONArray jsonArray = new JSONArray(Jsonstring);
+            if(jsonArray.length() > 0){
+                for(int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    if(jsonObject.getString("name").equals(string)){
+                        return jsonObject.getString(key);
+                    }
+                }
+            }
+            return "";
+        }catch (JSONException e){
+
+        }
+        return "";
+    }
+
+
+
+    /**
+     * 将 string的值设置到对应strings中
+     * @param string
+     * @param is 1 品牌 2门店
+     */
+    public void setData(String string,int is){
+        try {
+            JSONArray jsonArray = new JSONArray(string);
+            if(jsonArray.length() > 0){
+                if(is == 1){
+                    mMengDianPingPaiData = new String[jsonArray.length()];
+                }else if(is == 2){
+                    mMengDianData = new String[jsonArray.length()];
+                }
+
+                for(int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    if(is == 1){
+                        mMengDianPingPaiData[i] = jsonObject.getString("name");
+                    }else if(is == 2){
+                        mMengDianData[i] = jsonObject.getString("name");
+                    }
+                }
+            }
+        }catch (JSONException e){
+
+        }
+    }
+
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             * 请求回调
+             */
+            if(msg.what==1){
+                // 参数请求回调
+                String string = msg.obj.toString();
+                if(string != null){
+                    mCallbacks.shuJuHuiDiao(string,2);
+                }
+            }
+        }
+    };
+
+    /**
+     * 门店搜索
+     */
+    public void menDianSearch(){
+        if(mToken != null){
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
+            RequestBody body = new FormBody.Builder()
+                    .add("name",mSearchString)
+                    .add("men_dian_hao",mMen_Dian_ping_pai)
+                    .build();
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(mMenDianSearchURL)
+                    .post(body)
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
 
 }

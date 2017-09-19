@@ -1,5 +1,6 @@
 package com.bignerdranch.android.xundian.xundianguanli;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +31,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.TongZhiZhongXinFragment;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
@@ -52,34 +54,19 @@ import okhttp3.Response;
  * Created by Administrator on 2017/9/7.
  */
 
-public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchView.OnQueryTextListener{
+public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchView.OnQueryTextListener,NeiYeCommActivity.Callbacks{
 
     private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity";
-    private final int SDK_PERMISSION_REQUEST = 127;
-    private String permissionInfo;
 
+    private Button mXun_dian_addr_button;
 
     private Button mXuan_zhe_men_dian_ping_pai_button; //选择门店品牌
     private Button mXuan_zhe_men_dian_button; //选择门店
     private Button mKai_shi_xun_dian_button; // 开始巡店
-    private String mMen_Dian_ping_pai = "0"; // 门店品牌
     private String mMen_Dian;// 门店
 
 
-    private String mSearchString = ""; // 搜索用户输入
-
     private EditText mMen_dian_ming_cheng_searchview; // 门店搜索框
-
-    // 门店品牌数据
-    private String mMengDianPingpaiJsonData = "[{\"id\":2,\"name\":\"\\u4f0d\\u7f18\"},{\"id\":5,\"name\":\"\\u53ef\\u7684\\u4fbf\\u5229\"},{\"id\":10,\"name\":\"\\u597d\\u5fb7\\u4fbf\\u5229\"},{\"id\":12,\"name\":\"\\u7f57\\u68ee\\u4fbf\\u5229\"}]";
-    public String[] mMengDianPingPaiData;
-
-    // 门店数据
-    public String mMengDianJsonData = "";
-    public String[] mMengDianData;
-
-    // 门店搜索URl
-    public String mMenDianSearchURL = Config.URL+"/app/menDian";
 
     private LocationBaiDu mLocationBaiDu = new LocationBaiDu(); //定位信息存储
 
@@ -92,6 +79,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     public boolean mIsDingWeiChengGong = false; // 定位是否成功
 
     private AlertDialog alertDialog1;
+
 
 
     /**
@@ -127,7 +115,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         values();
         // 设置选择数据
         setData(mMengDianPingpaiJsonData,1);
-        setData(mMengDianJsonData,2);
+//        setData(mMengDianJsonData,2);
 
         // 百度地图定位调用 mMengDianPingpaiJsonData
         BaiDuDingWeiDiaoYong();
@@ -148,113 +136,19 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     }
 
     /**
-     * Handler
-     */
-    Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            /**
-             * 请求回调
-             */
-            if(msg.what==1){
-                // 参数请求回调
-                String string = msg.obj.toString();
-                if(string != null){
-                    mMengDianJsonData = string;
-                    setData(mMengDianJsonData,2);
-                }
-            }
-        }
-    };
-
-    /**
-     * 店铺搜索
-     */
-    public void menDianSearch(){
-        if(mToken != null){
-            final OkHttpClient client = new OkHttpClient();
-            //3, 发起新的请求,获取返回信息
-            RequestBody body = new FormBody.Builder()
-                    .add("name",mSearchString)
-                    .add("men_dian_hao",mMen_Dian_ping_pai)
-                    .build();
-            final Request request = new Request.Builder()
-                    .addHeader("Authorization","Bearer "+mToken)
-                    .url(mMenDianSearchURL)
-                    .post(body)
-                    .build();
-            //新建一个线程，用于得到服务器响应的参数
-            mThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Response response = null;
-                    try {
-                        //回调
-                        response = client.newCall(request).execute();
-                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
-                        mHandler.obtainMessage(1, response.body().string()).sendToTarget();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            mThread.start();
-        }
-    }
-
-    /**
-     * 将 string的值设置到对应strings中
-     * @param string
+     * 数据请求成功回调
+     * @param string 数据
      * @param is 1 品牌 2门店
      */
-    public void setData(String string,int is){
-        try {
-            JSONArray jsonArray = new JSONArray(string);
-            if(jsonArray.length() > 0){
-                if(is == 1){
-                    mMengDianPingPaiData = new String[jsonArray.length()];
-                }else if(is == 2){
-                    mMengDianData = new String[jsonArray.length()];
-                }
+    public void shuJuHuiDiao(String string,int is){
+        mMengDianJsonData = string;
+        if(is == 1){
 
-                for(int i = 0;i<jsonArray.length();i++){
-                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    if(is == 1){
-                        mMengDianPingPaiData[i] = jsonObject.getString("name");
-                    }else if(is == 2){
-                        mMengDianData[i] = jsonObject.getString("name");
-                    }
-                }
-            }
-        }catch (JSONException e){
-
+        }else if(is == 2){
+            setData(mMengDianJsonData,2);
         }
+
     }
-
-    /**
-     * 将string转为JSON对象,匹配string1，返回对应的id
-     * @param Jsonstring
-     * @param string
-     * @return
-     */
-    public int ChanKanId(String Jsonstring,String string){
-        try {
-            JSONArray jsonArray = new JSONArray(Jsonstring);
-            if(jsonArray.length() > 0){
-                for(int i = 0;i<jsonArray.length();i++){
-                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    if(jsonObject.getString("name").equals(string)){
-                        return Integer.valueOf(jsonObject.getString("id"));
-                    }
-                }
-            }
-            return 0;
-        }catch (JSONException e){
-
-        }
-        return 0;
-    }
-
 
 
     /**
@@ -266,6 +160,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         mMen_dian_ming_cheng_searchview = (EditText) findViewById(R.id.men_dian_ming_cheng);
         mKai_shi_xun_dian_button = (Button)findViewById(R.id.kai_shi_xun_dian_button);
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
+        mXun_dian_addr_button = (Button)findViewById(R.id.xun_dian_addr_button);
     }
 
     /**
@@ -521,9 +416,17 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
      * 定位成功调用方法
      */
     public void DingWeiChengGong(){
+        // 设置显示地址信息
+        mXun_dian_addr_button.setText("当前地址 : "+mLocationBaiDu.getAddr()+"\n详细地址 : "+mLocationBaiDu.getLocationDescribe());
         // 停止定位
         mLocClient.stop();
     }
+
+    @Override
+    public void onAttachedToWindow(){
+        mCallbacks = (Callbacks)mContext;
+    }
+
 
     @Override
     public void onDestroy() {
@@ -534,6 +437,8 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
+        // 销毁回调
+        mCallbacks = null;
     }
 
     @Override

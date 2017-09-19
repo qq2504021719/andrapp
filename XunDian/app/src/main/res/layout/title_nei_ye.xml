@@ -4,7 +4,7 @@
     android:layout_height="45dp"
     android:layout_alignParentTop="true"
     android:orientation="horizontal"
-    android:background="@drawable/title_background"
+    android:background="@drawable/bottom_border"
     >
 
     <LinearLayout

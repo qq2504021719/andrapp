@@ -39,12 +39,14 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="297aKrc6Pavg0pC8IfZ5a0QINQMYh87m" />
+        <!--首页-->
         <activity
             android:name=".MainPageActivity">
-
         </activity>
+        <!--巡店进度-查看详细-->
         <activity android:name=".xundianguanli.XunDianXiangXiActivity">
         </activity>
+        <!--登录-->
         <activity android:name=".LoginActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
             <intent-filter>
@@ -52,9 +54,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!--巡店管理-->
         <activity android:name=".xundianguanli.XunDianGuanLiActivity"></activity>
+        <!--巡店-->
         <activity android:name=".xundianguanli.XunDianActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden" ></activity>
+        <!--巡店计划-->
+        <activity android:name=".xundianjihua.JiHuaActivity"></activity>
+        <!--计划安排-->
+        <activity android:name=".xundianjihua.TJJiHuaActivity"></activity>
     </application>
 
 

@@ -46,6 +46,32 @@ public class DbSchema {
         }
     }
 
+    public static final class XunDianJiHuaTable{
+        public static final String NAME ="xundianjihua";
+        public static final class Cols{
+            // 计划id
+            public static final String ID = "id";
+            // 周
+            public static final String ZHOU = "zhou";
+            // 日期
+            public static final String RIQI = "riqi";
+            // 开始时间
+            public static final String KSJIAN  = "kstime";
+            // 结束时间
+            public static final String JSJIAN = "jstime";
+            // 门店品牌id
+            public static final String PPID = "ppid";
+            // 门店品牌
+            public static final String PINPAI = "pinpai";
+            // 门店id
+            public static final String MDID = "mdid";
+            // 门店名称
+            public static final String MDMINGC = "mdmingc";
+            // 门店号
+            public static final String MDHAO = "mdhao";
+        }
+    }
+
 
 
 }

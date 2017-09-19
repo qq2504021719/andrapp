@@ -7,5 +7,7 @@
     <color name="huise">#CCCCCC</color>
     <color name="huise6">#666666</color>
     <color name="zhuti">#0099FF</color>
+    <color name="zhuti1">#0099CC</color>
     <color name="hongse">#FF0000</color>
+    <color name="hongse1">#CC3333</color>
 </resources>
