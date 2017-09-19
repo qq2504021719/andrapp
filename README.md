@@ -22,3 +22,9 @@
 
 ## Test 技术测试
 ### 所用技术 (Server 服务)(Receiver 广播)(AlarmManager 定时任务) (notification 通知)
+
+## BoxDrawingView 定制视图与触摸事件
+### 根据触摸绘制矩形框
+
+## Sunset (动画)
+### 按住屏幕,太阳会慢慢落下海平面,天空颜色随之不断变换

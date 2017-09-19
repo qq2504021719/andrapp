@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.bignerdranch.android.test">
-
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+          package="com.bignerdranch.android.boxdrawingview">
 
     <application
         android:allowBackup="true"
@@ -11,22 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".DragAndDrawActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <service android:name=".RSSPullService"/>
-
-        <receiver android:name=".AlarmReceiver">
-            <intent-filter> <action android:name="com.bignerdranch.android.test.MyAlarmBroadCast" /> </intent-filter>
-        </receiver>
-
-
-
     </application>
 
 </manifest>
