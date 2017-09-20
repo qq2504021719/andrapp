@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
 import com.bignerdranch.android.xundian.comm.XunDianJiHua;
@@ -11,6 +12,10 @@ import com.bignerdranch.android.xundian.database.BaseHelper;
 import com.bignerdranch.android.xundian.database.DbCursorWrapper;
 import com.bignerdranch.android.xundian.database.DbSchema;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianJiHuaTable;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/9/19.
  */
@@ -42,7 +47,7 @@ public class XunDianJiHuaModel {
      */
     private DbCursorWrapper queryXunDianJiHua(String whereClause, String[] whereArgs){
         Cursor cursor = mDatabase.query(
-                DbSchema.XunDianTable.NAME,
+                XunDianJiHuaTable.NAME,
                 null,
                 whereClause,
                 whereArgs,
@@ -53,6 +58,63 @@ public class XunDianJiHuaModel {
         return new DbCursorWrapper(cursor);
     }
 
+    /**
+     * 查询巡店表所有数据
+     */
+    public List<XunDianJiHua> getXunDianJiHuas(){
+        List<XunDianJiHua> xunDianJiHuaList = new ArrayList<>();
+
+        String sql = "select * from "+XunDianJiHuaTable.NAME;
+        Cursor cursor = mDatabase.rawQuery(sql,null);
+        while (cursor.moveToNext()) {
+            XunDianJiHua xunDianJiHua =getXundianJiHuaCursor(cursor);
+            xunDianJiHuaList.add(xunDianJiHua);
+        }
+        return xunDianJiHuaList;
+    }
+
+    /**
+     * 处理查询数据
+     * @param cursor
+     * @return
+     */
+    public XunDianJiHua getXundianJiHuaCursor(Cursor cursor){
+        // id
+        int id = cursor.getInt(cursor.getColumnIndex(XunDianJiHuaTable.Cols.ID));
+        // 周
+        String zhou = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.ZHOU));
+        // 日期
+        String riqi = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.RIQI));
+        // 开始时间
+        String kstime = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.KSJIAN));
+        // 结束时间
+        String jstime = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.JSJIAN));
+        // 品牌id
+        int ppid = cursor.getInt(cursor.getColumnIndex(XunDianJiHuaTable.Cols.PPID));
+        // 品牌
+        String pingpai = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.PINPAI));
+        // 门店id
+        int mdid = cursor.getInt(cursor.getColumnIndex(XunDianJiHuaTable.Cols.MDID));
+        // 门店
+        String mendian = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.MDMINGC));
+        // 门店编号
+        String bianhao = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.MDHAO));
+
+        XunDianJiHua xunDianJiHua = new XunDianJiHua();
+
+        xunDianJiHua.setId(id);
+        xunDianJiHua.setZhou(zhou);
+        xunDianJiHua.setRiQi(riqi);
+        xunDianJiHua.setShiJian(kstime);
+        xunDianJiHua.setJSShiJian(jstime);
+        xunDianJiHua.setPingPaiId(ppid);
+        xunDianJiHua.setPingPaiStr(pingpai);
+        xunDianJiHua.setMenDianId(mdid);
+        xunDianJiHua.setMenDianStr(mendian);
+        xunDianJiHua.setMenDianHao(bianhao);
+
+        return xunDianJiHua;
+    }
 
     /**
      * 查询数据
@@ -130,7 +192,7 @@ public class XunDianJiHuaModel {
     public void updateXunDianJiHua(XunDianJiHua xunDianJiHua){
         String id = String.valueOf(xunDianJiHua.getId());
         ContentValues values = getContentValuesXun(xunDianJiHua);
-        mDatabase.update(DbSchema.XunDianTable.NAME,values,
+        mDatabase.update(XunDianJiHuaTable.NAME,values,
                 DbSchema.XunDianTable.Cols.ID+"=?",
                 new String[] {id});
     }

@@ -63,6 +63,8 @@
         <activity android:name=".xundianjihua.JiHuaActivity"></activity>
         <!--计划安排-->
         <activity android:name=".xundianjihua.TJJiHuaActivity"></activity>
+        <!--我的日程 -->
+        <activity android:name=".xundianjihua.RiChengActivity"></activity>
     </application>
 
 

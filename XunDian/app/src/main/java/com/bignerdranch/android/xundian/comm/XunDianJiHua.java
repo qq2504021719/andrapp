@@ -1,13 +1,15 @@
 package com.bignerdranch.android.xundian.comm;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Administrator on 2017/9/19.
  */
 
-public class XunDianJiHua {
+public class XunDianJiHua implements Comparable<XunDianJiHua>{
 
     // id
-    public String mId;
+    public int mId;
 
     // 周
     public String mZhou;
@@ -33,11 +35,22 @@ public class XunDianJiHua {
     // 名称号str
     public String mMenDianHao;
 
-    public String getId() {
+    // 根据开始时间排序
+    public int mOrderBy;
+
+    public void setOrderBy(int orderBy) {
+        mOrderBy = orderBy;
+    }
+
+    public int getOrderBy() {
+        return mOrderBy;
+    }
+
+    public int getId() {
         return mId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         mId = id;
     }
 
@@ -111,5 +124,11 @@ public class XunDianJiHua {
 
     public int getMenDianId() {
         return mMenDianId;
+    }
+
+
+    @Override
+    public int compareTo(@NonNull XunDianJiHua xunDianJiHua) {
+        return this.getOrderBy()-xunDianJiHua.getOrderBy();
     }
 }

@@ -228,4 +228,16 @@
         <item name="android:src">@drawable/right_hui_se</item>
     </style>
 
+    <!--添加计划textview-->
+    <style name="TjJiHuaLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/huisefc</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
 </resources>

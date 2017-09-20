@@ -83,7 +83,8 @@ public class JiHuaActivity extends NeiYeCommActivity {
         mWo_de_ri_cheng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = RiChengActivity.newIntent(mContext,1);
+                startActivity(i);
             }
         });
     }

@@ -50,4 +50,11 @@
     <string name="bao_cun">保存</string>
 
     <string name="ti_jiao_gzb">提交工作表</string>
+    <string name="xiu_gai_ji_hua">修改录入</string>
+    <string name="gong_zuo_lu_ru">工作录入</string>
+    <string name="shan_chu">删除</string>
+
+    <string name="ben_zhou_gong_zuo">本周工作</string>
+    <string name="bo_hui">驳回</string>
+
 </resources>

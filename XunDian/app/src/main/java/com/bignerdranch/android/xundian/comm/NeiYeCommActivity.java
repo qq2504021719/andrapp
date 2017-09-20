@@ -395,4 +395,36 @@ public class NeiYeCommActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * 根据str截取字符串string返回字符串
+     * @param str
+     * @param string
+     * @return
+     */
+    public String strSplit(String str,String string){
+        String s = new String(string);
+        String a[] = s.split(str);
+
+        String returnStr = "";
+
+        for (int i = 0;i<a.length;i++){
+            returnStr += a[i];
+        }
+
+        return returnStr;
+    }
+
+    /**
+     * 根据str截取字符串string数组
+     * @param str
+     * @param string
+     * @return
+     */
+    public String[] strSplitArray(String str,String string){
+        String s = new String(string);
+        String a[] = s.split(str);
+
+        return a;
+    }
+
 }

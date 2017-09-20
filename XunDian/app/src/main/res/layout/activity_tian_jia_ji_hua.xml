@@ -143,13 +143,82 @@
                     android:gravity="right">
 
                     <Button
-                        android:id="@+id/button_gong_zuo"
-                        android:text="工作录入"
+                        android:id="@+id/button_shan_chu_gong"
+                        android:text="@string/shan_chu"
                         android:layout_marginRight="10dp"
+                        android:visibility="gone"
                         android:background="@drawable/xun_dian_button"
                         android:textColor="@color/colorAccent"
-                        android:layout_width="130dp"
+                        android:layout_width="100dp"
                         android:layout_height="30dp"/>
+
+                    <Button
+                        android:id="@+id/button_gong_zuo"
+                        android:text="@string/gong_zuo_lu_ru"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/button"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="100dp"
+                        android:layout_height="30dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="40dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:text="计划列表"
+                        android:textSize="16dp"
+                        android:textColor="@color/heise"
+                        android:gravity="center_vertical"/>
+
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_yi"
+                            style="@style/TjJiHuaLinearLayout">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_er"
+                            style="@style/TjJiHuaLinearLayout">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_san"
+                            style="@style/TjJiHuaLinearLayout">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_si"
+                            style="@style/TjJiHuaLinearLayout">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_wu"
+                            style="@style/TjJiHuaLinearLayout">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_liu"
+                            style="@style/TjJiHuaLinearLayout">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_zhou_ri"
+                            style="@style/TjJiHuaLinearLayout">
+                        </LinearLayout>
+
 
                 </LinearLayout>
             </LinearLayout>

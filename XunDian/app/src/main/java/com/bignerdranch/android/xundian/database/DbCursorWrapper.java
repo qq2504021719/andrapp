@@ -58,7 +58,13 @@ public class DbCursorWrapper extends CursorWrapper {
         return xunDianCanShu;
     }
 
+    /**
+     * 查询巡店计划数据
+     * @return
+     */
     public XunDianJiHua getXunDianJiHua(){
+        // id
+        int id = getInt(getColumnIndex(XunDianJiHuaTable.Cols.ID));
         // 周
         String zhou = getString(getColumnIndex(XunDianJiHuaTable.Cols.ZHOU));
         // 日期
@@ -80,6 +86,7 @@ public class DbCursorWrapper extends CursorWrapper {
 
         XunDianJiHua xunDianJiHua = new XunDianJiHua();
 
+        xunDianJiHua.setId(id);
         xunDianJiHua.setZhou(zhou);
         xunDianJiHua.setRiQi(riqi);
         xunDianJiHua.setShiJian(kstime);
