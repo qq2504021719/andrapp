@@ -1,12 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/IndexBuJuLinearLayout">
+    style="@style/IndexBuJuLinearLayout"
+    android:background="@color/colorAccent">
     <com.bignerdranch.android.xundian.ui.BounceScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="40dp"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:id="@+id/textview_zhou_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="2017-08-03周"
+                    android:textSize="16dp"
+                    android:textColor="@color/heise"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="我的日程"
+                    android:textSize="16dp"
+                    android:textColor="@color/heise"
+                    android:gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_yi_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_yi"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_yi_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_yi"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_er_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_er"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_er_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_er"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_san_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_san"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_san_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_san"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_si_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_si"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_si_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_si"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_wu_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_wu"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_wu_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_wu"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_liu_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_liu"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_liu_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_liu"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_ri_title"
+                    style="@style/benZhouLinearLayout">
+
+                    <TextView
+                        android:id="@+id/textview_title_ri"
+                        style="@style/benZhouLinearLayoutTV"/>
+
+                    <TextView
+                        android:id="@+id/textview_title_ri_baifbi"
+                        style="@style/benZhouLinearLayoutTV1"/>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bottom_hui_se"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_zhou_ri"
+                    style="@style/TjJiHuaLinearLayout"
+                    android:layout_marginTop="0dp">
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
 
     </com.bignerdranch.android.xundian.ui.BounceScrollView>
 

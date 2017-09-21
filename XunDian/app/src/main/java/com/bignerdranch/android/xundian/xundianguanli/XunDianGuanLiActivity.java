@@ -203,7 +203,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
 
                         mXuan_zhe_men_dian_ping_pai_button.setText(mMengDianPingPaiData[index]);
                         // 更新用户选择门店品牌
-                        mMen_Dian_ping_pai = ""+ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
+                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
                         // 从新搜索内容
                         menDianSearch();
 

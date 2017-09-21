@@ -38,6 +38,17 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // 根据开始时间排序
     public int mOrderBy;
 
+    // 是否完成 0 1
+    public int mIsWC;
+
+    public void setIsWC(int isWC) {
+        mIsWC = isWC;
+    }
+
+    public int getIsWC() {
+        return mIsWC;
+    }
+
     public void setOrderBy(int orderBy) {
         mOrderBy = orderBy;
     }

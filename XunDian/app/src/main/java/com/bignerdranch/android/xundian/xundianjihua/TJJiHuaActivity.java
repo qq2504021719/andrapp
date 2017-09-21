@@ -215,6 +215,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
      * 值操作
      */
     public void values(){
+        // 开启loading
+        LoadingStringEdit("数据加载中");
         // Token赋值
         setToken(mContext);
         // 巡店计划model
@@ -332,6 +334,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                         // 门店品牌
                         int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
 
+                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
                         // 请求店铺
                         menDianSearch();
 
@@ -507,9 +510,10 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
      *
      */
     public void setShowJH(){
+        // 初始化显示组件
+        initShowView();
         if(mXunDianJiHuas.size() > 0){
-            // 初始化显示组件
-            initShowView();
+
 
             List<XunDianJiHua> xunDianJiHuaList = new ArrayList<>();
             xunDianJiHuaList = mXunDianJiHuas;
@@ -714,8 +718,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             mTextview_dian_hao_value.setText(mXunDianJiHua.getMenDianHao());
         }
     }
-
-
 
     /**
      * 数据请求成功回调

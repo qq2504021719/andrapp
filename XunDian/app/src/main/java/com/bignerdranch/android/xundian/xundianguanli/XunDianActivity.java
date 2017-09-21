@@ -96,6 +96,10 @@ public class XunDianActivity extends NeiYeCommActivity {
     // 巡店数据对象存储
     public HashMap<Integer,XunDianCanShu> mXunDianCanShus;
 
+    // 存储显示序号
+    public HashMap<Integer,Integer> mShowXuHao = new HashMap<>();
+
+
     // LinearLayout 公共样式
     public static LinearLayout.LayoutParams mLayoutParam;
 
@@ -112,7 +116,6 @@ public class XunDianActivity extends NeiYeCommActivity {
     public static int mTuPianDianJi;
 
     // this
-    public static XunDianActivity mContext;
     // LoginModel 登录模型
     private static XunDianModel mXunDianModel;
 
@@ -135,8 +138,7 @@ public class XunDianActivity extends NeiYeCommActivity {
     // 图片已提交数量
     private static int mCanShuYiTiJiao;
 
-    // dialog
-    private Dialog mWeiboDialog;
+
 
     public static Intent newIntent(Context packageContext, String string){
         Intent i = new Intent(packageContext,XunDianActivity.class);
@@ -326,14 +328,14 @@ public class XunDianActivity extends NeiYeCommActivity {
                 file = new File(xunDianCanShu.getPhontPath());
             }
             // 图片压缩
-            String pathPhoto = imgYaSuo(file.getPath(),Config.XunCanImgWidth,Config.XunCanImgHeight);
-            File files = new File(pathPhoto);
+//            String pathPhoto = imgYaSuo(file.getPath(),Config.XunCanImgWidth,Config.XunCanImgHeight);
+//            File files = new File(pathPhoto);
 
             // MediaType.parse() 里面是上传的文件类型。 MediaType.parse("image/*")
             body.addFormDataPart(
                     "photo",
                     getPhotoFilename(),
-                    RequestBody.create(MediaType.parse("image/jpeg"),files)
+                    RequestBody.create(MediaType.parse("image/jpeg"),file)
             );
 
         }
@@ -497,6 +499,9 @@ public class XunDianActivity extends NeiYeCommActivity {
 
                 // 查询数据库是否有值
                 ChaKanFuZhi();
+
+                // 存储显示序号
+                mShowXuHao.put(id,i+1);
 
                 // 创建标题
                 CreateBiaoTi(mXunDianCanShu.getName(),mXunDianCanShu.getIs_bi_tian(),i);
@@ -987,7 +992,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                 for(int i = 0;i<mXunDianCanShus.size();i++){
                     if(mXunDianCanShus.get(i) != null){
                         if(mXunDianCanShus.get(i).getIs_bi_tian() == 1){
-                            int c = (i+1);
+                            int c = mShowXuHao.get(mXunDianCanShus.get(i).getId());
                             // 验证值
                             if(mXunDianCanShus.get(i).getValue() != null){
                                 String s = mXunDianCanShus.get(i).getValue().trim();
@@ -1014,8 +1019,8 @@ public class XunDianActivity extends NeiYeCommActivity {
 
                 // 提交
                 if(mCanShuNum == inWenTi){
-                    canShuTiJiao();
                     LoadingStringEdit("提交中...");
+                    canShuTiJiao();
                 }
             }
         });
@@ -1023,12 +1028,6 @@ public class XunDianActivity extends NeiYeCommActivity {
 
     }
 
-    /**
-     * loading
-     */
-    public void LoadingStringEdit(String logingString){
-        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(mContext,logingString);
-    }
 
     /**
      * 启动其他Activity返回方法
@@ -1060,12 +1059,18 @@ public class XunDianActivity extends NeiYeCommActivity {
             }else{
                 // 隐藏加号
                 imageViewDian.setVisibility(View.GONE);
+                // 压缩图片
+                String pathPhoto = imgYaSuo(PhotoFile.getPath(),Config.XunCanImgWidth,Config.XunCanImgHeight);
+                File files = new File(pathPhoto);
+
                 // 显示图片
-                Bitmap bitmap = PictureUtils.getScaledBitmap(PhotoFile.getPath(),this);
+                Bitmap bitmap = PictureUtils.getScaledBitmap(files.getPath(),this);
                 view.setImageBitmap(bitmap);
 
-                // 存入对象
-                mXunDianCanShus.get(mTuPianDianJi).setPhontPath(PhotoFile.getPath());
+                // 存入文件对象
+                mXunDianCanShus.get(mTuPianDianJi).setPhotoFile(files);
+                // 存入文件路径
+                mXunDianCanShus.get(mTuPianDianJi).setPhontPath(files.getPath());
                 // 写入数据库
                 mXunDianModel.addIsUpdate(mXunDianCanShus.get(mTuPianDianJi));
             }

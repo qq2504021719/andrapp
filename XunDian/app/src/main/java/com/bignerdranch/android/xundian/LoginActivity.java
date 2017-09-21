@@ -2,10 +2,14 @@ package com.bignerdranch.android.xundian;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
+import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.model.LoginModel;
 
@@ -22,9 +27,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -40,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String CLIENT_ID = "2";
     private static final String CLIENT_SECRET = "S4rOJxiKfd4Ch3SuOPaq6ZBNTMg9ixuoehEMVEsg";
-    private static final String MURL = "http://xd.trc-demo.com:3002/oauth/token";
+    private static final String MURL = Config.URL+"/oauth/token";
+    private static final String mYZURL = Config.URL+"/app/ji_qi_ma";
 
     public static String TOKEN = null;
 
@@ -53,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     public static String mZhangHao;
     // 密码
     private static String mMima;
-    // 是否保存账号
+    // 是否保存账号 1 保存 2不保存
     private static int mIsBaoCun=2;
     // this
     public static LoginActivity mContext;
@@ -65,6 +73,9 @@ public class LoginActivity extends AppCompatActivity {
     // 开启线程
     private static Thread mThread;
 
+    // 机器码
+    private static String mJiQiMa;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -75,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         // 组件操作, 操作
         ZhuJianCaoZhuo();
 
+        getJiQiMa();
         // 销毁其余容器
         AtyContainer.finishAllActivity();
 
@@ -100,8 +112,15 @@ public class LoginActivity extends AppCompatActivity {
              * 登录回调
              */
             if(msg.what==1){
-                LoginActivity loginActivity = new LoginActivity();
                 DengLuAdd((String) msg.obj);
+            }else if(msg.what==2){
+                if(msg.obj.toString().equals("false")){
+                    tiShi(mContext,"账号已绑定手机,请联系管理员");
+                }else if(mJiQiMa.equals(msg.obj.toString())){
+                    getData();
+                }else{
+                    tiShi(mContext,"账号已绑定手机,请联系管理员");
+                }
             }
 
         }
@@ -156,22 +175,72 @@ public class LoginActivity extends AppCompatActivity {
         mDeng_lu_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mZhangHao = mZhang_hao_edittext.getText().toString();
-                mMima = mMi_ma_edittext.getText().toString();
-                if(mJi_zhu_checkbox.isChecked()){
-                    mIsBaoCun = 1;
+                if(isNetworkAvailableAndConnected(mContext)){
+                    mZhangHao = mZhang_hao_edittext.getText().toString();
+                    mMima = mMi_ma_edittext.getText().toString();
+                    if(mJi_zhu_checkbox.isChecked()){
+                        mIsBaoCun = 1;
+                    }else{
+                        mIsBaoCun = 2;
+                    }
+                    dengLuyanZheng();
                 }else{
-                    mIsBaoCun = 2;
+                    tiShi(mContext,"网络连接失败");
                 }
 
-                dengLuyanZheng();
             }
         });
     }
 
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
+    /**
+     * 登录验证请求,提交机器码,品牌,型号
+     */
+    public static void YanZheng(String cToken){
+        if(!cToken.isEmpty()){
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
 
+            // 机器码
+            String str = "";
+            if(!mJiQiMa.isEmpty()) str = mJiQiMa;
+
+            // 型号
+            String str1 = Build.MODEL;
+            if(str1.isEmpty()) str1 = "";
+
+            // 品牌
+            String str2 = android.os.Build.BRAND;
+            if(str2.isEmpty()) str2 = "";
+
+            MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            body.addFormDataPart("ji_qi_ma",str);
+            body.addFormDataPart("ping_pai",str2);
+            body.addFormDataPart("xing_hao",str1);
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+cToken)
+                    .url(mYZURL)
+                    .post(body.build())
+                    .build();
+
+
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
 
     /**
      * 登录请求
@@ -243,7 +312,8 @@ public class LoginActivity extends AppCompatActivity {
                 login.setIsBaoCun(mIsBaoCun);
                 mLoginModel.addLogin(login);
                 // 验证跳转
-                getData();
+                YanZheng(TOKEN);
+//                getData();
             }else{
                 tiShi(mContext);
             }
@@ -260,5 +330,40 @@ public class LoginActivity extends AppCompatActivity {
     public static void tiShi(Context context){
         Toast.makeText(context,R.string.zhang_mi_bu, Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * 提示
+     * @param context
+     */
+    public static void tiShi(Context context,String string){
+        Toast.makeText(context,string, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 获取机器码
+     * @return
+     */
+    public void getJiQiMa(){
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+        final String tmDevice, tmSerial, tmPhone, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        mJiQiMa = deviceUuid.toString();
+    }
+
+    /**
+     * 检查网络是否完全连接 true 连接  false 没有连接
+     * @return
+     */
+    public boolean isNetworkAvailableAndConnected(Context context){
+        ConnectivityManager cm =(ConnectivityManager)context.getSystemService(CONNECTIVITY_SERVICE);
+        boolean isNetworkAvailable = cm.getActiveNetworkInfo() != null;
+        boolean isNetworkConnected = isNetworkAvailable && cm.getActiveNetworkInfo().isConnected();
+        return isNetworkConnected;
+    }
+
+
 
 }

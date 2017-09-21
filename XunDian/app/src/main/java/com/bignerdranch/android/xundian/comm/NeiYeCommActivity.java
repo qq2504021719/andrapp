@@ -1,6 +1,7 @@
 package com.bignerdranch.android.xundian.comm;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Observable;
 import android.graphics.Bitmap;
@@ -49,22 +50,22 @@ import okhttp3.Response;
 
 public class NeiYeCommActivity extends AppCompatActivity{
 
-    public TextView mTitle_nei_ye; // 设置显示标题
+    public TextView mTitle_nei_ye = null; // 设置显示标题
 
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
-    public Context mContext;
+    public Context mContext = null;
 
     // Token
-    public String mToken;
+    public String mToken = null;
 
     // LoginModel 登录模型
-    public static LoginModel mLoginModel;
+    public static LoginModel mLoginModel = null;
     // 登录对象
-    public static Login mLogin;
+    public static Login mLogin = null;
 
     // 开启线程
-    public static Thread mThread;
+    public static Thread mThread = null;
 
     // json转换
     public Gson mGson = new Gson();
@@ -77,7 +78,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
 
     // 门店数据
     public String mMengDianJsonData = "";
-    public String[] mMengDianData;
+    public String[] mMengDianData =new String[0];
 
     public String mSearchString = ""; // 用户输入
     public String mMen_Dian_ping_pai = "0"; // 门店品牌
@@ -85,6 +86,13 @@ public class NeiYeCommActivity extends AppCompatActivity{
     // 门店搜索URl
     public String mMenDianSearchURL = Config.URL+"/app/menDian";
 
+    // dialog,加载
+    public Dialog mWeiboDialog;
+
+    /**
+     * 默认连接数据库
+     * @param context
+     */
     public void setToken(Context context){
         // 登录数据库连接
         mLoginModel = LoginModel.get(context);
@@ -347,6 +355,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
+            WeiboDialogUtils.closeDialog(mWeiboDialog);
             /**
              * 请求回调
              */
@@ -369,7 +378,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
             //3, 发起新的请求,获取返回信息
             RequestBody body = new FormBody.Builder()
                     .add("name",mSearchString)
-                    .add("men_dian_hao",mMen_Dian_ping_pai)
+                    .add("pin_pai",mMen_Dian_ping_pai)
                     .build();
             final Request request = new Request.Builder()
                     .addHeader("Authorization","Bearer "+mToken)
@@ -425,6 +434,15 @@ public class NeiYeCommActivity extends AppCompatActivity{
         String a[] = s.split(str);
 
         return a;
+    }
+
+    /**
+     * loading 浮层
+     *
+     * @param logingString 提示文字
+     */
+    public void LoadingStringEdit(String logingString){
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(mContext,logingString);
     }
 
 }

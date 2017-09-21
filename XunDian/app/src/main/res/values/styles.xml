@@ -240,4 +240,34 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
+    <!--本周工作样式-->
+    <style name="benZhouLinearLayout">
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="benZhouLinearLayoutTV">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:text">08-03 周一</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/heise</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="benZhouLinearLayoutTV1">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:text">完成率10%</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/huise6</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
 </resources>
