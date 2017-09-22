@@ -31,12 +31,14 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.LoginActivity;
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.ChaoShi;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.PictureUtils;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.model.ChaoShiModel;
 import com.bignerdranch.android.xundian.model.LoginModel;
 import com.bignerdranch.android.xundian.model.XunDianModel;
 import com.google.gson.Gson;
@@ -133,11 +135,13 @@ public class XunDianActivity extends NeiYeCommActivity {
     private String mTuPanTJURL = Config.URL+"/app/xun_dian_ti_jiao/tuPian";
 
     // 参数必填数量
-    private static int mCanShuNum;
+    private static int mCanShuNum = 0;
     // 图片数量
-    private static int mCanShuNums;
+    private static int mCanShuNums = 0;
     // 图片已提交数量
-    private static int mCanShuYiTiJiao;
+    private static int mCanShuYiTiJiao = 0;
+
+    public ChaoShiModel mChaoShiModel;
     // 是否超时 1 没有 0 超时
     private int mIsChaoShi = 1;
     // 倒计时显示
@@ -151,6 +155,9 @@ public class XunDianActivity extends NeiYeCommActivity {
     // 定时任务
     private int mTIME = 1000;
     Handler handler = new Handler();
+
+    // 是否提交
+    private int mIsTiJiao = 0;
 
 
     public static Intent newIntent(Context packageContext, String string){
@@ -171,6 +178,7 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         // 连接数据库
         mXunDianModel = XunDianModel.get(mContext);
+        mChaoShiModel = ChaoShiModel.get(mContext);
 
         // 值接收处理
         values();
@@ -208,11 +216,14 @@ public class XunDianActivity extends NeiYeCommActivity {
                             // 添加组件
                             addView(mXunDianJSONData);
                             // 倒计时显示
-                            if(!jsonObject.getString("tian_xie_shi").isEmpty()){
-                                mDaoJiShi = Integer.valueOf(jsonObject.getString("tian_xie_shi"))*60;
-                                mDaoJiShi1 = mDaoJiShi;
-                                handler.postDelayed(runnable, mTIME); //每隔1s执行
+                            if(mDaoJiShi == 0 && mDaoJiShi1 == 0){
+                                if(!jsonObject.getString("tian_xie_shi").isEmpty()){
+                                    mDaoJiShi = Integer.valueOf(jsonObject.getString("tian_xie_shi"))*60;
+                                    mDaoJiShi1 = mDaoJiShi;
+                                    handler.postDelayed(runnable, mTIME); //每隔1s执行
+                                }
                             }
+
                         }
 
                     } catch (JSONException e) {
@@ -307,6 +318,21 @@ public class XunDianActivity extends NeiYeCommActivity {
             mMenDianID = Integer.valueOf(mXunDian.getString("mMenDianId"));
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        // 查询超时,并设置
+        ChaoShi chaoShi = mChaoShiModel.getChaoShi(String.valueOf(mMenDianID));
+        if(chaoShi != null){
+            // 是否超时 1 没有 0 超时
+            mIsChaoShi = chaoShi.getIsChaoShi();
+            // 倒计时时间
+            mDaoJiShi = chaoShi.getZhongShi();
+            // 倒计时实时时间
+            mDaoJiShi1 = chaoShi.getWeiChaoShi();
+            // 超时时间
+            mDaoJiShi2 = chaoShi.getChaoShi();
+            // 启动倒计时
+            handler.postDelayed(runnable, mTIME); //每隔1s执行
         }
 
     }
@@ -516,6 +542,10 @@ public class XunDianActivity extends NeiYeCommActivity {
         WeiboDialogUtils.closeDialog(mWeiboDialog);
         // 删除本地数据库数据
         mXunDianModel.deleteXunDian(strid);
+        // 设置已提交
+        mIsTiJiao = 1;
+        // 删除本地超时数据
+        mChaoShiModel.deleteCaoShi(String.valueOf(mMenDianID));
         // 关闭当前activity
         finish();
     }
@@ -536,6 +566,7 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         try {
             mXunDianJson = new JSONArray(jsonStrings);
+            mCanShuNum = 0;
             for(int i = 0;i<mXunDianJson.length();i++){
 
                 if(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")) == 1){
@@ -1090,10 +1121,10 @@ public class XunDianActivity extends NeiYeCommActivity {
                         }
                     }
                 }
-                // 提交
+                // 提交 18817610991  34805
                 if(mIsTijiao == 1){
+                    Log.i("巡店",mCanShuNum+"|"+inWenTi);
                     if(mCanShuNum == inWenTi){
-                        tiShi(mContext,"提交中...");
                         LoadingStringEdit("提交中...");
                         mIsTijiao = 0;
                         canShuTiJiao();
@@ -1172,5 +1203,28 @@ public class XunDianActivity extends NeiYeCommActivity {
             mXunDianCanShu.setPhontPath(xunDianCanShu.getPhontPath());
         }
     }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        // 保持超时数据
+        chaoShiBC();
+    }
+
+    /**
+     * 用户如果没有提交,则保持超时信息
+     */
+    public void chaoShiBC(){
+        if(mIsTiJiao == 0){
+            ChaoShi chaoShi = new ChaoShi();
+            chaoShi.setId(mMenDianID);
+            chaoShi.setIsChaoShi(mIsChaoShi);
+            chaoShi.setChaoShi(mDaoJiShi2);
+            chaoShi.setWeiChaoShi(mDaoJiShi1);
+            chaoShi.setZhongShi(mDaoJiShi);
+            mChaoShiModel.addIsUpdate(chaoShi);
+        }
+    }
+
 
 }

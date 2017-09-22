@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.bignerdranch.android.xundian.database.DbSchema.LoginTable;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianTable;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianJiHuaTable;
+import com.bignerdranch.android.xundian.database.DbSchema.ChaoShiTable;
 /**
  * Created by Administrator on 2017/9/11.
  */
@@ -43,6 +44,18 @@ public class BaseHelper extends SQLiteOpenHelper {
                 XunDianTable.Cols.XIABIAO+", "+
                 XunDianTable.Cols.VALUES+", "+
                 XunDianTable.Cols.PHONE+");"
+        );
+
+        /**
+         * 超时时间存储
+         */
+        db.execSQL("create table "+ ChaoShiTable.NAME+"("+
+                "_id integer primary key autoincrement, "+
+                ChaoShiTable.Cols.ID+", "+
+                ChaoShiTable.Cols.ISCHAOSHI+", "+
+                ChaoShiTable.Cols.CHAOSHI+", "+
+                ChaoShiTable.Cols.ZHONGSHI+", "+
+                ChaoShiTable.Cols.WEICHAOSHI+");"
         );
 
         /**

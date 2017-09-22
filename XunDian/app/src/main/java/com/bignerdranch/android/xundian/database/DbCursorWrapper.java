@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.util.Log;
 
+import com.bignerdranch.android.xundian.comm.ChaoShi;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
 import com.bignerdranch.android.xundian.comm.XunDianJiHua;
@@ -58,6 +59,27 @@ public class DbCursorWrapper extends CursorWrapper {
         return xunDianCanShu;
     }
 
+
+    /**
+     * 查询超时数据
+     * @return
+     */
+    public ChaoShi getChaoShi(){
+        int id = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.ID));
+        int isChaoShi = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.ISCHAOSHI));
+        int chaoSHi = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.CHAOSHI));
+        int weiChaoShi = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.WEICHAOSHI));
+        int zhongshi = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.ZHONGSHI));
+
+        ChaoShi chaoShi = new ChaoShi();
+        chaoShi.setId(id);
+        chaoShi.setIsChaoShi(isChaoShi);
+        chaoShi.setChaoShi(chaoSHi);
+        chaoShi.setWeiChaoShi(weiChaoShi);
+        chaoShi.setZhongShi(zhongshi);
+        return chaoShi;
+    }
+
     /**
      * 查询巡店计划数据
      * @return
@@ -99,5 +121,7 @@ public class DbCursorWrapper extends CursorWrapper {
 
         return xunDianJiHua;
     }
+
+
 
 }

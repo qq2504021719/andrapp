@@ -11,6 +11,7 @@ import com.bignerdranch.android.xundian.database.BaseHelper;
 import com.bignerdranch.android.xundian.database.DbCursorWrapper;
 import com.bignerdranch.android.xundian.database.DbSchema;
 import com.bignerdranch.android.xundian.database.DbSchema.XunDianTable;
+import com.bignerdranch.android.xundian.database.DbSchema.ChaoShiTable;
 
 import java.util.ArrayList;
 import java.util.List;

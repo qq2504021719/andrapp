@@ -43,6 +43,26 @@ public class DbSchema {
             public static final String VALUES = "valuess";
             // 图片
             public static final String PHONE = "phone";
+
+        }
+    }
+
+    /**
+     * 超时时间存储
+     */
+    public static final class ChaoShiTable{
+        public static final String NAME = "chaoshi";
+        public static final class Cols{
+            // 门店id
+            public static final String ID = "id";
+            // 是否超时
+            public static final String ISCHAOSHI = "ischaoshi";
+            // 超时时间
+            public static final String CHAOSHI = "chaoshi";
+            // 剩余时间
+            public static final String WEICHAOSHI = "weichaoshi";
+            // 总时间
+            public static final String ZHONGSHI = "zhongshi";
         }
     }
 
