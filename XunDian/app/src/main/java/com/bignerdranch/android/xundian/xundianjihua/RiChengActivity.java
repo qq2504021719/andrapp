@@ -327,8 +327,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         setXunDianJiHuas();
         // 设置周数据,日期数据
         setZhouData();
-        // 设置门店/品牌
-        setData(mMengDianPingpaiJsonData,1);
+        // 品牌请求
+        pinPaiSearch();
         // 请求店铺
         menDianSearch();
         // 显示数据库计划
@@ -463,6 +463,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                         // 门店品牌
                         int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
 
+                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
                         // 请求店铺
                         menDianSearch();
 
@@ -526,6 +527,15 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             }
         });
 
+        // 工作录入
+        mButton_gong_zuo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 存入值
+                setDatabase();
+            }
+        });
+
         // 提交工作表
         mButton_ti_jiao_gzb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -533,6 +543,33 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
 
             }
         });
+    }
+
+    /**
+     * 验证数据及存入数据库
+     */
+    public void setDatabase(){
+        if(mXunDianJiHua.getZhou() == null || mXunDianJiHua.getZhou().equals("")){
+            tiShi(mContext,"请选择周");
+        }else if(mXunDianJiHua.getRiQi() == null || mXunDianJiHua.getRiQi().equals("")){
+            tiShi(mContext,"请选择日期");
+        }else if(mXunDianJiHua.getShiJian() == null || mXunDianJiHua.getShiJian().equals("")){
+            tiShi(mContext,"请选择开始日期");
+        }else if(mXunDianJiHua.getJSShiJian() == null || mXunDianJiHua.getJSShiJian().equals("")){
+            tiShi(mContext,"请选择结束日期");
+        }else if(mXunDianJiHua.getPingPaiStr() == null || mXunDianJiHua.getPingPaiStr().equals("")){
+            tiShi(mContext,"请选择门店品牌");
+        }else if(mXunDianJiHua.getMenDianStr() == null || mXunDianJiHua.getMenDianStr().equals("")){
+            tiShi(mContext,"请选择门店名称");
+        }else{
+
+            // 添加到List
+            if(mXiuGaiKey != 1000){
+                mXunDianJiHuas.set(mXiuGaiKey,mXunDianJiHua);
+            }
+            // 更新下标
+            initAddDelete();
+        }
     }
 
     /**
@@ -796,10 +833,11 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
      * @param is 1 品牌 2门店
      */
     public void shuJuHuiDiao(String string,int is){
-        mMengDianJsonData = string;
         if(is == 1){
-
+            mMengDianPingpaiJsonData = string;
+            setData(mMengDianPingpaiJsonData,1);
         }else if(is == 2){
+            mMengDianJsonData = string;
             setData(mMengDianJsonData,2);
         }
 

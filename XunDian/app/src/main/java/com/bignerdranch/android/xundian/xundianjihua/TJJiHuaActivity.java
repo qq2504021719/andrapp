@@ -223,8 +223,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mXunDianJiHuaModel = XunDianJiHuaModel.get(mContext);
         // 设置周数据,日期数据
         setZhouData();
-        // 设置门店/品牌
-        setData(mMengDianPingpaiJsonData,1);
+        // 品牌请求
+        pinPaiSearch();
         // 请求店铺
         menDianSearch();
         // 数据库查询巡店计划
@@ -725,10 +725,11 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
      * @param is 1 品牌 2门店
      */
     public void shuJuHuiDiao(String string,int is){
-        mMengDianJsonData = string;
         if(is == 1){
-
+            mMengDianPingpaiJsonData = string;
+            setData(mMengDianPingpaiJsonData,1);
         }else if(is == 2){
+            mMengDianJsonData = string;
             setData(mMengDianJsonData,2);
         }
 

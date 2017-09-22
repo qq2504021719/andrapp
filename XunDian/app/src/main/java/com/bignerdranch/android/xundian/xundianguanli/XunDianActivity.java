@@ -71,6 +71,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.R.id.list;
+import static android.os.Build.TIME;
 
 /**
  * Created by Administrator on 2017/9/12.
@@ -137,7 +138,19 @@ public class XunDianActivity extends NeiYeCommActivity {
     private static int mCanShuNums;
     // 图片已提交数量
     private static int mCanShuYiTiJiao;
-
+    // 是否超时 1 没有 0 超时
+    private int mIsChaoShi = 1;
+    // 倒计时显示
+    private TextView mTextview_dao_ji_shi;
+    // 倒计时时间
+    private int mDaoJiShi = 0;
+    // 倒计时实时时间
+    private int mDaoJiShi1 = 0;
+    // 超时时间
+    private int mDaoJiShi2 = 0;
+    // 定时任务
+    private int mTIME = 1000;
+    Handler handler = new Handler();
 
 
     public static Intent newIntent(Context packageContext, String string){
@@ -188,9 +201,25 @@ public class XunDianActivity extends NeiYeCommActivity {
                 // 参数请求回调
                 String string = msg.obj.toString();
                 if(string != null){
-                    mXunDianJSONData = string;
-                    // 添加组件
-                    addView(mXunDianJSONData);
+                    try {
+                        JSONObject jsonObject = new JSONObject(string);
+                        mXunDianJSONData = jsonObject.getString("can_shu");
+                        if(!mXunDianJSONData.isEmpty()){
+                            // 添加组件
+                            addView(mXunDianJSONData);
+                            // 倒计时显示
+                            if(!jsonObject.getString("tian_xie_shi").isEmpty()){
+                                mDaoJiShi = Integer.valueOf(jsonObject.getString("tian_xie_shi"))*60;
+                                mDaoJiShi1 = mDaoJiShi;
+                                handler.postDelayed(runnable, mTIME); //每隔1s执行
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }else if(msg.what == 2){
                 // 参数上传回调
@@ -230,6 +259,40 @@ public class XunDianActivity extends NeiYeCommActivity {
             }
         }
     };
+
+
+    /**
+     * 定时任务调用
+     */
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            // handler自带方法实现定时器
+            try {
+                handler.postDelayed(this, mTIME);
+                setDaoJiShi();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 设置倒计时显示
+     *
+     */
+    public void setDaoJiShi(){
+        String str = "";
+        if(mDaoJiShi1 > 0 && mDaoJiShi2 == 0){
+            mDaoJiShi1 -= 1;
+            str = ""+mDaoJiShi1+"秒";
+        }else{
+            mIsChaoShi = 0;
+            mDaoJiShi2 += 1;
+            str = "已超时"+mDaoJiShi2+"秒";
+        }
+        mTextview_dao_ji_shi.setText(str);
+    }
 
     /**
      * 值接收处理
@@ -398,6 +461,13 @@ public class XunDianActivity extends NeiYeCommActivity {
                     jsonObject.put("gps_lng",mXunDian.getString("mLontitude"));
                     jsonObject.put("gps_addr",mXunDian.getString("mAddr"));
                     jsonObject.put("gps_addr_yuyihua",mXunDian.getString("mLocationDescribe"));
+                    // 是否超时
+                    jsonObject.put("is_chao_shi",String.valueOf(mIsChaoShi));
+                    // 超时时间
+                    jsonObject.put("chao_shi_shi_jian",String.valueOf(mDaoJiShi2));
+                    // 未超时所用时间
+                    jsonObject.put("yong_shi_jian",String.valueOf(mDaoJiShi-mDaoJiShi1));
+
                     jsonObjects.put(""+key,jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -406,7 +476,7 @@ public class XunDianActivity extends NeiYeCommActivity {
             }
 
         }
-//        Log.i("巡店",jsonObjects.toString());
+//        Log.i(" ",jsonObjects.toString());
         final OkHttpClient client = new OkHttpClient();
         //3, 发起新的请求,获取返回信息
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonObjects.toString());
@@ -455,6 +525,7 @@ public class XunDianActivity extends NeiYeCommActivity {
      * @param jsonString
      */
     public void addView(String jsonString){
+
         final String jsonStrings = jsonString;
 
         mXun_dian_bounce_linearlayout = (LinearLayout)findViewById(R.id.xun_dian_bounce_linearlayout);
@@ -975,6 +1046,8 @@ public class XunDianActivity extends NeiYeCommActivity {
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         // 保存
         mXun_dian_bc_button = (Button)findViewById(R.id.xun_dian_bc_button);
+        // 倒计时显示
+        mTextview_dao_ji_shi = (TextView)findViewById(R.id.textview_dao_ji_shi);
     }
 
 
@@ -987,6 +1060,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         // 保存
         mXun_dian_bc_button.setOnClickListener(new View.OnClickListener() {
             int inWenTi = 0;
+            int mIsTijiao = 1;
             @Override
             public void onClick(View view) {
                 for(int i = 0;i<mXunDianCanShus.size();i++){
@@ -1016,12 +1090,18 @@ public class XunDianActivity extends NeiYeCommActivity {
                         }
                     }
                 }
-
                 // 提交
-                if(mCanShuNum == inWenTi){
-                    LoadingStringEdit("提交中...");
-                    canShuTiJiao();
+                if(mIsTijiao == 1){
+                    if(mCanShuNum == inWenTi){
+                        tiShi(mContext,"提交中...");
+                        LoadingStringEdit("提交中...");
+                        mIsTijiao = 0;
+                        canShuTiJiao();
+                    }
+                }else{
+                    tiShi(mContext,"已提交...");
                 }
+
             }
         });
 

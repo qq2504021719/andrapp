@@ -129,7 +129,8 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     public void values(){
         // Token赋值
         setToken(mContext);
-
+        // 品牌请求
+        pinPaiSearch();
         // 请求店铺
         menDianSearch();
 
@@ -141,10 +142,11 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
      * @param is 1 品牌 2门店
      */
     public void shuJuHuiDiao(String string,int is){
-        mMengDianJsonData = string;
         if(is == 1){
-
+            mMengDianPingpaiJsonData = string;
+            setData(mMengDianPingpaiJsonData,1);
         }else if(is == 2){
+            mMengDianJsonData = string;
             setData(mMengDianJsonData,2);
         }
 
@@ -184,8 +186,12 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
 
             @Override
             public void afterTextChanged(Editable editable) {
-                tiShi(mContext,String.valueOf(editable));
-                mSearchString = String.valueOf(editable);
+                mSearchString = String.valueOf(editable).trim();
+                // 清空显示
+                mXuan_zhe_men_dian_button.setText("选择门店");
+                // 清空门店搜索
+                mLocationBaiDu.setMenDianId(0);
+                // 搜索门店
                 menDianSearch();
             }
         });
@@ -202,12 +208,18 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
                     public void onClick(DialogInterface arg0, int index) {
 
                         mXuan_zhe_men_dian_ping_pai_button.setText(mMengDianPingPaiData[index]);
+
+                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
                         // 更新用户选择门店品牌
                         mMen_Dian_ping_pai = mMengDianPingPaiData[index];
+                        // 清空显示
+                        mXuan_zhe_men_dian_button.setText("选择门店");
+                        // 清空门店搜索
+                        mLocationBaiDu.setMenDianId(0);
                         // 从新搜索内容
                         menDianSearch();
 
-                        mLocationBaiDu.setMenDianPingPaiId(Integer.valueOf(mMen_Dian_ping_pai));
+                        mLocationBaiDu.setMenDianPingPaiId(Integer.valueOf(id));
                         alertDialog1.dismiss();
                     }
                 });

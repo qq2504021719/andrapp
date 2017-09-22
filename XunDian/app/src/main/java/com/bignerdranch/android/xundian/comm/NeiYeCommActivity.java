@@ -81,10 +81,12 @@ public class NeiYeCommActivity extends AppCompatActivity{
     public String[] mMengDianData =new String[0];
 
     public String mSearchString = ""; // 用户输入
-    public String mMen_Dian_ping_pai = "0"; // 门店品牌
+    public String mMen_Dian_ping_pai = ""; // 门店品牌
 
     // 门店搜索URl
     public String mMenDianSearchURL = Config.URL+"/app/menDian";
+    // 品牌搜索URl
+    public String mPinPaiSearchURL = Config.URL+"/app/get_ping_pai";
 
     // dialog,加载
     public Dialog mWeiboDialog;
@@ -342,6 +344,12 @@ public class NeiYeCommActivity extends AppCompatActivity{
                         mMengDianData[i] = jsonObject.getString("name");
                     }
                 }
+            }else{
+                if(is == 1){
+                    mMengDianPingPaiData= new String[0];
+                }else if(is == 2){
+                    mMengDianData= new String[0];
+                }
             }
         }catch (JSONException e){
 
@@ -355,16 +363,18 @@ public class NeiYeCommActivity extends AppCompatActivity{
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
+            // 关闭loading
             WeiboDialogUtils.closeDialog(mWeiboDialog);
             /**
              * 请求回调
              */
             if(msg.what==1){
-                // 参数请求回调
+                // 品牌参数请求回调
                 String string = msg.obj.toString();
-                if(string != null){
-                    mCallbacks.shuJuHuiDiao(string,2);
-                }
+                mCallbacks.shuJuHuiDiao(string,2);
+            }else if(msg.what==2){
+                String string = msg.obj.toString();
+                mCallbacks.shuJuHuiDiao(string,1);
             }
         }
     };
@@ -375,10 +385,16 @@ public class NeiYeCommActivity extends AppCompatActivity{
     public void menDianSearch(){
         if(mToken != null){
             final OkHttpClient client = new OkHttpClient();
+
+            String str = "";
+            String str1 = "";
+            if(!mSearchString.isEmpty()) str = mSearchString;
+
+            if(!mMen_Dian_ping_pai.isEmpty()) str1 = mMen_Dian_ping_pai;
             //3, 发起新的请求,获取返回信息
             RequestBody body = new FormBody.Builder()
-                    .add("name",mSearchString)
-                    .add("pin_pai",mMen_Dian_ping_pai)
+                    .add("name",str)
+                    .add("pin_pai",str1)
                     .build();
             final Request request = new Request.Builder()
                     .addHeader("Authorization","Bearer "+mToken)
@@ -395,6 +411,38 @@ public class NeiYeCommActivity extends AppCompatActivity{
                         response = client.newCall(request).execute();
                         //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
                         mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
+    /**
+     * 品牌搜索
+     */
+    public void pinPaiSearch(){
+        if(mToken != null){
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
+            RequestBody body = new FormBody.Builder().build();
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(mPinPaiSearchURL)
+                    .post(body)
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(2, response.body().string()).sendToTarget();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
