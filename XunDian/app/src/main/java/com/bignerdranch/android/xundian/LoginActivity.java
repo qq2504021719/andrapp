@@ -1,6 +1,9 @@
 package com.bignerdranch.android.xundian;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -19,8 +22,10 @@ import android.widget.Toast;
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.Login;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,6 +81,23 @@ public class LoginActivity extends AppCompatActivity {
     // 机器码
     private static String mJiQiMa;
 
+    // 请求用户信息url
+    private static String mUserDataUrl = Config.URL+"/app/user";
+
+    private static AlertDialog alertDialog1;
+
+    // 存储用户公司信息
+    private static JSONArray mGongSiList = new JSONArray();
+
+    // 存储用户公司名称
+    private static String[] mStringsGS;
+
+    // dialog,加载
+    public static Dialog mWeiboDialog;
+
+    // 公司id写入地址
+    public static String mGsIdURl = Config.URL+"/app/user_logined_gongsi";
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -115,23 +137,191 @@ public class LoginActivity extends AppCompatActivity {
                 DengLuAdd((String) msg.obj);
             }else if(msg.what==2){
                 if(msg.obj.toString().equals("false")){
+                    mLoginModel.deleteLogin(1);
+                    // 关闭loading
+                    WeiboDialogUtils.closeDialog(mWeiboDialog);
                     tiShi(mContext,"账号已绑定手机,请联系管理员");
                 }else if(mJiQiMa.equals(msg.obj.toString())){
-                    getData();
+                    getUserData();
+//                    getData();
                 }else{
+                    // 关闭loading
+                    WeiboDialogUtils.closeDialog(mWeiboDialog);
+                    mLoginModel.deleteLogin(1);
                     tiShi(mContext,"账号已绑定手机,请联系管理员");
                 }
+            }else if(msg.what == 3){
+                // 请求用户信息回调
+                if(msg.obj.toString() != null){
+                    yongHuGs(msg.obj.toString());
+                }
+
+            }else if(msg.what == 4){
+                if(msg.obj.toString().equals("选择公司成功")){
+                    getData();
+                }else{
+                    // 关闭loading
+                    WeiboDialogUtils.closeDialog(mWeiboDialog);
+                    tiShi(mContext,"登录失败,请联系管理员");
+                    mLoginModel.deleteLogin(1);
+                }
+            }else{
+                // 关闭loading
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
+                tiShi(mContext,"登录失败,请联系管理员");
+                mLoginModel.deleteLogin(1);
             }
 
         }
     };
+
+
+    /**
+     * 查询用户信息,多公司则选择公司
+     * @param stringJson
+     */
+    public static void yongHuGs(String stringJson){
+        try {
+            JSONObject jsonObject = new JSONObject(stringJson);
+            JSONArray jsongong_si = new JSONArray(jsonObject.getString("gong_si").toString());
+            if(jsongong_si.length() > 1){
+                mStringsGS = new String[jsongong_si.length()];
+                mGongSiList = jsongong_si;
+                for(int i = 0;i<jsongong_si.length();i++){
+                    JSONObject jsonObject1 = new JSONObject(jsongong_si.get(i).toString());
+                    mStringsGS[i] = jsonObject1.getString("name");
+                }
+                // 弹窗显示
+                showTanChuang();
+            }else if(jsongong_si.length() == 1){
+                JSONObject jsonObject1 = new JSONObject(jsongong_si.get(0).toString());
+                gongSiIdPost(jsonObject1.getString("id"));
+            }else{
+                // 关闭loading
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
+                tiShi(mContext,"账号没有归属公司,请联系管理员");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 显示弹窗,用户选择公司
+     */
+    public static void showTanChuang(){
+        // 关闭loading
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+        alertBuilder.setTitle("请选择公司");
+        alertBuilder.setItems(mStringsGS, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int index) {
+                chaXunYongXuanZheID(mStringsGS[index]);
+            }
+        });
+        alertDialog1 = alertBuilder.create();
+        alertDialog1.show();
+    }
+
+    /**
+     * 查看用户选择公司id,提交数据库
+     * @param string
+     */
+    public static void chaXunYongXuanZheID(String string){
+        if(mGongSiList.length() > 1){
+            for(int i = 0;i<mGongSiList.length();i++){
+                JSONObject jsonObject1 = null;
+                try {
+                    jsonObject1 = new JSONObject(mGongSiList.get(i).toString());
+                    if(jsonObject1.getString("name").equals(string)){
+                        gongSiIdPost(jsonObject1.getString("id"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 公司id发送给服务器
+     * @param id
+     */
+    public static void gongSiIdPost(String id){
+        final OkHttpClient client = new OkHttpClient();
+
+
+        //3, 发起新的请求,获取返回信息
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("gong_si_id",id);
+
+
+
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+TOKEN)
+                .url(mGsIdURl)
+                .post(body.build())
+                .build();
+
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(4, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+    /**
+     * 获取用户信息
+     */
+    public static void getUserData(){
+        if(TOKEN != null){
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
+            RequestBody body = new FormBody.Builder()
+                    .build();
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+TOKEN)
+                    .url(mUserDataUrl)
+                    .post(body)
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(3, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
+
 
     /**
      * 验证是否登录,验证成功跳转
      */
     public static void getData(){
         mLoginModel = LoginModel.get(mContext);
-//        mLoginModel.deleteLogin(1);
         mLogin = mLoginModel.getLogin(1);
         if(mLogin != null){
             // 存储容器
@@ -183,6 +373,8 @@ public class LoginActivity extends AppCompatActivity {
                     }else{
                         mIsBaoCun = 2;
                     }
+
+                    LoadingStringEdit("加载中...");
                     dengLuyanZheng();
                 }else{
                     tiShi(mContext,"网络连接失败");
@@ -278,6 +470,8 @@ public class LoginActivity extends AppCompatActivity {
             });
             mThread.start();
         }else{
+            // 关闭loading
+            WeiboDialogUtils.closeDialog(mWeiboDialog);
             tiShi(mContext);
         }
     }
@@ -315,6 +509,7 @@ public class LoginActivity extends AppCompatActivity {
                 YanZheng(TOKEN);
 //                getData();
             }else{
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
                 tiShi(mContext);
             }
         } catch (JSONException e) {
@@ -344,13 +539,21 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     public void getJiQiMa(){
-        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, tmPhone, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        mJiQiMa = deviceUuid.toString();
+        String m_szDevIDShort = "35" +
+        Build.BOARD.length()%10 +
+        Build.BRAND.length()%10 +
+        Build.CPU_ABI.length()%10 +
+        Build.DEVICE.length()%10 +
+        Build.DISPLAY.length()%10 +
+        Build.HOST.length()%10 +
+        Build.ID.length()%10 +
+        Build.MANUFACTURER.length()%10 +
+        Build.MODEL.length()%10 +
+        Build.PRODUCT.length()%10 +
+        Build.TAGS.length()%10 +
+        Build.TYPE.length()%10 +
+        Build.USER.length()%10 ;
+        mJiQiMa = m_szDevIDShort;
     }
 
     /**
@@ -365,5 +568,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * loading 浮层
+     *
+     * @param logingString 提示文字
+     */
+    public void LoadingStringEdit(String logingString){
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(mContext,logingString);
+    }
 }

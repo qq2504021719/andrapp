@@ -74,7 +74,7 @@
                     android:textCursorDrawable="@drawable/edit_cursor_color"
                     android:background="@drawable/login_border"
                     android:inputType="textPassword"
-                    android:digits="0123456789zxcvbnmasdfghjklqwertyuiop"/>/>
+                    android:digits="0123456789zxcvbnmasdfghjklqwertyuiop"/>
             </LinearLayout>
 
         </LinearLayout>

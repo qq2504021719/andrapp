@@ -86,7 +86,9 @@
             android:id="@+id/ke_hu_yu_tuo_zhan_linearLayout"
             style="@style/GongZuoZhongXin.2LinearLayout"
             android:layout_marginRight="15dp">
-            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+            <LinearLayout
+                android:id="@+id/button_ke_hu"
+                style="@style/GongZuoZhongXin.3LinearLayout">
                 <ImageView
                     style="@style/GongZuoZhongXin.ImageView"
                     android:src="@drawable/tuozhan"

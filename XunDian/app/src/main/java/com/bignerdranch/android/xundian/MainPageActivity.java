@@ -163,8 +163,8 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
      */
     public void ZhuJianCaoZhuo(){
         // 设置红点
-        TongZhiZhongXinFragment tongZhiZhongXinFragment = new TongZhiZhongXinFragment();
-        tongZhiZhongXinFragment.shanChuHongDian();
+//        TongZhiZhongXinFragment tongZhiZhongXinFragment = new TongZhiZhongXinFragment();
+//        tongZhiZhongXinFragment.shanChuHongDian();
 
         /*
          * 为四个按钮添加监听

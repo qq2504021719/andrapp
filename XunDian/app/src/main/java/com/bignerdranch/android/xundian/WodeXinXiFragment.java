@@ -1,6 +1,7 @@
 package com.bignerdranch.android.xundian;
 
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,11 +20,13 @@ import android.widget.TextView;
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.Login;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
 import com.bignerdranch.android.xundian.ui.CircleImageView;
 import com.gigamole.library.ShadowLayout;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,6 +80,9 @@ public class WodeXinXiFragment extends Fragment {
     // 开启线程
     private static Thread mThread;
 
+    // dialog,加载
+    public static Dialog mWeiboDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_wo_de_xin_xi, container, false);
@@ -99,7 +105,7 @@ public class WodeXinXiFragment extends Fragment {
         }
 
 
-
+        LoadingStringEdit("加载中...");
         return mView;
     }
 
@@ -204,7 +210,6 @@ public class WodeXinXiFragment extends Fragment {
         }else{
             try {
                 JSONObject jsonObject = new JSONObject(string);
-                Log.i("巡店:",string);
                 // 姓名
                 if(jsonObject.getString("name") != null){
                     name = "姓名 : "+jsonObject.getString("name");
@@ -215,6 +220,30 @@ public class WodeXinXiFragment extends Fragment {
                     String url = Config.URL+"/"+jsonObject.getString("touXiang");
                     Picasso.with(getActivity()).load(url).into(mWo_img);
                 }
+                // 公司名称开始
+                JSONArray jsongong_si = new JSONArray(jsonObject.getString("gong_si").toString());
+                // 公司id
+                String GsId = jsonObject.getString("logined_gongsi_id");
+                String GongName = "";
+                if(jsongong_si.length() > 1 && !GsId.isEmpty()){
+                    for(int i = 0;i<jsongong_si.length();i++){
+                        JSONObject jsonObject1 = null;
+                        try {
+                            jsonObject1 = new JSONObject(jsongong_si.get(i).toString());
+                            if(jsonObject1.getString("id").equals(GsId)){
+                                GongName = jsonObject1.getString("name");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }else if(jsongong_si.length() == 1){
+                    JSONObject jsonObject1 = new JSONObject(jsongong_si.get(0).toString());
+                    GongName = jsonObject1.getString("name");
+                }
+
+                if(!GsId.isEmpty()) mWo_gong_si.setText("公司 : "+GongName);
+                // 公司名称结束
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -222,7 +251,8 @@ public class WodeXinXiFragment extends Fragment {
         // 姓名
         mWo_xing_ming.setText(name);
 
-
+        // 关闭loading
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
 
     /**
@@ -284,8 +314,7 @@ public class WodeXinXiFragment extends Fragment {
      */
     public void isShanChu(){
         mLogin = mLoginModel.getLogin(1);
-//        Log.i("登录",""+mLogin.getIsBaoCun());
-        if(mLogin.getIsBaoCun() == 2){
+        if(mLogin.getIsBaoCun() == 1){
             mLoginModel.deleteLogin(1);
         }
     }
@@ -300,5 +329,14 @@ public class WodeXinXiFragment extends Fragment {
         view.setShadowRadius(20);//阴影半径
         view.setShadowDistance(10);//阴影距离
         view.setShadowColor(R.color.huise);//阴影颜色
+    }
+
+    /**
+     * loading 浮层
+     *
+     * @param logingString 提示文字
+     */
+    public void LoadingStringEdit(String logingString){
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(getContext(),logingString);
     }
 }

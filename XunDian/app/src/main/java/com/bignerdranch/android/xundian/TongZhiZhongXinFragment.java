@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +20,31 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.ExtendsFragment;
+import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.TongZhi;
+import com.bignerdranch.android.xundian.model.LoginModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
  * Created by Administrator on 2017/9/10.
  */
 
-public class TongZhiZhongXinFragment extends Fragment{
+public class TongZhiZhongXinFragment extends Fragment {
 
     private static final String VIEW_PUT = "com.bignerdranch.android.xundian.TongZhiZhongXinFragment";
 
@@ -38,18 +55,20 @@ public class TongZhiZhongXinFragment extends Fragment{
     private TextView mTong_zhi_textview;
     private View mTong_zhi_yuan_view;
     // 通知未读数量
-    private int mTongZhiNum = 5;
+    private int mTongZhiNum = 0;
 
     // 公告
     private View mGong_gao_linearLayout;
     private TextView mGong_gao_textview;
     private View mGong_gao_yuan_view;
     // 公告未读数量
-    private int mGongGaoNum = 7;
+    private int mGongGaoNum = 0;
 
 
-    // 通知公告数据List
+    // 通知数据List
     public List<TongZhi> mTongZhis;
+    // 公告数据List
+    public List<TongZhi> mGongGaos;
     // is页面 1 通知 2 公告
     private int mIsYeMian = 1;
 
@@ -59,6 +78,20 @@ public class TongZhiZhongXinFragment extends Fragment{
 
     // 回调函数存储变量
     private Callbacks mCallbacks;
+
+    public String MURL = Config.URL+"/app/get_tong_zhi_gong_gao";
+
+
+    // LoginModel 登录模型
+    public static LoginModel mLoginModel;
+    // 登录对象
+    public static Login mLogin;
+
+    // Token
+    public String mToken;
+
+    // 开启线程
+    public Thread mThread;
 
     /**
      * 实现回调接口
@@ -74,13 +107,31 @@ public class TongZhiZhongXinFragment extends Fragment{
 
         // 组件初始化
         ZhuJianInit();
+
+
+        // 值操作
+        values();
+        // 数据请求
+        getTongZhiGongGao();
+
         // 组件操作, 操作
         ZhuJianCaoZhuo();
 
-        // 更新UI
-        updateUI();
+
+
 
         return mView;
+    }
+
+    /**
+     * 值操作 set get值
+     */
+    public void values() {
+        // new登录模型
+        mLoginModel = LoginModel.get(getActivity());
+        // Token查询,赋值
+        mLogin = mLoginModel.getLogin(1);
+        mToken = mLogin.getToken();
     }
 
     @Override
@@ -119,14 +170,14 @@ public class TongZhiZhongXinFragment extends Fragment{
      */
     public void updateUI(){
         if(mIsYeMian == 1){
-            getTongZhis("--通知");
-        }else{
-            getTongZhis("--公告");
-
+            mAdapter = new TongZhiAdapter(mTongZhis);
+            mTongZhiRecyclerView.setAdapter(mAdapter);
+        }else if(mIsYeMian == 2){
+            mAdapter = new TongZhiAdapter(mGongGaos);
+            mTongZhiRecyclerView.setAdapter(mAdapter);
         }
         // 获取数据
-        mAdapter = new TongZhiAdapter(mTongZhis);
-        mTongZhiRecyclerView.setAdapter(mAdapter);
+
 
         // 通知公告背景色
         updateButtonBackground();
@@ -279,6 +330,10 @@ public class TongZhiZhongXinFragment extends Fragment{
             webSettings.setUseWideViewPort(true);
             webSettings.setJavaScriptEnabled(true);
 
+            // 可能的话使所有列的宽度不超过屏幕宽度
+            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+            webSettings.setLoadWithOverviewMode(true);
+
             // 设置View
             alertBuilder.setView(viewD);
 
@@ -344,19 +399,113 @@ public class TongZhiZhongXinFragment extends Fragment{
      */
     public void getTongZhis(String str){
         mTongZhis = new ArrayList<TongZhi>();
-        for(int i = 0;i<30;i++){
-            TongZhi tongZhi = new TongZhi();
-            if(i%2 == 0){
-                tongZhi.setChaKan(false);
-            }else{
-                tongZhi.setChaKan(true);
+        mGongGaos = new ArrayList<TongZhi>();
+        try {
+            JSONArray jsonArray = new JSONArray(str);
+            if(jsonArray.length() > 0){
+                for (int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    TongZhi tongZhi = new TongZhi();
+
+                    // 公告
+                    if(jsonObject.getString("lei_xing").equals("0")){
+                        mGongGaoNum +=1;
+                    }
+                    // 通知
+                    if(jsonObject.getString("lei_xing").equals("1")){
+                        mTongZhiNum +=1;
+                    }
+
+                    if(jsonObject.getString("is").equals("0")){
+                        tongZhi.setChaKan(false);
+                    }else{
+                        tongZhi.setChaKan(true);
+                    }
+                    tongZhi.setId(i);
+                    Log.i("巡店",jsonObject.getString("biao_ti"));
+                    tongZhi.setTitle(jsonObject.getString("biao_ti"));
+                    tongZhi.setTime(jsonObject.getString("created_at"));
+                    tongZhi.setContent(jsonObject.getString("url"));
+
+                    if(jsonObject.getString("lei_xing").equals("0")){
+                        mGongGaos.add(tongZhi);
+                    }else{
+                        mTongZhis.add(tongZhi);
+                    }
+
+                }
             }
-            tongZhi.setId(i);
-            tongZhi.setTitle(i+str+"巡店达人管理系统手机操作端苹果IOS版");
-            tongZhi.setTime("2017-06-14 14:42:07");
-            tongZhi.setContent("http://www.bootcss.com/");
-            mTongZhis.add(tongZhi);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        // 更新UI
+        updateUI();
+//        for(int i = 0;i<30;i++){
+//            TongZhi tongZhi = new TongZhi();
+//            if(i%2 == 0){
+//                tongZhi.setChaKan(false);
+//            }else{
+//                tongZhi.setChaKan(true);
+//            }
+//            tongZhi.setId(i);
+//            tongZhi.setTitle(i+str+"巡店达人管理系统手机操作端苹果IOS版");
+//            tongZhi.setTime("2017-06-14 14:42:07");
+//            tongZhi.setContent("http://xd.trc-demo.com:3002/tong_zhi_cha_kan/4");
+//            mTongZhis.add(tongZhi);
+//        }
 
     }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             * 请求回调
+             */
+            if(msg.what==1){
+                // 通知公告数据请求
+                Log.i("巡店",msg.obj.toString());
+                getTongZhis(msg.obj.toString());
+            }
+        }
+    };
+
+    public void getTongZhiGongGao(){
+        Log.i("巡店",mToken);
+        if(!mToken.isEmpty()){
+            final OkHttpClient client = new OkHttpClient();
+
+            MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            body.addFormDataPart("is","2");
+
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(MURL)
+                    .post(body.build())
+                    .build();
+
+
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
 }

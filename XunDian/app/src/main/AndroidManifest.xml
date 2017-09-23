@@ -68,6 +68,9 @@
         <activity android:name=".xundianjihua.TJJiHuaActivity"></activity>
         <!--我的日程 -->
         <activity android:name=".xundianjihua.RiChengActivity"></activity>
+
+        <!--客户拓展-->
+        <activity android:name=".kehutuozhan.KeHuActivity"></activity>
     </application>
 
 
