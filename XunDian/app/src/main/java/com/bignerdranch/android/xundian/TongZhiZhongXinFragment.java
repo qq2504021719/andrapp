@@ -412,7 +412,6 @@ public class TongZhiZhongXinFragment extends Fragment {
                     // 已读信息
                     JSONArray jsonArray1 = new JSONArray(jsonObject.getString("yi_du_user"));
                     TongZhi tongZhi = new TongZhi();
-
                     // 公告
                     if(jsonObject.getString("lei_xing").equals("0") && jsonArray1.length() == 0){
                         mGongGaoNum +=1;
@@ -429,9 +428,13 @@ public class TongZhiZhongXinFragment extends Fragment {
                         tongZhi.setChaKan(true);
                     }
                     tongZhi.setId(Integer.valueOf(jsonObject.getString("id")));
+
                     tongZhi.setTitle(jsonObject.getString("biao_ti"));
+
                     tongZhi.setTime(jsonObject.getString("created_at"));
+
                     tongZhi.setContent(jsonObject.getString("url"));
+
 
                     if(jsonObject.getString("lei_xing").equals("0")){
                         mGongGaos.add(tongZhi);

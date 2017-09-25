@@ -293,16 +293,19 @@ public class XunDianActivity extends NeiYeCommActivity {
      *
      */
     public void setDaoJiShi(){
-        String str = "";
-        if(mDaoJiShi1 > 0 && mDaoJiShi2 == 0){
-            mDaoJiShi1 -= 1;
-            str = ""+mDaoJiShi1+"秒";
-        }else{
-            mIsChaoShi = 0;
-            mDaoJiShi2 += 1;
-            str = "已超时"+mDaoJiShi2+"秒";
+        if(mXunDianCanShus != null  &&  mXunDianCanShus.size() > 0){
+            String str = "";
+            if(mDaoJiShi1 > 0 && mDaoJiShi2 == 0){
+                mDaoJiShi1 -= 1;
+                str = ""+mDaoJiShi1+"秒";
+            }else{
+                mIsChaoShi = 0;
+                mDaoJiShi2 += 1;
+                str = "已超时"+mDaoJiShi2+"秒";
+            }
+            mTextview_dao_ji_shi.setText(str);
         }
-        mTextview_dao_ji_shi.setText(str);
+
     }
 
     /**
@@ -1094,44 +1097,49 @@ public class XunDianActivity extends NeiYeCommActivity {
             int mIsTijiao = 1;
             @Override
             public void onClick(View view) {
-                for(int i = 0;i<mXunDianCanShus.size();i++){
-                    if(mXunDianCanShus.get(i) != null){
-                        if(mXunDianCanShus.get(i).getIs_bi_tian() == 1){
-                            int c = mShowXuHao.get(mXunDianCanShus.get(i).getId());
-                            // 验证值
-                            if(mXunDianCanShus.get(i).getValue() != null){
-                                String s = mXunDianCanShus.get(i).getValue().trim();
-                                if(s == null || "".equals(s)){
-                                    tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
-                                    break;
-                                }else{
-                                    // 验证图片
-                                    if(mXunDianCanShus.get(i).getPhontPath() == null){
-                                        tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"图片不能为空");
+                if(mXunDianCanShus != null  &&  mXunDianCanShus.size() > 0){
+                    for(int i = 0;i<mXunDianCanShus.size();i++){
+                        if(mXunDianCanShus.get(i) != null){
+                            if(mXunDianCanShus.get(i).getIs_bi_tian() == 1){
+                                int c = mShowXuHao.get(mXunDianCanShus.get(i).getId());
+                                // 验证值
+                                if(mXunDianCanShus.get(i).getValue() != null){
+                                    String s = mXunDianCanShus.get(i).getValue().trim();
+                                    if(s == null || "".equals(s)){
+                                        tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
                                         break;
                                     }else{
-                                        inWenTi ++;
+                                        // 验证图片
+                                        if(mXunDianCanShus.get(i).getPhontPath() == null){
+                                            tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"图片不能为空");
+                                            break;
+                                        }else{
+                                            inWenTi ++;
+                                        }
                                     }
+                                }else{
+                                    tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
+                                    break;
                                 }
-                            }else{
-                                tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
-                                break;
-                            }
 
+                            }
                         }
                     }
-                }
-                // 提交 18817610991  34805
-                if(mIsTijiao == 1){
-                    Log.i("巡店",mCanShuNum+"|"+inWenTi);
-                    if(mCanShuNum == inWenTi){
-                        LoadingStringEdit("提交中...");
-                        mIsTijiao = 0;
-                        canShuTiJiao();
+                    // 提交 18817610991  34805
+                    if(mIsTijiao == 1){
+                        Log.i("巡店",mCanShuNum+"|"+inWenTi);
+                        if(mCanShuNum == inWenTi){
+                            LoadingStringEdit("提交中...");
+                            mIsTijiao = 0;
+                            canShuTiJiao();
+                        }
+                    }else{
+                        tiShi(mContext,"已提交...");
                     }
                 }else{
-                    tiShi(mContext,"已提交...");
+                    tiShi(mContext,"为空不能提交");
                 }
+
 
             }
         });
@@ -1207,7 +1215,7 @@ public class XunDianActivity extends NeiYeCommActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        // 保持超时数据
+        // 保存超时数据
         chaoShiBC();
     }
 
@@ -1215,7 +1223,7 @@ public class XunDianActivity extends NeiYeCommActivity {
      * 用户如果没有提交,则保持超时信息
      */
     public void chaoShiBC(){
-        if(mIsTiJiao == 0){
+        if(mXunDianCanShus != null  &&  mIsTiJiao == 0 && mXunDianCanShus.size() > 0){
             ChaoShi chaoShi = new ChaoShi();
             chaoShi.setId(mMenDianID);
             chaoShi.setIsChaoShi(mIsChaoShi);
