@@ -24,6 +24,7 @@ import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.ExtendsFragment;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.TongZhi;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
 
 import org.json.JSONArray;
@@ -79,7 +80,10 @@ public class TongZhiZhongXinFragment extends Fragment {
     // 回调函数存储变量
     private Callbacks mCallbacks;
 
+    // 通知公告查询
     public String MURL = Config.URL+"/app/get_tong_zhi_gong_gao";
+    // 通知公告已读提交
+    public String mTongGaoTiJiao = Config.URL+"/app/post_tong_zhi_gong_gao";
 
 
     // LoginModel 登录模型
@@ -92,6 +96,9 @@ public class TongZhiZhongXinFragment extends Fragment {
 
     // 开启线程
     public Thread mThread;
+
+    // dialog,加载
+    public Dialog mWeiboDialog;
 
     /**
      * 实现回调接口
@@ -108,7 +115,7 @@ public class TongZhiZhongXinFragment extends Fragment {
         // 组件初始化
         ZhuJianInit();
 
-
+        LoadingStringEdit("加载中...");
         // 值操作
         values();
         // 数据请求
@@ -240,13 +247,22 @@ public class TongZhiZhongXinFragment extends Fragment {
     public void shanChuHongDian(){
         if(mGongGaoNum == 0){
             mGong_gao_yuan_view.setVisibility(View.INVISIBLE);
+        }else{
+            mGong_gao_yuan_view.setVisibility(View.VISIBLE);
         }
         if(mTongZhiNum == 0){
             mTong_zhi_yuan_view.setVisibility(View.INVISIBLE);
+        }else{
+            mTong_zhi_yuan_view.setVisibility(View.VISIBLE);
         }
+        Log.i("巡店","通知公告-公告"+mGongGaoNum+"|通知"+mTongZhiNum);
         if(mGongGaoNum == 0 && mTongZhiNum == 0){
             mCallbacks.IsHong(1);
+        }else{
+            mCallbacks.IsHong(2);
         }
+        // 关闭loading
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
 
     private class TongZhiHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -283,6 +299,8 @@ public class TongZhiZhongXinFragment extends Fragment {
             mTong_zhi_title_textview = (TextView)mItemView.findViewById(R.id.tong_zhi_title_textview);
             mTong_zhi_shi_jian_textview = (TextView)mItemView.findViewById(R.id.tong_zhi_shi_jian_textview);
             mTong_zhi_ischakan_view = (View)mItemView.findViewById(R.id.tong_zhi_ischakan_view);
+
+
         }
 
         /**
@@ -290,22 +308,8 @@ public class TongZhiZhongXinFragment extends Fragment {
          * @param v
          */
         public void onClick(View v){
-
-            // 更新数量,是否显示红点
-            if(!mTongZhi.getChaKan()){
-                if(mIsYeMian == 1){
-                    if(mTongZhiNum > 0){
-                        mTongZhiNum = mTongZhiNum-1;
-                    }
-                }else if(mIsYeMian == 2){
-                    if(mGongGaoNum > 0){
-                        mGongGaoNum = mGongGaoNum-1;
-                    }
-                }
-                shanChuHongDian();
-            }
-
-
+            // 提交已读
+            postTongZhiGongGao(String.valueOf(mTongZhi.getId()));
             mTongZhi.setChaKan(true);
             // 刷新数据
             mAdapter.notifyDataSetChanged();
@@ -405,24 +409,26 @@ public class TongZhiZhongXinFragment extends Fragment {
             if(jsonArray.length() > 0){
                 for (int i = 0;i<jsonArray.length();i++){
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    // 已读信息
+                    JSONArray jsonArray1 = new JSONArray(jsonObject.getString("yi_du_user"));
                     TongZhi tongZhi = new TongZhi();
 
                     // 公告
-                    if(jsonObject.getString("lei_xing").equals("0")){
+                    if(jsonObject.getString("lei_xing").equals("0") && jsonArray1.length() == 0){
                         mGongGaoNum +=1;
                     }
+
                     // 通知
-                    if(jsonObject.getString("lei_xing").equals("1")){
+                    if(jsonObject.getString("lei_xing").equals("1") && jsonArray1.length() == 0){
                         mTongZhiNum +=1;
                     }
 
-                    if(jsonObject.getString("is").equals("0")){
+                    if(jsonArray1.length() == 0){
                         tongZhi.setChaKan(false);
                     }else{
                         tongZhi.setChaKan(true);
                     }
-                    tongZhi.setId(i);
-                    Log.i("巡店",jsonObject.getString("biao_ti"));
+                    tongZhi.setId(Integer.valueOf(jsonObject.getString("id")));
                     tongZhi.setTitle(jsonObject.getString("biao_ti"));
                     tongZhi.setTime(jsonObject.getString("created_at"));
                     tongZhi.setContent(jsonObject.getString("url"));
@@ -441,19 +447,6 @@ public class TongZhiZhongXinFragment extends Fragment {
         }
         // 更新UI
         updateUI();
-//        for(int i = 0;i<30;i++){
-//            TongZhi tongZhi = new TongZhi();
-//            if(i%2 == 0){
-//                tongZhi.setChaKan(false);
-//            }else{
-//                tongZhi.setChaKan(true);
-//            }
-//            tongZhi.setId(i);
-//            tongZhi.setTitle(i+str+"巡店达人管理系统手机操作端苹果IOS版");
-//            tongZhi.setTime("2017-06-14 14:42:07");
-//            tongZhi.setContent("http://xd.trc-demo.com:3002/tong_zhi_cha_kan/4");
-//            mTongZhis.add(tongZhi);
-//        }
 
     }
 
@@ -468,14 +461,28 @@ public class TongZhiZhongXinFragment extends Fragment {
              */
             if(msg.what==1){
                 // 通知公告数据请求
-                Log.i("巡店",msg.obj.toString());
                 getTongZhis(msg.obj.toString());
+            }else if(msg.what == 2){
+                // 提交通知公告
+                // 更新数量,是否显示红点
+                if(mIsYeMian == 1){
+                    if(mTongZhiNum > 0){
+                        mTongZhiNum = mTongZhiNum-1;
+                    }
+                }else if(mIsYeMian == 2){
+                    if(mGongGaoNum > 0){
+                        mGongGaoNum = mGongGaoNum-1;
+                    }
+                }
+                shanChuHongDian();
             }
         }
     };
 
+    /**
+     * 查询通知公告
+     */
     public void getTongZhiGongGao(){
-        Log.i("巡店",mToken);
         if(!mToken.isEmpty()){
             final OkHttpClient client = new OkHttpClient();
 
@@ -506,6 +513,52 @@ public class TongZhiZhongXinFragment extends Fragment {
             });
             mThread.start();
         }
+    }
+
+    /**
+     * 提交已读通知公告
+     * @param id
+     */
+    public void postTongZhiGongGao(String id){
+        if(!mToken.isEmpty()){
+            final OkHttpClient client = new OkHttpClient();
+
+            MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            body.addFormDataPart("id",id);
+
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(mTongGaoTiJiao)
+                    .post(body.build())
+                    .build();
+
+
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
+    /**
+     * loading 浮层
+     *
+     * @param logingString 提示文字
+     */
+    public void LoadingStringEdit(String logingString){
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(getContext(),logingString);
     }
 
 }

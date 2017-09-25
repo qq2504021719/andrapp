@@ -178,6 +178,7 @@ public class BenZhouFragment extends Fragment{
         setXunDianJiHuas();
         // 显示计划
         setShowJH();
+
     }
 
     /**

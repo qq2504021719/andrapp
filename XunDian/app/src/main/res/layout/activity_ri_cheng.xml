@@ -257,7 +257,8 @@
             style="@style/IndexBuJuLinearLayout"
             android:layout_height="60dp"
             android:paddingRight="10dp"
-            android:paddingLeft="10dp">
+            android:paddingLeft="10dp"
+            android:background="@color/colorAccent">
             <Button
                 android:id="@+id/button_ti_jiao_gzb"
                 android:text="驳回工作表提交"

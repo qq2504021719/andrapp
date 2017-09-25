@@ -59,6 +59,7 @@
             android:id="@+id/bar_yuan_view"
             android:layout_width="6dp"
             android:layout_height="6dp"
+            android:visibility="invisible"
             android:background="@drawable/yuan"/>
     </LinearLayout>
     <LinearLayout

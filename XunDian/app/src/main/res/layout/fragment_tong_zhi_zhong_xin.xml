@@ -30,6 +30,7 @@
                 android:id="@+id/tong_zhi_yuan_view"
                 android:layout_width="6dp"
                 android:layout_height="6dp"
+                android:visibility="invisible"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/yuan"/>
         </LinearLayout>
@@ -56,6 +57,7 @@
                 android:id="@+id/gong_gao_yuan_view"
                 android:layout_width="6dp"
                 android:layout_height="6dp"
+                android:visibility="invisible"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/yuan"/>
         </LinearLayout>

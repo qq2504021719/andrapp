@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -21,10 +23,22 @@ import android.widget.TextView;
 
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
+import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.Login;
+import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.model.LoginModel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/1.
@@ -58,7 +72,17 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
     private String permissionInfo;
     private final int SDK_PERMISSION_REQUEST = 127;
 
+    // 开启线程
+    public Thread mThread;
+    // Token
+    public String mToken;
 
+    // LoginModel 登录模型
+    public LoginModel mLoginModel;
+    // 登录对象
+    public Login mLogin;
+
+    public String MURL = Config.URL+"/app/get_tong_zhi_gong_gao";
 
 
     public static Intent newIntent(Context packageContext, int viewId){
@@ -66,14 +90,13 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         i.putExtra(EXTRA_VIEW_ID,viewId);
         return i;
     }
-    // LoginModel 登录模型
-    private static LoginModel mLoginModel;
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_page_view_page);
+
 
         // 销毁其余容器
         AtyContainer.finishAllActivity();
@@ -84,8 +107,23 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         ZhuJianCaoZhuo();
 
         getPersimmions();
+        // 值操作
+        values();
 
 
+    }
+
+    /**
+     * 值操作 set get值
+     */
+    public void values() {
+        // new登录模型
+        mLoginModel = LoginModel.get(this);
+        // Token查询,赋值
+        mLogin = mLoginModel.getLogin(1);
+        mToken = mLogin.getToken();
+        // 获取公告通知,是否显示红点
+        getTongZhiGongGao();
     }
 
     @TargetApi(23)
@@ -382,6 +420,65 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         if(num == 1){
             // 隐藏通知公告红点
             mBar_yuan_view.setVisibility(View.INVISIBLE);
+        }else if(num == 2){
+            // 显示通知公告红点
+            mBar_yuan_view.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             * 请求回调
+             */
+            if(msg.what==1){
+                if(msg.obj.toString().equals("0")){
+                    IsHong(2);
+                }else if(msg.obj.toString().equals("1")){
+                    IsHong(1);
+                }
+            }
+        }
+    };
+
+    /**
+     * 获取用户未读通知公告
+     */
+    public void getTongZhiGongGao(){
+        if(!mToken.isEmpty()){
+            final OkHttpClient client = new OkHttpClient();
+
+            MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            body.addFormDataPart("is","1");
+
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(MURL)
+                    .post(body.build())
+                    .build();
+
+
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
         }
     }
 }
