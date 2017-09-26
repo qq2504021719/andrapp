@@ -57,4 +57,13 @@
     <string name="ben_zhou_gong_zuo">本周工作</string>
     <string name="bo_hui">驳回</string>
 
+    <string name="ri_chang_kao_qing">日常考勤</string>
+    <string name="kao_qing_ji_lu">考勤记录</string>
+    <string name="qing_jia_guan_li">请假管理</string>
+    <string name="pai_fang_guan_li">拜访管理</string>
+
+
+    <string name="qian_dao">签到</string>
+    <string name="shang_ban_qian_dao">上班签到</string>
+    <string name="xia_ban_qian_dao">下班签到</string>
 </resources>

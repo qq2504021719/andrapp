@@ -95,6 +95,26 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <!--上班签到-->
+    <style name="ButtonShangBanQianDao">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:background">@drawable/hong_se_button</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <!--下班签到-->
+    <style name="ButtonXiaBanQianDao">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:background">@drawable/lan_se_button</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="XunDianLinearLayout">
         <item name="android:orientation">vertical</item>
         <item name="android:layout_width">match_parent</item>

@@ -49,7 +49,9 @@
             android:id="@+id/kao_qing_linearLayout"
             style="@style/GongZuoZhongXin.2LinearLayout"
             android:layout_marginRight="15dp">
-            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+            <LinearLayout
+                android:id="@+id/gong_kao_qing_linearLayout"
+                style="@style/GongZuoZhongXin.3LinearLayout">
                 <ImageView
                     style="@style/GongZuoZhongXin.ImageView"
                     android:src="@drawable/kaoqin"
