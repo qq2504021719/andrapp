@@ -3,8 +3,11 @@ package com.bignerdranch.android.xundian.kaoqing;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,9 +25,21 @@ import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/26.
@@ -45,7 +60,21 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
     boolean isFirstLoc = true; // 是否首次定位
     public boolean mIsDingWeiChengGong = false; // 定位是否成功
 
+    // 公司签到经度
+    public Double mGongSiLat;
+    // 公司签到维度
+    public Double mGongSiLng;
+    // 误差范围 米
+    public Double mWuChaFanWei;
+    // 请求用户签到范围公司
+    public String mQianDaoFanWeiURL = Config.URL+"/app/yong_hu_qian_dao_fan_wei";
+
     private LocationBaiDu mLocationBaiDu = new LocationBaiDu(); //定位信息存储
+
+    // 上班签到
+    public Button mButton_shang_ban_qian_dao;
+    // 下班签到
+    public Button mButton_xia_ban_qian_dao;
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,RiChangKaoQingActivity.class);
@@ -74,6 +103,10 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         // 重新定位
         mRi_chang_ding_wei = (ImageView)findViewById(R.id.ri_chang_ding_wei);
+        // 上班签到
+        mButton_shang_ban_qian_dao = (Button)findViewById(R.id.button_shang_ban_qian_dao);
+        // 下班签到
+        mButton_xia_ban_qian_dao = (Button)findViewById(R.id.button_xia_ban_qian_dao);
     }
     /**
      * 值操作
@@ -84,6 +117,8 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
             setToken(mContext);
             // 百度地图定位
             BaiDuDingWeiDiaoYong();
+            // 获取用户签到范围
+            getGongSiQianDaoFanWei();
         }else{
             tiShi(mContext,"请连接网络");
         }
@@ -105,6 +140,31 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                 mIsDingWeiChengGong = false; // 定位是否成功
 
                 BaiDuDingWeiDiaoYong();
+            }
+        });
+
+        // 上班签到
+        mButton_shang_ban_qian_dao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
+                if(juLi <= mWuChaFanWei){
+                    tiShi(mContext,"上班签到成功"+juLi);
+                }else{
+                    tiShi(mContext,"上班签到超出签到范围"+juLi);
+                }
+            }
+        });
+        // 下班签到
+        mButton_xia_ban_qian_dao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
+                if(juLi <= mWuChaFanWei){
+                    tiShi(mContext,"下班签到成功"+juLi);
+                }else{
+                    tiShi(mContext,"下班签到超出签到范围"+juLi);
+                }
             }
         });
     }
@@ -270,6 +330,101 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
         super.onPause();
         // 在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
         mMapView.onPause();
+    }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             * 请求回调
+             */
+            if(msg.what==1){
+                if(msg.obj.toString() != null && msg.obj.toString() != ""){
+                    try {
+                        JSONObject jsonObject = new JSONObject(msg.obj.toString());
+                        mGongSiLat = Double.valueOf(jsonObject.getString("qian_dao_lat"));
+                        mGongSiLng = Double.valueOf(jsonObject.getString("qian_dao_lng"));
+                        mWuChaFanWei = Double.valueOf(jsonObject.getString("fan_wei_mi"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
+
+
+    /**
+     * 请求公司签到范围
+     */
+    public void getGongSiQianDaoFanWei(){
+        if(mToken != null) {
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
+            RequestBody body = new FormBody.Builder()
+                    .build();
+
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization", "Bearer " + mToken)
+                    .url(mQianDaoFanWeiURL)
+                    .post(body)
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
+    /**
+     * 根据两点的经度纬度计算出距离
+     * @param lon1
+     * @param lat1
+     * @param lon2
+     * @param lat2
+     * @return
+     */
+    public double GetShortDistance(double lon1, double lat1, double lon2, double lat2)
+    {
+        double DEF_PI = 3.14159265359; // PI
+        double DEF_2PI= 6.28318530712; // 2*PI
+        double DEF_PI180= 0.01745329252; // PI/180.0
+        double DEF_R =6370693.5; // radius of earth
+        double ew1, ns1, ew2, ns2;
+        double dx, dy, dew;
+        double distance;
+        // 角度转换为弧度
+        ew1 = lon1 * DEF_PI180;
+        ns1 = lat1 * DEF_PI180;
+        ew2 = lon2 * DEF_PI180;
+        ns2 = lat2 * DEF_PI180;
+        // 经度差
+        dew = ew1 - ew2;
+        // 若跨东经和西经180 度，进行调整
+        if (dew > DEF_PI)
+        dew = DEF_2PI - dew;
+        else if (dew < -DEF_PI)
+        dew = DEF_2PI + dew;
+        dx = DEF_R * Math.cos(ns1) * dew; // 东西方向长度(在纬度圈上的投影长度)
+        dy = DEF_R * (ns1 - ns2); // 南北方向长度(在经度圈上的投影长度)
+        // 勾股定理求斜边长
+        distance = Math.sqrt(dx * dx + dy * dy);
+        return distance;
     }
 
 }
