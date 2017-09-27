@@ -118,6 +118,8 @@ public class XunDianModel {
         values.put(XunDianTable.Cols.ID,String.valueOf(xunDianCanShu.getMenDianId()));
         values.put(XunDianTable.Cols.XIABIAO,String.valueOf(xunDianCanShu.getXiaBiao()));
         values.put(XunDianTable.Cols.VALUES,xunDianCanShu.getValue());
+        values.put(XunDianTable.Cols.XUNKAISHITIME,xunDianCanShu.getXunKaiShiTime());
+        values.put(XunDianTable.Cols.XUNJIESHITIME,xunDianCanShu.getXunJieShuTime());
         if(xunDianCanShu.getPhontPath() != null){
             values.put(XunDianTable.Cols.PHONE,xunDianCanShu.getPhontPath());
         }

@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -60,6 +61,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -159,6 +161,25 @@ public class XunDianActivity extends NeiYeCommActivity {
     // 是否提交
     private int mIsTiJiao = 0;
 
+    // 最大下标
+    public int mZuiDaXiaBiao = 0;
+
+    // 当前时间
+    public String mDangQianTime;
+
+    // 点击保存后提示语
+    public String mDianJiBaoCun = "您已点击保存,无法修改,请再次点击保存";
+
+    /**
+     * 设置最大下标
+     * @param num
+     */
+    public void setZuiDaXiaBiao(int num){
+        if(num > mZuiDaXiaBiao){
+            mZuiDaXiaBiao = num;
+        }
+    }
+
 
     public static Intent newIntent(Context packageContext, String string){
         Intent i = new Intent(packageContext,XunDianActivity.class);
@@ -180,11 +201,13 @@ public class XunDianActivity extends NeiYeCommActivity {
         mXunDianModel = XunDianModel.get(mContext);
         mChaoShiModel = ChaoShiModel.get(mContext);
 
+        // 组件初始化
+        ZhuJianInit();
+
         // 值接收处理
         values();
 
-        // 组件初始化
-        ZhuJianInit();
+
 
         // 组件操作
         ZhuJianCaoZhuo();
@@ -220,7 +243,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                                 if(!jsonObject.getString("tian_xie_shi").isEmpty()){
                                     mDaoJiShi = Integer.valueOf(jsonObject.getString("tian_xie_shi"))*60;
                                     mDaoJiShi1 = mDaoJiShi;
-                                    handler.postDelayed(runnable, mTIME); //每隔1s执行
+
                                 }
                             }
 
@@ -239,6 +262,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                     // 删除数据
                     try {
                         deleteXunDianData(mXunDian.getString("mMenDianId"));
+                        tiShi(mContext,"上传成功");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -289,6 +313,15 @@ public class XunDianActivity extends NeiYeCommActivity {
     };
 
     /**
+     * 倒计时调用
+     */
+    public void diaoYongDaoJiShi(){
+        // 本地服务器存储倒计时计算
+        benDitimeDaoJiShi();
+        handler.postDelayed(runnable, mTIME); //每隔1s执行
+    }
+
+    /**
      * 设置倒计时显示
      *
      */
@@ -309,9 +342,35 @@ public class XunDianActivity extends NeiYeCommActivity {
     }
 
     /**
+     * 本地存储巡店开始时间倒计时计算,并赋值
+     */
+    public void benDitimeDaoJiShi(){
+        if(mXunDianCanShu.getXunKaiShiTime() != null  &&  mXunDianCanShu.getXunKaiShiTime()!=""){
+            String XunKaiShiTime = mXunDianCanShu.getXunKaiShiTime();
+
+            String date1 = dataTime(getDangQianTime());
+            String date2 = dataTime(XunKaiShiTime);
+
+            // 退出没有计算时间
+            int time = Integer.valueOf(date1)-Integer.valueOf(date2);
+
+
+            // 赋值,剩余时间大于没有计算时间,剩余时间-没有计算时间并且大于0 超时时间为0
+            if(mDaoJiShi1 > time && (mDaoJiShi1-time) > 0 && mDaoJiShi2 == 0){
+                mDaoJiShi1 = mDaoJiShi-time;
+            }else{
+                mDaoJiShi2 = time;
+            }
+            Log.i("巡店",getDangQianTime()+":"+date1+"|"+XunKaiShiTime+":"+date2+"|"+mDaoJiShi1+"|"+time);
+        }
+    }
+
+    /**
      * 值接收处理
      */
     public void values(){
+        // 当前时间
+        mDangQianTime = getDangQianTime();
         // Token赋值
         setToken(mContext);
 
@@ -335,7 +394,7 @@ public class XunDianActivity extends NeiYeCommActivity {
             // 超时时间
             mDaoJiShi2 = chaoShi.getChaoShi();
             // 启动倒计时
-            handler.postDelayed(runnable, mTIME); //每隔1s执行
+//            handler.postDelayed(runnable, mTIME); //每隔1s执行
         }
 
     }
@@ -377,31 +436,37 @@ public class XunDianActivity extends NeiYeCommActivity {
      * 参数提交循环
      */
     public void canShuTiJiao(){
-        if(mXunDianCanShus.size() > 0){
+        if(isNetworkAvailableAndConnected(mContext)){
+            if(mXunDianCanShus.size() > 0){
 //            tiShi(mContext,"上传中,请稍等");
-            /**
-             * 图片的数量
-             */
-            for(Integer key:mXunDianCanShus.keySet()){
-                if(mXunDianCanShus.get(key) != null){
-                    if(mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null){
-                        mCanShuNums++;
-                    }
-                }
-            }
-            /**
-             * 图片上传
-             */
-            if(mCanShuNums > 0){
+                /**
+                 * 图片的数量
+                 */
                 for(Integer key:mXunDianCanShus.keySet()){
                     if(mXunDianCanShus.get(key) != null){
-                        PhoneTiJiao(mXunDianCanShus.get(key));
+                        if(mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null){
+                            mCanShuNums++;
+                        }
                     }
                 }
-            }else{
-                TiJiao(mXunDianCanShus);
+                /**
+                 * 图片上传
+                 */
+                if(mCanShuNums > 0){
+                    for(Integer key:mXunDianCanShus.keySet()){
+                        if(mXunDianCanShus.get(key) != null){
+                            PhoneTiJiao(mXunDianCanShus.get(key));
+                        }
+                    }
+                }else{
+                    TiJiao(mXunDianCanShus);
+                }
             }
+        }else{
+            tiShi(mContext,"网络无法连接");
+            finish();
         }
+
     }
 
     /**
@@ -496,7 +561,11 @@ public class XunDianActivity extends NeiYeCommActivity {
                     jsonObject.put("chao_shi_shi_jian",String.valueOf(mDaoJiShi2));
                     // 未超时所用时间
                     jsonObject.put("yong_shi_jian",String.valueOf(mDaoJiShi-mDaoJiShi1));
-
+                    // 开始时间
+                    jsonObject.put("xun_kai_si_time",mXunDianCanShus.get(key).getXunKaiShiTime());
+                    // 完成时间
+                    jsonObject.put("xun_jie_shu_time",mXunDianCanShus.get(key).getXunJieShuTime());
+//                    Log.i("巡店",mXunDianCanShus.get(key).getXunKaiShiTime()+"|"+mXunDianCanShus.get(key).getXunJieShuTime());
                     jsonObjects.put(""+key,jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -598,9 +667,10 @@ public class XunDianActivity extends NeiYeCommActivity {
                 // 是否拍照
                 mXunDianCanShu.setIs_pai_zhao(mXunDianJson.getJSONObject(i).getString("is_pai_zhao"));
                 // 选择项目
-                mXunDianCanShu.setXuan_ze_qi(mXunDianJson.getJSONObject(i).getString("xuan_ze_qi"));
+                mXunDianCanShu.setXuan_ze_qi(mXunDianJson.getJSONObject(i).getString("xuan_ze_qis"));
                 // 是否必填
                 mXunDianCanShu.setIs_bi_tian(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")));
+
 
                 // 查询数据库是否有值
                 ChaKanFuZhi();
@@ -616,12 +686,17 @@ public class XunDianActivity extends NeiYeCommActivity {
 
                 // 添加到List对象
                 mXunDianCanShus.put(id,mXunDianCanShu);
+
+                // 设置最大id
+                setZuiDaXiaBiao(id);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
-
+        // 倒计时调用
+        diaoYongDaoJiShi();
     }
 
     /**
@@ -738,6 +813,16 @@ public class XunDianActivity extends NeiYeCommActivity {
         if(mXunDianCanShu.getValue() != null){
             editText.setText(mXunDianCanShu.getValue());
         }
+        // 禁止输入
+        if(mXunDianCanShu.getXunJieShuTime() != null && mXunDianCanShu.getXunJieShuTime() != "" ){
+            editText.setFocusable(false);
+            editText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tiShi(mContext,mDianJiBaoCun);
+                }
+            });
+        }
         // 存储
         mXunDianCanShu.setEditText(editText);
         // 唯一id
@@ -818,6 +903,16 @@ public class XunDianActivity extends NeiYeCommActivity {
         }
         // 唯一id
         final int editTextId = XiaBiao;
+        // 禁止输入
+        if(mXunDianCanShu.getXunJieShuTime() != null && mXunDianCanShu.getXunJieShuTime() != "" ){
+            editText.setFocusable(false);
+            editText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tiShi(mContext,mDianJiBaoCun);
+                }
+            });
+        }
         // 输入值存储
         editText.addTextChangedListener(new TextWatcher() {
             final int id = editTextId;
@@ -895,33 +990,45 @@ public class XunDianActivity extends NeiYeCommActivity {
         if(mXunDianCanShu.getXuan_ze_qi() != null){
             stringZhuan = ChuLiJson(mXunDianCanShu.getXuan_ze_qi());
         }
+        Log.i("巡店",mXunDianCanShu.getXuan_ze_qi());
         final String[] strings = stringZhuan;
-        textView.setOnClickListener(new View.OnClickListener() {
-            final int id = editTextId;
-            @Override
-            public void onClick(View view) {
-                if(strings.length > 0){
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(XunDianActivity.this);
-                    alertBuilder.setItems(strings, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int index) {
-                            // 更新显示
-                            textView.setText(strings[index]);
-                            // 存储值
-                            if(strings[index] != null){
-                                mXunDianCanShus.get(id).setValue(strings[index]);
-                                // 写入数据库
-                                mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
-                            }
-                            alertDialog1.dismiss();
-                        }
-                    });
-                    alertDialog1 = alertBuilder.create();
-                    alertDialog1.show();
+        // 点击保存后无法编辑
+        if(mXunDianCanShu.getXunJieShuTime() != null && mXunDianCanShu.getXunJieShuTime() != "" ){
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tiShi(mContext,mDianJiBaoCun);
                 }
+            });
+        }else{
+            textView.setOnClickListener(new View.OnClickListener() {
+                final int id = editTextId;
+                @Override
+                public void onClick(View view) {
+                    if(strings.length > 0){
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(XunDianActivity.this);
+                        alertBuilder.setItems(strings, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int index) {
+                                // 更新显示
+                                textView.setText(strings[index]);
+                                // 存储值
+                                if(strings[index] != null){
+                                    mXunDianCanShus.get(id).setValue(strings[index]);
+                                    // 写入数据库
+                                    mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
+                                }
+                                alertDialog1.dismiss();
+                            }
+                        });
+                        alertDialog1 = alertBuilder.create();
+                        alertDialog1.show();
+                    }
 
-            }
-        });
+                }
+            });
+        }
+
         // 添加到父组件
         ll.addView(textView);
     }
@@ -955,28 +1062,39 @@ public class XunDianActivity extends NeiYeCommActivity {
         }
         // 唯一id
         final int editTextId = XiaBiao;
-        // 点击事件
-        textView.setOnClickListener(new View.OnClickListener() {
-            final int id = editTextId;
-            @Override
-            public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
-                new DatePickerDialog(XunDianActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
-                        textView.setText(string);
-                        // 数据存储
-                        if(string != null){
-                            mXunDianCanShus.get(id).setValue(string);
-                            // 写入数据库
-                            mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
+        // 禁止输入
+        if(mXunDianCanShu.getXunJieShuTime() != null && mXunDianCanShu.getXunJieShuTime() != "" ){
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tiShi(mContext,mDianJiBaoCun);
+                }
+            });
+        }else{
+            // 点击事件
+            textView.setOnClickListener(new View.OnClickListener() {
+                final int id = editTextId;
+                @Override
+                public void onClick(View view) {
+                    Calendar c = Calendar.getInstance();
+                    new DatePickerDialog(XunDianActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            // TODO Auto-generated method stub
+                            String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
+                            textView.setText(string);
+                            // 数据存储
+                            if(string != null){
+                                mXunDianCanShus.get(id).setValue(string);
+                                // 写入数据库
+                                mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
+                            }
                         }
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+        }
+
         // 添加到父组件
         ll.addView(textView);
     }
@@ -1047,29 +1165,40 @@ public class XunDianActivity extends NeiYeCommActivity {
         final boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
         imageViewShow.setEnabled(canTakePhoto);
         if(canTakePhoto){
-            Uri uri = Uri.fromFile(mPhotoFile);
+//            Uri uri = Uri.fromFile(mPhotoFile);
+            Uri uri = FileProvider.getUriForFile(mContext,"com.bignerdranch.android.xundian.provider",mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
         }
-
-        imageViewShow.setOnClickListener(new View.OnClickListener() {
-            final int id = editTextId;
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(captureImage,REQUEST_PHOTO);
-                if(canTakePhoto){
-                    // 点击id
-                    mTuPianDianJi = id;
-                    // 存储加号View
-                    mXunDianCanShus.get(id).setMImageViewj(imageViewDian);
-                    // 存储显示图片View
-                    mXunDianCanShus.get(id).setImageView(imageViewShow);
-                    // 存储文件对象
-                    mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
-                    // 存储图片路径
-                    mXunDianCanShus.get(id).setPhontPath(mPhotoFile.getPath());
+        // 点击保存后无法编辑
+        if(mXunDianCanShu.getXunJieShuTime() != null && mXunDianCanShu.getXunJieShuTime() != "" ){
+            imageViewShow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tiShi(mContext,mDianJiBaoCun);
                 }
-            }
-        });
+            });
+        }else{
+            imageViewShow.setOnClickListener(new View.OnClickListener() {
+                final int id = editTextId;
+                @Override
+                public void onClick(View view) {
+                    startActivityForResult(captureImage,REQUEST_PHOTO);
+                    if(canTakePhoto){
+                        // 点击id
+                        mTuPianDianJi = id;
+                        // 存储加号View
+                        mXunDianCanShus.get(id).setMImageViewj(imageViewDian);
+                        // 存储显示图片View
+                        mXunDianCanShus.get(id).setImageView(imageViewShow);
+                        // 存储文件对象
+                        mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
+                        // 存储图片路径
+                        mXunDianCanShus.get(id).setPhontPath(mPhotoFile.getPath());
+                    }
+                }
+            });
+        }
+
     }
 
     /**
@@ -1097,8 +1226,9 @@ public class XunDianActivity extends NeiYeCommActivity {
             int mIsTijiao = 1;
             @Override
             public void onClick(View view) {
+                inWenTi = 0;
                 if(mXunDianCanShus != null  &&  mXunDianCanShus.size() > 0){
-                    for(int i = 0;i<mXunDianCanShus.size();i++){
+                    for(int i = 0;i<=mZuiDaXiaBiao;i++){
                         if(mXunDianCanShus.get(i) != null){
                             if(mXunDianCanShus.get(i).getIs_bi_tian() == 1){
                                 int c = mShowXuHao.get(mXunDianCanShus.get(i).getId());
@@ -1109,8 +1239,11 @@ public class XunDianActivity extends NeiYeCommActivity {
                                         tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
                                         break;
                                     }else{
-                                        // 验证图片
-                                        if(mXunDianCanShus.get(i).getPhontPath() == null){
+                                        // 验证图片 isZhaoPian
+                                        if(mXunDianCanShus.get(i).getIs_pai_zhao().equals("是")
+                                                && mXunDianCanShus.get(i).getPhontPath() == null
+                                                && mXunDianCanShus.get(i).getPhotoFile() == null
+                                                && mXunDianCanShus.get(i).getServerPhotoPath() == null){
                                             tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"图片不能为空");
                                             break;
                                         }else{
@@ -1125,12 +1258,17 @@ public class XunDianActivity extends NeiYeCommActivity {
                             }
                         }
                     }
+
+
                     // 提交 18817610991  34805
                     if(mIsTijiao == 1){
                         Log.i("巡店",mCanShuNum+"|"+inWenTi);
                         if(mCanShuNum == inWenTi){
                             LoadingStringEdit("提交中...");
                             mIsTijiao = 0;
+                            // 保存完成时间
+                            baoCunWanChengTime();
+                            // 参数提交
                             canShuTiJiao();
                         }
                     }else{
@@ -1140,11 +1278,24 @@ public class XunDianActivity extends NeiYeCommActivity {
                     tiShi(mContext,"为空不能提交");
                 }
 
-
             }
         });
+    }
 
-
+    /**
+     * 保存完成时间
+     */
+    public void baoCunWanChengTime(){
+        // 数据库查询出来如果为空将巡店开始时间,存入数据库
+        if(mXunDianCanShu.getXunJieShuTime() == null || mXunDianCanShu.getXunJieShuTime() == "" ){
+            for(Integer key:mXunDianCanShus.keySet()){
+                if(mXunDianCanShus.get(key) != null){
+                    XunDianCanShu xunCan = mXunDianCanShus.get(key);
+                    xunCan.setXunJieShuTime(getDangQianTime());
+                    mXunDianModel.addIsUpdate(xunCan);
+                }
+            }
+        }
     }
 
 
@@ -1207,9 +1358,21 @@ public class XunDianActivity extends NeiYeCommActivity {
                 String.valueOf(mXunDianCanShu.getXiaBiao())
         );
         if(xunDianCanShu != null){
+            // 用户输入值
             mXunDianCanShu.setValue(xunDianCanShu.getValue());
+            // 图片路径
             mXunDianCanShu.setPhontPath(xunDianCanShu.getPhontPath());
+            // 巡店开始时间
+            mXunDianCanShu.setXunKaiShiTime(xunDianCanShu.getXunKaiShiTime());
+            // 巡店结束时间
+            mXunDianCanShu.setXunJieShuTime(xunDianCanShu.getXunJieShuTime());
         }
+        // 数据库查询出来如果为空将巡店开始时间,存入数据库
+        if(mXunDianCanShu.getXunKaiShiTime() == null || mXunDianCanShu.getXunKaiShiTime() == "" ){
+            mXunDianCanShu.setXunKaiShiTime(mDangQianTime);
+            mXunDianModel.addIsUpdate(mXunDianCanShu);
+        }
+        Log.i("巡店","开始时间:"+mXunDianCanShu.getXunKaiShiTime()+",完成时间:"+mXunDianCanShu.getXunJieShuTime());
     }
 
     @Override

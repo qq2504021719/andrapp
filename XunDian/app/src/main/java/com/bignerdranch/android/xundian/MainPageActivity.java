@@ -152,6 +152,12 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
                 permissionInfo += "Manifest.permission.READ_PHONE_STATE Deny \n";
             }
 
+            // 拍照权限
+            if (addPermission(permissions, Manifest.permission.CAMERA)) {
+                permissionInfo += "Manifest.permission.CAMERA Deny \n";
+            }
+
+
             if (permissions.size() > 0) {
                 requestPermissions(permissions.toArray(new String[permissions.size()]), SDK_PERMISSION_REQUEST);
             }

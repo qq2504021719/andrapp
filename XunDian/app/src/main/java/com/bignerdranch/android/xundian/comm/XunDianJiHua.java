@@ -41,6 +41,8 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // 是否完成 0 1
     public int mIsWC;
 
+
+
     public void setIsWC(int isWC) {
         mIsWC = isWC;
     }

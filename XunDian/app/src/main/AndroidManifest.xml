@@ -76,6 +76,18 @@
         <activity android:name=".kaoqing.KaoQingActivity"></activity>
         <!--日常考勤-->
         <activity android:name=".kaoqing.RiChangKaoQingActivity"></activity>
+
+        <!--Android N 相机调用问题-->
+        <provider
+            android:authorities="com.bignerdranch.android.xundian.provider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
     </application>
 
 

@@ -343,11 +343,20 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
              */
             if(msg.what==1){
                 if(msg.obj.toString() != null && msg.obj.toString() != ""){
+
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
-                        mGongSiLat = Double.valueOf(jsonObject.getString("qian_dao_lat"));
-                        mGongSiLng = Double.valueOf(jsonObject.getString("qian_dao_lng"));
-                        mWuChaFanWei = Double.valueOf(jsonObject.getString("fan_wei_mi"));
+                        if(jsonObject.getString("qian_dao_lat").equals("null") ||
+                           jsonObject.getString("qian_dao_lat").equals("null") ||
+                           jsonObject.getString("qian_dao_lat").equals("null")){
+                            tiShi(mContext,"公司签到位置未设置,联系管理员");
+                            finish();
+                        }else{
+                            Log.i("巡店",msg.obj.toString());
+                            mGongSiLat = Double.valueOf(jsonObject.getString("qian_dao_lat"));
+                            mGongSiLng = Double.valueOf(jsonObject.getString("qian_dao_lng"));
+                            mWuChaFanWei = Double.valueOf(jsonObject.getString("fan_wei_mi"));
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

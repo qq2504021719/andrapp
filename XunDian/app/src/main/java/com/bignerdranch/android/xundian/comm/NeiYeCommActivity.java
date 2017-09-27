@@ -33,7 +33,11 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -114,7 +118,40 @@ public class NeiYeCommActivity extends AppCompatActivity{
         void shuJuHuiDiao(String string,int is);
     }
 
+    /**
+     * 获取当前时间
+     * @return 当前时间y-m-d h-i-s
+     */
+    public String getDangQianTime(){
+        SimpleDateFormat simpleDateFormats =new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.CHINA);
+        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        //当前时间，貌似多余，其实是为了所有可能的系统一致
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        return simpleDateFormats.format(calendar.getTime());
+    }
 
+    /**
+     * 掉此方法输入所要转换的时间输入例如（"2014-06-14 16-09-00"）返回时间戳
+     *
+     * @param time
+     * @return
+     */
+    public String dataTime(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss",
+                Locale.CHINA);
+        Date date;
+        String times = null;
+        try {
+            date = sdr.parse(time);
+            long l = date.getTime();
+            String stf = String.valueOf(l);
+            times = stf.substring(0, 10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return times;
+    }
 
     /**
      * 点击返回
@@ -228,7 +265,8 @@ public class NeiYeCommActivity extends AppCompatActivity{
      */
     public File getPhotoFile(String string){
         File externalFilesDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        // 确认外部存储是否可用,如果不可用,返回null
+//        File externalFilesDir = this.getExternalFilesDir("android.support.v4.content.FileProvider");
+        // 确认外部存储是否可用,如果不可用,返回null,
         if(externalFilesDir == null){
             return null;
         }

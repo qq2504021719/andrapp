@@ -136,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
             if(msg.what==1){
                 DengLuAdd((String) msg.obj);
             }else if(msg.what==2){
+                Log.i("巡店","机器码请求返回"+msg.obj.toString());
                 if(msg.obj.toString().equals("false")){
                     mLoginModel.deleteLogin(1);
                     // 关闭loading

@@ -52,9 +52,14 @@ public class DbCursorWrapper extends CursorWrapper {
     public XunDianCanShu getXundian(){
         String values = getString(getColumnIndex(XunDianTable.Cols.VALUES));
         String phone = getString(getColumnIndex(XunDianTable.Cols.PHONE));
+        String xunKaiShiTime = getString(getColumnIndex(XunDianTable.Cols.XUNKAISHITIME));
+        String xunJieShuTime = getString(getColumnIndex(XunDianTable.Cols.XUNJIESHITIME));
+
         XunDianCanShu xunDianCanShu = new XunDianCanShu();
         xunDianCanShu.setValue(values);
         xunDianCanShu.setPhontPath(phone);
+        xunDianCanShu.setXunKaiShiTime(xunKaiShiTime);
+        xunDianCanShu.setXunJieShuTime(xunJieShuTime);
 
         return xunDianCanShu;
     }

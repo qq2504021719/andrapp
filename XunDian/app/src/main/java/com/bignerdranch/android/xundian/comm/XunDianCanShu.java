@@ -52,6 +52,28 @@ public class XunDianCanShu{
     // 门店名称
     private String mMenDianMingCheng;
 
+    // 巡店开始时间
+    public String mXunKaiShiTime;
+
+    // 巡店完成时间
+    public String mXunJieShuTime;
+
+    public void setXunKaiShiTime(String xunKaiShiTime) {
+        mXunKaiShiTime = xunKaiShiTime;
+    }
+
+    public void setXunJieShuTime(String xunJieShuTime) {
+        mXunJieShuTime = xunJieShuTime;
+    }
+
+    public String getXunKaiShiTime() {
+        return mXunKaiShiTime;
+    }
+
+    public String getXunJieShuTime() {
+        return mXunJieShuTime;
+    }
+
     public void setServerPhotoPath(String serverPhotoPath) {
         mServerPhotoPath = serverPhotoPath;
     }

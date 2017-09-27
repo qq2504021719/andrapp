@@ -43,6 +43,10 @@ public class DbSchema {
             public static final String VALUES = "valuess";
             // 图片
             public static final String PHONE = "phone";
+            // 巡店开始时间
+            public static final String XUNKAISHITIME = "xunkaishitime";
+            // 巡店结束时间
+            public static final String XUNJIESHITIME = "xunjieshutime";
 
         }
     }
@@ -66,6 +70,9 @@ public class DbSchema {
         }
     }
 
+    /**
+     * 巡店周计划保存
+     */
     public static final class XunDianJiHuaTable{
         public static final String NAME ="xundianjihua";
         public static final class Cols{
