@@ -121,7 +121,7 @@ public class XunDianActivity extends NeiYeCommActivity {
     public static int mTuPianDianJi;
 
     // this
-    // LoginModel 登录模型
+    // mXunDianModel 登录模型
     private static XunDianModel mXunDianModel;
 
     // 门店id
@@ -361,7 +361,7 @@ public class XunDianActivity extends NeiYeCommActivity {
             }else{
                 mDaoJiShi2 = time;
             }
-            Log.i("巡店",getDangQianTime()+":"+date1+"|"+XunKaiShiTime+":"+date2+"|"+mDaoJiShi1+"|"+time);
+//            Log.i("巡店",getDangQianTime()+":"+date1+"|"+XunKaiShiTime+":"+date2+"|"+mDaoJiShi1+"|"+time);
         }
     }
 
@@ -990,7 +990,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         if(mXunDianCanShu.getXuan_ze_qi() != null){
             stringZhuan = ChuLiJson(mXunDianCanShu.getXuan_ze_qi());
         }
-        Log.i("巡店",mXunDianCanShu.getXuan_ze_qi());
+//        Log.i("巡店",mXunDianCanShu.getXuan_ze_qi());
         final String[] strings = stringZhuan;
         // 点击保存后无法编辑
         if(mXunDianCanShu.getXunJieShuTime() != null && mXunDianCanShu.getXunJieShuTime() != "" ){
@@ -1182,18 +1182,24 @@ public class XunDianActivity extends NeiYeCommActivity {
                 final int id = editTextId;
                 @Override
                 public void onClick(View view) {
-                    startActivityForResult(captureImage,REQUEST_PHOTO);
-                    if(canTakePhoto){
-                        // 点击id
-                        mTuPianDianJi = id;
-                        // 存储加号View
-                        mXunDianCanShus.get(id).setMImageViewj(imageViewDian);
-                        // 存储显示图片View
-                        mXunDianCanShus.get(id).setImageView(imageViewShow);
-                        // 存储文件对象
-                        mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
-                        // 存储图片路径
-                        mXunDianCanShus.get(id).setPhontPath(mPhotoFile.getPath());
+                    // 未输入值提示输入值
+                    if(mXunDianCanShus.get(editTextId) != null &&
+                            (mXunDianCanShus.get(editTextId).getValue() == null ||  mXunDianCanShus.get(editTextId).getValue() == "")){
+                        tiShi(mContext,mShowXuHao.get(mXunDianCanShus.get(editTextId).getId())+" : "+mXunDianCanShus.get(editTextId).getName()+"请选择或输入值");
+                    }else{
+                        startActivityForResult(captureImage,REQUEST_PHOTO);
+                        if(canTakePhoto){
+                            // 点击id
+                            mTuPianDianJi = id;
+                            // 存储加号View
+                            mXunDianCanShus.get(id).setMImageViewj(imageViewDian);
+                            // 存储显示图片View
+                            mXunDianCanShus.get(id).setImageView(imageViewShow);
+                            // 存储文件对象
+                            mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
+                            // 存储图片路径
+                            mXunDianCanShus.get(id).setPhontPath(mPhotoFile.getPath());
+                        }
                     }
                 }
             });
@@ -1262,7 +1268,7 @@ public class XunDianActivity extends NeiYeCommActivity {
 
                     // 提交 18817610991  34805
                     if(mIsTijiao == 1){
-                        Log.i("巡店",mCanShuNum+"|"+inWenTi);
+//                        Log.i("巡店",mCanShuNum+"|"+inWenTi);
                         if(mCanShuNum == inWenTi){
                             LoadingStringEdit("提交中...");
                             mIsTijiao = 0;
@@ -1372,7 +1378,7 @@ public class XunDianActivity extends NeiYeCommActivity {
             mXunDianCanShu.setXunKaiShiTime(mDangQianTime);
             mXunDianModel.addIsUpdate(mXunDianCanShu);
         }
-        Log.i("巡店","开始时间:"+mXunDianCanShu.getXunKaiShiTime()+",完成时间:"+mXunDianCanShu.getXunJieShuTime());
+//        Log.i("巡店","开始时间:"+mXunDianCanShu.getXunKaiShiTime()+",完成时间:"+mXunDianCanShu.getXunJieShuTime());
     }
 
     @Override

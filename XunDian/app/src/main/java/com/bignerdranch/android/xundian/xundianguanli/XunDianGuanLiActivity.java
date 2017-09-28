@@ -35,6 +35,8 @@ import com.bignerdranch.android.xundian.TongZhiZhongXinFragment;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
+import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.model.XunDianModel;
 
 
 import org.json.JSONArray;
@@ -80,7 +82,10 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
 
     private AlertDialog alertDialog1;
 
-
+    // mXunDianModel 登录模型
+    private static XunDianModel mXunDianModel;
+    // 巡店数据
+    public XunDianCanShu mXunDianCanShu;
 
     /**
      * 封装创建Intent对象,并传入参数
@@ -106,6 +111,10 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
 
 
         mContext = this;
+
+        // 连接数据库
+        mXunDianModel = XunDianModel.get(mContext);
+
         // 组件初始化
         ZhuJianInit();
 
@@ -201,7 +210,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         mXuan_zhe_men_dian_ping_pai_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("巡店",mMengDianPingPaiData.toString());
+//                Log.i("巡店",mMengDianPingPaiData.toString());
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
                 alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
                     @Override
@@ -263,19 +272,60 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
                     }else if(mIsDingWeiChengGong == false){
                         tiShi(mContext,"定位失败");
                     }else{
-                        String string = mGson.toJson(mLocationBaiDu);
-                        // 存储容器
-                        Intent i = XunDianActivity.newIntent(XunDianGuanLiActivity.this,string);
-                        startActivity(i);
+                        // 验证是否有其他店铺未提交
+                        String[] strings = DianIDgetData(mMengDianJsonData);
+                        if(strings[0].equals("true")){
+                            String string = mGson.toJson(mLocationBaiDu);
+                            // 存储容器
+                            Intent i = XunDianActivity.newIntent(XunDianGuanLiActivity.this,string);
+                            startActivity(i);
+                        }else{
+                            tiShi(mContext,strings[1]+"未提交,请先提交");
+                        }
                     }
                 }else{
                     tiShi(mContext,"网络连接失败");
                 }
-
             }
         });
     }
 
+    /**
+     * 查询数据库是否有巡店数据
+     * @param Jsonstring
+     * @return [0=>true/false] 有/无数据 [1=>"棋盘点"] 店铺名称
+     */
+    public String[] DianIDgetData(String Jsonstring){
+        String[] strings = new String[2];
+        strings[0] = "true";
+        // 查询数据库所有的记录
+        List<XunDianCanShu> xunDianCanShuList = mXunDianModel.getXunDianID();
+
+        if(xunDianCanShuList.size() > 0){
+            try {
+                JSONArray jsonArray = new JSONArray(Jsonstring);
+                if(jsonArray.length() > 0){
+                    for(int i = 0;i<jsonArray.length();i++){
+                        JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                        if(xunDianCanShuList.get(0).getMenDianId() == Integer.valueOf(jsonObject.getString("id"))){
+                            strings[1] = jsonObject.getString("name");
+                        }else{
+                            strings[0] = "false";
+                        }
+                    }
+                }
+            }catch (JSONException e){
+            }
+
+            // 用户选择门店和数据存储门店相同
+            if(mLocationBaiDu.getMenDianId() == xunDianCanShuList.get(0).getMenDianId()){
+                strings[0] = "true";
+            }
+        }
+
+
+        return strings;
+    }
 
     /**
      * 百度地图定位调用

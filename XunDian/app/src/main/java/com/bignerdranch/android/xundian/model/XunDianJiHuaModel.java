@@ -75,7 +75,7 @@ public class XunDianJiHuaModel {
 
     /**
      * 处理查询数据
-     * @param cursor
+     * @param xunDianJiHua
      * @return
      */
     public XunDianJiHua getXundianJiHuaCursor(Cursor cursor){

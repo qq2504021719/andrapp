@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.comm.XunDianJiHua;
 import com.bignerdranch.android.xundian.database.BaseHelper;
 import com.bignerdranch.android.xundian.database.DbCursorWrapper;
 import com.bignerdranch.android.xundian.database.DbSchema;
@@ -58,6 +59,45 @@ public class XunDianModel {
         return new DbCursorWrapper(cursor);
     }
 
+
+    /**
+     * 根据店铺id查询巡店数据
+     * @return
+     */
+    public List<XunDianCanShu> getXunDianID(){
+        List<XunDianCanShu> xunDianCanShuList = new ArrayList<>();
+
+        String sql = "select * from "+ DbSchema.XunDianTable.NAME;
+        Cursor cursor = mDatabase.rawQuery(sql,null);
+        while (cursor.moveToNext()) {
+            XunDianCanShu xunDianCanShu =getXundianJiHuaCursor(cursor);
+            xunDianCanShuList.add(xunDianCanShu);
+        }
+        return xunDianCanShuList;
+
+    }
+
+    /**
+     * 处理查询数据
+     * @param cursor
+     * @return
+     */
+    public XunDianCanShu getXundianJiHuaCursor(Cursor cursor){
+        int id = cursor.getInt(cursor.getColumnIndex(XunDianTable.Cols.ID));
+        String values = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.VALUES));
+        String phone = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.PHONE));
+        String xunKaiShiTime = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.XUNKAISHITIME));
+        String xunJieShuTime = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.XUNJIESHITIME));
+
+        XunDianCanShu xunDianCanShu = new XunDianCanShu();
+        xunDianCanShu.setMenDianId(id);
+        xunDianCanShu.setValue(values);
+        xunDianCanShu.setPhontPath(phone);
+        xunDianCanShu.setXunKaiShiTime(xunKaiShiTime);
+        xunDianCanShu.setXunJieShuTime(xunJieShuTime);
+
+        return xunDianCanShu;
+    }
 
     /**
      * 查询数据
