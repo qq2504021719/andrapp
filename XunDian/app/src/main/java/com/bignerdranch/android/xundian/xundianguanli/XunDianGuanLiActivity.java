@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.kaoqing.RiChangKaoQingActivity;
 import com.bignerdranch.android.xundian.model.XunDianModel;
 
 
@@ -59,6 +61,9 @@ import okhttp3.Response;
 public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchView.OnQueryTextListener,NeiYeCommActivity.Callbacks{
 
     private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity";
+
+    // 重新定位
+    private ImageView mRi_chang_ding_wei;
 
     private Button mXun_dian_addr_button;
 
@@ -172,6 +177,8 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         mKai_shi_xun_dian_button = (Button)findViewById(R.id.kai_shi_xun_dian_button);
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         mXun_dian_addr_button = (Button)findViewById(R.id.xun_dian_addr_button);
+        // 重新定位
+        mRi_chang_ding_wei = (ImageView)findViewById(R.id.ri_chang_ding_wei);
     }
 
     /**
@@ -180,6 +187,20 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     public void ZhuJianCaoZhuo(){
         // 设置标题
         mTitle_nei_ye.setText(R.string.gong_zuo_zhong_xin_xun_dian_guan_li);
+
+        // 重新定位
+        mRi_chang_ding_wei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tiShi(mContext,"定位成功");
+
+                myListener = new MyLocationListenner();
+                isFirstLoc = true; // 是否首次定位
+                mIsDingWeiChengGong = false; // 定位是否成功
+
+                BaiDuDingWeiDiaoYong();
+            }
+        });
 
         // 搜索内容存储
         mMen_dian_ming_cheng_searchview.addTextChangedListener(new TextWatcher() {

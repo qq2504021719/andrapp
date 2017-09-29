@@ -52,9 +52,13 @@ public class KaoQingActivity extends KaoQingCommonActivity{
      */
     public void ZhuJianInit(){
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
+        // 日常考勤
         mRi_chang_kao_qing = (LinearLayout)findViewById(R.id.ri_chang_kao_qing);
+        // 考勤记录
         mKao_qing_ji_lu = (LinearLayout)findViewById(R.id.kao_qing_ji_lu);
+        // 请假管理
         mQing_jia_guan_li = (LinearLayout)findViewById(R.id.qing_jia_guan_li);
+        // 拜访管理
         mPai_fang_guan_li = (LinearLayout)findViewById(R.id.pai_fang_guan_li);
     }
 
@@ -83,10 +87,12 @@ public class KaoQingActivity extends KaoQingCommonActivity{
             }
         });
 
-        // 考勤记录
-        mKao_qing_ji_lu.setOnClickListener(new View.OnClickListener() {
+        // 请假管理
+        mQing_jia_guan_li.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent i = QingJiaGuanLiActivity.newIntent(mContext,1);
+                startActivity(i);
             }
         });
     }

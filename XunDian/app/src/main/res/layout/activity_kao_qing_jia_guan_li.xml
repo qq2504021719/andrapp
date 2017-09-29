@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/title_nei_ye"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:orientation="vertical">
+
+        <com.bignerdranch.android.xundian.ui.BounceScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                style="@style/IndexBuJuLinearLayout"
+                android:paddingLeft="10dp">
+                <!--选择部门-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_bu_meng"
+                        style="@style/TjJiHuaTextView"
+                        android:text="选择部门"/>
+
+                    <TextView
+                        android:id="@+id/textview_bu_meng_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+                </LinearLayout>
+                <!--请假类型-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/textview_lei_xing"
+                        style="@style/TjJiHuaTextView"
+                        android:text="请假类型"/>
+
+                    <TextView
+                        android:id="@+id/textview_lei_xing_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </com.bignerdranch.android.xundian.ui.BounceScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

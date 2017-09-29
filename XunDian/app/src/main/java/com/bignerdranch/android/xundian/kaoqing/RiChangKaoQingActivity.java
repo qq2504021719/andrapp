@@ -505,7 +505,16 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
 
                 TextView titleTextView;
                 if(adds.length() != 0 && qianDaoTime.length() != 0 ){
-                    titleTextView = CreateTextView(name+"(已签到 "+time+")",1,R.color.zhuti);
+                    int ColorInt = R.color.zhuti;
+                    // 上班时签到时间>大于上班时间
+                    if(i%2 == 0 && Integer.valueOf(qianDaoTime.replace(":","")) > Integer.valueOf(time.replace(":",""))){
+                        ColorInt = R.color.hongse;
+                        // 下班时签到时间小于下班时间
+                    }else if(i%2 == 1 && Integer.valueOf(qianDaoTime.replace(":","")) < Integer.valueOf(time.replace(":",""))){
+                        ColorInt = R.color.hongse;
+                    }
+
+                    titleTextView = CreateTextView(name+"(已签到 "+time+")",1,ColorInt);
                 }else{
                     titleTextView = CreateTextView(name+"(未签到 "+time+")",1,R.color.heise);
                 }
