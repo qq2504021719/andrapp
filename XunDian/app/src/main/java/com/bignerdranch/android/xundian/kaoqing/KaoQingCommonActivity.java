@@ -15,6 +15,9 @@ import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2017/9/26.
@@ -57,6 +60,24 @@ public class KaoQingCommonActivity extends AppCompatActivity {
      */
     public void DianJiFanHui(View v) {
         finish();
+    }
+
+    /**
+     * 获取当前时间
+     * @return 当前时间y-m-d h-i-s
+     */
+    public String getDangQianTime(int is){
+        SimpleDateFormat simpleDateFormats = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        if(is == 1){
+             simpleDateFormats = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        }else if(is == 2){
+             simpleDateFormats =new SimpleDateFormat("yyyy-MM-dd hh:ii:ss", Locale.CHINA);
+        }
+        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        //当前时间，貌似多余，其实是为了所有可能的系统一致
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        return simpleDateFormats.format(calendar.getTime());
     }
 
     /**

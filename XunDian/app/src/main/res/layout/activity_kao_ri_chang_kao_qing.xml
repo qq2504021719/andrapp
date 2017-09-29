@@ -68,23 +68,34 @@
 
             </LinearLayout>
 
-
             <!--地图-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="200dp"
                 android:orientation="vertical"
                 android:background="@drawable/gong_zuo_zhong_xin_button">
 
                 <com.baidu.mapapi.map.MapView
                     android:id="@+id/bmapview_kao"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="200dp"
                     android:clickable="true"/>
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <com.bignerdranch.android.xundian.ui.BounceScrollView
+                    android:background="@color/colorAccent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
             <!--文字信息-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,119 +122,108 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bottom_border">
 
-                    <TextView
-                        android:layout_weight="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="不吃饭不上班,打起精神赚钞票"
-                        android:layout_marginBottom="5dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:text="上班时间09:00-16:00"
-                        android:layout_marginBottom="5dp"/>
-
+                    <!--<TextView-->
+                        <!--android:layout_weight="2"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="周六,周日休"-->
+                        <!--android:layout_marginBottom="5dp"/>-->
                 </LinearLayout>
 
-                <!--上午签到-->
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp"
+                    android:id="@+id/linear_kao_qing_fu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
+                    <!--上午签到-->
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="6dp"
-                            android:layout_height="6dp"
-                            android:background="@drawable/heise_yuan"/>
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="6dp"
+                                android:layout_height="6dp"
+                                android:background="@drawable/heise_yuan"/>
+
+                            <TextView
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="上午签到(09:00 已签到)"
+                                android:textSize="16dp"
+                                android:textColor="@color/zhuti"/>
+
+                            <TextView
+                                android:gravity="right"
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="08:55"/>
+
+                        </LinearLayout>
 
                         <TextView
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
+                            android:layout_marginLeft="11dp"
+                            android:layout_marginTop="3dp"
+                            android:textColor="@color/huise6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="上午签到"
-                            android:textSize="16dp"
-                            android:textColor="@color/heise"/>
-
-                        <TextView
-                            android:layout_gravity="center_vertical"
-                            android:gravity="right"
-                            android:layout_weight="1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="08:55"/>
+                            android:text="万达广场8号写字楼1112室"/>
 
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_marginLeft="11dp"
-                        android:layout_marginTop="3dp"
-                        android:textColor="@color/huise6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="万达广场8号写字楼1112室"/>
-
-                </LinearLayout>
-
-                <!--下午签到-->
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
+                    <!--下午签到-->
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="6dp"
-                            android:layout_height="6dp"
-                            android:background="@drawable/heise_yuan"/>
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="下午签到"
-                            android:textSize="16dp"
-                            android:textColor="@color/heise"/>
+                            <ImageView
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="6dp"
+                                android:layout_height="6dp"
+                                android:background="@drawable/heise_yuan"/>
 
-                        <TextView
-                            android:layout_gravity="center_vertical"
-                            android:gravity="right"
-                            android:layout_weight="1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="08:55"/>
+                            <TextView
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下午(18:00 未签到)"
+                                android:textSize="16dp"
+                                android:textColor="@color/heise"/>
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_marginLeft="11dp"
-                        android:layout_marginTop="3dp"
-                        android:textColor="@color/huise6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="万达广场8号写字楼1112室"/>
-
                 </LinearLayout>
 
+
+
+            </LinearLayout>
+
+            </LinearLayout>
+            </com.bignerdranch.android.xundian.ui.BounceScrollView>
             </LinearLayout>
 
             <!--按钮-->
@@ -234,22 +234,11 @@
 
                 <Button
                     android:id="@+id/button_shang_ban_qian_dao"
-                    android:text="@string/shang_ban_qian_dao"
-                    style="@style/ButtonShangBanQianDao"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="3"
-                    android:layout_marginRight="3dp"
-                    />
-
-                <Button
-                    android:id="@+id/button_xia_ban_qian_dao"
-                    android:layout_marginLeft="3dp"
-                    android:text="@string/xia_ban_qian_dao"
+                    android:text="@string/qian_dao"
                     style="@style/ButtonXiaBanQianDao"
                     android:layout_width="wrap_content"
                     android:layout_weight="3"
                     />
-
             </LinearLayout>
 
 

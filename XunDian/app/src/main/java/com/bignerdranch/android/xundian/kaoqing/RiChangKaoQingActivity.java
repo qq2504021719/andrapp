@@ -2,13 +2,17 @@ package com.bignerdranch.android.xundian.kaoqing;
 
 import android.content.Context;
 import android.content.Intent;
+import android.icu.math.BigDecimal;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -28,6 +32,7 @@ import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,21 +65,49 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
     boolean isFirstLoc = true; // 是否首次定位
     public boolean mIsDingWeiChengGong = false; // 定位是否成功
 
+    // 父节点
+    public LinearLayout mLinear_kao_qing_fu;
+    // 日期显示
+    public TextView mTextview_kao_ri_qi;
+
     // 公司签到经度
     public Double mGongSiLat;
     // 公司签到维度
     public Double mGongSiLng;
     // 误差范围 米
     public Double mWuChaFanWei;
-    // 请求用户签到范围公司
+    // 班次名称
+    public String mBanCiName;
+    // 星期一
+    public String mDay1 = "0";
+    // 星期二
+    public String mDay2 = "0";
+    // 星期三
+    public String mDay3 = "0";
+    // 星期四
+    public String mDay4 = "0";
+    // 星期五
+    public String mDay5 = "0";
+    // 星期六
+    public String mDay6 = "0";
+    // 星期日
+    public String mDay7 = "0";
+    // 签到次数
+    public String mQianDaoNum = "0";
+    // 班次签到信息
+    public String mBanCiQianDaoJson = "";
+    // 请求用户签到范围
     public String mQianDaoFanWeiURL = Config.URL+"/app/yong_hu_qian_dao_fan_wei";
+    // 用户签到提交
+    public String mQianDaoTiJiao = Config.URL+"/app/qian_dao_xie_ru";
 
     private LocationBaiDu mLocationBaiDu = new LocationBaiDu(); //定位信息存储
 
-    // 上班签到
+    // 签到
     public Button mButton_shang_ban_qian_dao;
-    // 下班签到
-    public Button mButton_xia_ban_qian_dao;
+
+    // is签到
+    public int mIsQian = 0;
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,RiChangKaoQingActivity.class);
@@ -103,10 +136,12 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         // 重新定位
         mRi_chang_ding_wei = (ImageView)findViewById(R.id.ri_chang_ding_wei);
+        // 父节点
+        mLinear_kao_qing_fu = (LinearLayout)findViewById(R.id.linear_kao_qing_fu);
+        // 日期
+        mTextview_kao_ri_qi = (TextView)findViewById(R.id.textview_kao_ri_qi);
         // 上班签到
         mButton_shang_ban_qian_dao = (Button)findViewById(R.id.button_shang_ban_qian_dao);
-        // 下班签到
-        mButton_xia_ban_qian_dao = (Button)findViewById(R.id.button_xia_ban_qian_dao);
     }
     /**
      * 值操作
@@ -143,30 +178,37 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
             }
         });
 
-        // 上班签到
+        // 日期
+        mTextview_kao_ri_qi.setText(getDangQianTime(1));
+
+        // 签到
         mButton_shang_ban_qian_dao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
-                if(juLi <= mWuChaFanWei){
-                    tiShi(mContext,"上班签到成功"+juLi);
-                }else{
-                    tiShi(mContext,"上班签到超出签到范围"+juLi);
-                }
+                // 获取用户签到范围
+                getGongSiQianDaoFanWei();
+
+
+                mIsQian = 1;
             }
         });
-        // 下班签到
-        mButton_xia_ban_qian_dao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
-                if(juLi <= mWuChaFanWei){
-                    tiShi(mContext,"下班签到成功"+juLi);
-                }else{
-                    tiShi(mContext,"下班签到超出签到范围"+juLi);
-                }
-            }
-        });
+    }
+
+    /**
+     * 回调签到
+     */
+    public void qianDao(){
+        Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
+        Log.i("巡店","lat:"+mGongSiLng+"lng:"+mGongSiLat+"|"+juLi+"|"+mWuChaFanWei);
+        if(juLi <= mWuChaFanWei){
+//            tiShi(mContext,"上班签到成功"+juLi);
+            // 提交签到信息
+            qianDaoTiJiao();
+        }else{
+            java.text.DecimalFormat df=new java.text.DecimalFormat("#");
+            tiShi(mContext,"签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米");
+        }
+        mIsQian = 0;
     }
 
     /**
@@ -302,7 +344,6 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
      * 定位成功调用方法
      */
     public void DingWeiChengGong(){
-        Log.i("巡店","当前地址 : "+mLocationBaiDu.getAddr()+"\n详细地址 : "+mLocationBaiDu.getLocationDescribe());
         // 停止定位
         mLocClient.stop();
     }
@@ -352,14 +393,24 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                             tiShi(mContext,"公司签到位置未设置,联系管理员");
                             finish();
                         }else{
-                            Log.i("巡店",msg.obj.toString());
                             mGongSiLat = Double.valueOf(jsonObject.getString("qian_dao_lat"));
                             mGongSiLng = Double.valueOf(jsonObject.getString("qian_dao_lng"));
                             mWuChaFanWei = Double.valueOf(jsonObject.getString("fan_wei_mi"));
+                            mBanCiQianDaoJson = jsonObject.getString("banCiKaoQingData");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    if(mIsQian == 1){
+                        qianDao();
+                    }
+                    // 显示用户签到信息
+                    ShowQianDao();
+                }
+            }else if(msg.what == 2){
+                tiShi(mContext,msg.obj.toString());
+                if(msg.obj.toString().equals("签到成功")){
+                        getGongSiQianDaoFanWei();
                 }
             }
         }
@@ -436,4 +487,173 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
         return distance;
     }
 
+
+    /**
+     * 创建签到内容显示
+     */
+    public void ShowQianDao(){
+        // 清空父节点
+        mLinear_kao_qing_fu.removeAllViews();
+        try {
+            JSONArray jsonArray = new JSONArray(mBanCiQianDaoJson);
+            for(int i = 0;i<jsonArray.length();i++){
+                JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                String name = jsonObject.getString("name").trim();
+                String time = jsonObject.getString("time").trim();
+                String adds = jsonObject.getString("adds").trim();
+                String qianDaoTime = jsonObject.getString("qianDaoTime").trim();
+
+                TextView titleTextView;
+                if(adds.length() != 0 && qianDaoTime.length() != 0 ){
+                    titleTextView = CreateTextView(name+"(已签到 "+time+")",1,R.color.zhuti);
+                }else{
+                    titleTextView = CreateTextView(name+"(未签到 "+time+")",1,R.color.heise);
+                }
+
+                TextView timeTextView = CreateTextView(qianDaoTime,2,R.color.heise);
+
+                TextView addsTextView = CreateTextView(adds,3,R.color.heise);
+
+                // iamge
+                LinearLayout imgLinearLayout = CreateLinearLayout(3);
+                ImageView imageView = CreateImageView();
+                imgLinearLayout.addView(imageView);
+
+                // 内层
+                LinearLayout nCreateLinearLayout = CreateLinearLayout(2);
+                nCreateLinearLayout.addView(imgLinearLayout);
+                nCreateLinearLayout.addView(titleTextView);
+                nCreateLinearLayout.addView(timeTextView);
+
+                // 外层
+                LinearLayout wCreateLinearLayout = CreateLinearLayout(1);
+                wCreateLinearLayout.addView(nCreateLinearLayout);
+                wCreateLinearLayout.addView(addsTextView);
+
+                // 添加到父节点
+                mLinear_kao_qing_fu.addView(wCreateLinearLayout);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 创建textview
+     * @param string 显示内容
+     * @param leix 1 标题 2 右侧签到时间  3 签到地址
+     * @param color 标题颜色
+     * @return
+     */
+    public TextView CreateTextView(String string,int leix,int color){
+        TextView textView = new TextView(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        if(leix == 1 || leix == 2){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
+            layoutParam.setMargins(5,0,0,0);
+        }else if(leix == 3){
+            layoutParam.setMargins(11,3,0,0);
+        }
+        textView.setLayoutParams(layoutParam);
+        textView.setText(string);
+
+        if(leix == 1){
+            textView.setTextColor(getResources().getColor(color));
+            textView.setTextSize(16);
+        }else if(leix == 2){
+            textView.setGravity(Gravity.RIGHT);
+        }else if(leix == 3){
+            textView.setTextColor(getResources().getColor(R.color.huise6));
+        }
+
+        return textView;
+    }
+
+    /**
+     * 创建布局
+     * @param leix 1 外部垂直布局 2内部行布局
+     * @return
+     */
+    public LinearLayout CreateLinearLayout(int leix){
+        LinearLayout linearLayout = new LinearLayout(mContext);
+
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        if(leix == 3){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }
+
+        if(leix == 1){
+            layoutParam.setMargins(0,20,0,0);
+        }
+
+        linearLayout.setLayoutParams(layoutParam);
+
+        if(leix == 1){
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+        }else if(leix == 3){
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        }else if(leix == 2){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        }
+
+
+        return linearLayout;
+    }
+
+    /**
+     * 创建iamgeview
+     * @return
+     */
+    public ImageView CreateImageView(){
+        ImageView imageView = new ImageView(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(20,20);
+        imageView.setLayoutParams(layoutParam);
+        imageView.setBackground(getResources().getDrawable(R.drawable.heise_yuan));
+        return imageView;
+    }
+
+    /**
+     * 签到提交
+     */
+    public void qianDaoTiJiao(){
+        if(mToken != null) {
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
+            MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("gps_lat",String.valueOf(mLocationBaiDu.getLatitude()));
+                jsonObject.put("gps_lng",String.valueOf(mLocationBaiDu.getLontitude()));
+                jsonObject.put("gps_addr",mLocationBaiDu.getAddr());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            body.addFormDataPart("is","2");
+            body.addFormDataPart("data",jsonObject.toString());
+            Log.i("巡店",jsonObject.toString());
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization", "Bearer " + mToken)
+                    .url(mQianDaoTiJiao)
+                    .post(body.build())
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
 }
