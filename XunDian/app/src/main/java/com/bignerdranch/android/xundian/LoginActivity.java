@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.UUID;
@@ -98,6 +99,9 @@ public class LoginActivity extends AppCompatActivity {
     // 公司id写入地址
     public static String mGsIdURl = Config.URL+"/app/user_logined_gongsi";
 
+    // 免验证机器
+    public static String[] mYanZhengJiQi = Config.XunDianMianyanZheng;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -136,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
             if(msg.what==1){
                 DengLuAdd((String) msg.obj);
             }else if(msg.what==2){
-                Log.i("巡店","机器码请求返回"+msg.obj.toString());
+//                Log.i("巡店","机器码请求返回"+msg.obj.toString());
                 if(msg.obj.toString().equals("false")){
                     mLoginModel.deleteLogin(1);
                     // 关闭loading
@@ -506,9 +510,27 @@ public class LoginActivity extends AppCompatActivity {
                 login.setMiMa(mMima);
                 login.setIsBaoCun(mIsBaoCun);
                 mLoginModel.addLogin(login);
-                // 验证跳转
-                YanZheng(TOKEN);
-//                getData();
+                // 删除登录信息
+//                mLoginModel.deleteLogin(1);
+                if(mYanZhengJiQi.length > 0){
+                    int isYOU = 0;
+                    for(int c = 0;c<mYanZhengJiQi.length;c++){
+                        if(mJiQiMa.equals(mYanZhengJiQi[c])){
+                            isYOU = 1;
+                            break;
+                        }
+                    }
+                    // 机器码
+                    if(isYOU == 1){
+                        getData();
+                    }else{
+                        // 验证跳转
+                        YanZheng(TOKEN);
+                    }
+                }else{
+                    // 验证跳转
+                    YanZheng(TOKEN);
+                }
             }else{
                 WeiboDialogUtils.closeDialog(mWeiboDialog);
                 tiShi(mContext);

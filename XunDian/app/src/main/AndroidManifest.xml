@@ -77,7 +77,8 @@
         <!--日常考勤-->
         <activity android:name=".kaoqing.RiChangKaoQingActivity"></activity>
         <!--请假管理-->
-        <activity android:name=".kaoqing.QingJiaGuanLiActivity"></activity>
+        <activity android:name=".kaoqing.QingJiaGuanLiActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
         <!--Android N 相机调用问题-->
         <provider
             android:authorities="com.bignerdranch.android.xundian.provider"

@@ -13,4 +13,7 @@ public class Config {
     // 巡店参数图片压缩高
     public static int XunCanImgHeight = 480;
 
+    // 巡店免验证机器码
+    public static String[] XunDianMianyanZheng = new String[]{"358615524688244"};
+
 }

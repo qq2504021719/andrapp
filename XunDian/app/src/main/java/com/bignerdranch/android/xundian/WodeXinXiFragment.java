@@ -203,6 +203,8 @@ public class WodeXinXiFragment extends Fragment {
      */
     public void setUserView(String string){
         String name = "姓名 : 小郑";
+        String gongHao = "工号 : DD1001";
+        String zhiWu = "职务 : 业务员";
         if(string == null){
             // 头像
             mWo_img.setImageResource(R.drawable.timg);
@@ -244,13 +246,25 @@ public class WodeXinXiFragment extends Fragment {
 
                 if(!GsId.isEmpty()) mWo_gong_si.setText("公司 : "+GongName);
                 // 公司名称结束
+
+                // 工号
+                if(jsonObject.getString("bian_hao") != null){
+                    gongHao = "工号 : "+jsonObject.getString("bian_hao");
+                }
+                if(jsonObject.getString("roles") != null){
+                    zhiWu = "工号 : "+jsonObject.getString("roles");
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         // 姓名
         mWo_xing_ming.setText(name);
-
+        // 工号
+        mWo_gong_hao.setText(gongHao);
+        // 职务
+        mWo_zhi_wu.setText(zhiWu);
         // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
