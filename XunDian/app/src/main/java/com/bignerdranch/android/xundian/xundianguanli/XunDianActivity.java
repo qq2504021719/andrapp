@@ -123,6 +123,7 @@ public class XunDianActivity extends NeiYeCommActivity {
     // this
     // mXunDianModel 登录模型
     private static XunDianModel mXunDianModel;
+    private Login mLogin;
 
     // 门店id
     private int mMenDianID;
@@ -369,6 +370,9 @@ public class XunDianActivity extends NeiYeCommActivity {
      * 值接收处理
      */
     public void values(){
+        mLoginModel = LoginModel.get(mContext);
+        // 查询登录信息
+        mLogin = mLoginModel.getLogin(1);
         // 当前时间
         mDangQianTime = getDangQianTime();
         // Token赋值
@@ -613,7 +617,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
         // 删除本地数据库数据
-        mXunDianModel.deleteXunDian(strid);
+        mXunDianModel.deleteXunDian(strid,String.valueOf(mLogin.getUid()));
         // 设置已提交
         mIsTiJiao = 1;
         // 删除本地超时数据
@@ -647,7 +651,10 @@ public class XunDianActivity extends NeiYeCommActivity {
                 }
 
 
+
                 mXunDianCanShu = new XunDianCanShu();
+                // 用户id
+                mXunDianCanShu.setUserId(String.valueOf(mLogin.getUid()));
                 // 参数id
                 int id = Integer.valueOf(mXunDianJson.getJSONObject(i).getString("id"));
                 // 店铺id
@@ -668,7 +675,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                 mXunDianCanShu.setIs_pai_zhao(mXunDianJson.getJSONObject(i).getString("is_pai_zhao"));
                 // 选择项目
                 mXunDianCanShu.setXuan_ze_qi(mXunDianJson.getJSONObject(i).getString("xuan_ze_qis"));
-                // 是否必填
+                // 是否必须拍照
                 mXunDianCanShu.setIs_bi_tian(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")));
 
 
@@ -1235,32 +1242,31 @@ public class XunDianActivity extends NeiYeCommActivity {
                 inWenTi = 0;
                 if(mXunDianCanShus != null  &&  mXunDianCanShus.size() > 0){
                     for(int i = 0;i<=mZuiDaXiaBiao;i++){
-                        if(mXunDianCanShus.get(i) != null){
-                            if(mXunDianCanShus.get(i).getIs_bi_tian() == 1){
-                                int c = mShowXuHao.get(mXunDianCanShus.get(i).getId());
-                                // 验证值
-                                if(mXunDianCanShus.get(i).getValue() != null){
-                                    String s = mXunDianCanShus.get(i).getValue().trim();
-                                    if(s == null || "".equals(s)){
-                                        tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
-                                        break;
-                                    }else{
-                                        // 验证图片 isZhaoPian
-                                        if(mXunDianCanShus.get(i).getIs_pai_zhao().equals("是")
-                                                && mXunDianCanShus.get(i).getPhontPath() == null
-                                                && mXunDianCanShus.get(i).getPhotoFile() == null
-                                                && mXunDianCanShus.get(i).getServerPhotoPath() == null){
-                                            tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"图片不能为空");
-                                            break;
-                                        }else{
-                                            inWenTi ++;
-                                        }
-                                    }
-                                }else{
-                                    tiShi(mContext,c+" : "+mXunDianCanShus.get(i).getName()+"不能为空");
+                        if(mXunDianCanShus.get(i) != null) {
+                            int c = mShowXuHao.get(mXunDianCanShus.get(i).getId());
+                            // 验证值
+                            if (mXunDianCanShus.get(i).getValue() != null) {
+                                String s = mXunDianCanShus.get(i).getValue().trim();
+                                if (s == null || "".equals(s)) {
+                                    tiShi(mContext, c + " : " + mXunDianCanShus.get(i).getName() + "内容不能为空");
                                     break;
+                                } else {
+                                    // 验证图片 isZhaoPian
+                                    if (mXunDianCanShus.get(i).getIs_pai_zhao().equals("是")
+                                            && mXunDianCanShus.get(i).getIs_bi_tian() == 1
+                                            && mXunDianCanShus.get(i).getPhontPath() == null
+                                            && mXunDianCanShus.get(i).getPhotoFile() == null
+                                            && mXunDianCanShus.get(i).getServerPhotoPath() == null) {
+                                        tiShi(mContext, c + " : " + mXunDianCanShus.get(i).getName() + "图片不能为空");
+                                        break;
+                                    } else {
+                                        inWenTi++;
+                                    }
                                 }
-
+                            } else {
+//                                Log.i("巡店", mXunDianCanShus.get(i).getName());
+                                tiShi(mContext, c + " : " + mXunDianCanShus.get(i).getName() + "内容不能为空");
+                                break;
                             }
                         }
                     }
@@ -1361,7 +1367,8 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         XunDianCanShu xunDianCanShu = mXunDianModel.getXunDian(
                 String.valueOf(mXunDianCanShu.getMenDianId()),
-                String.valueOf(mXunDianCanShu.getXiaBiao())
+                String.valueOf(mXunDianCanShu.getXiaBiao()),
+                mXunDianCanShu.getUserId()
         );
         if(xunDianCanShu != null){
             // 用户输入值

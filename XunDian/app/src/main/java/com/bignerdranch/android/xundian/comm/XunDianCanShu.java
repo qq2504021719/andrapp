@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.LoginActivity;
+import com.bignerdranch.android.xundian.model.LoginModel;
 
 import java.io.File;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import java.io.Serializable;
  */
 
 public class XunDianCanShu{
+
     // 标题
     private String mName;
     // 填写方式
@@ -57,6 +59,17 @@ public class XunDianCanShu{
 
     // 巡店完成时间
     public String mXunJieShuTime;
+
+    // 用户id
+    private String mUserId;
+
+    public void setUserId(String userId) {
+        mUserId = userId;
+    }
+
+    public String getUserId() {
+        return mUserId;
+    }
 
     public void setXunKaiShiTime(String xunKaiShiTime) {
         mXunKaiShiTime = xunKaiShiTime;

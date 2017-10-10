@@ -148,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
                     tiShi(mContext,"账号已绑定手机,请联系管理员");
                 }else if(mJiQiMa.equals(msg.obj.toString())){
                     getUserData();
-//                    getData();
                 }else{
                     // 关闭loading
                     WeiboDialogUtils.closeDialog(mWeiboDialog);
@@ -187,7 +186,16 @@ public class LoginActivity extends AppCompatActivity {
      */
     public static void yongHuGs(String stringJson){
         try {
+
+
             JSONObject jsonObject = new JSONObject(stringJson);
+
+            // 存储用户id
+            Config.ChaoJiYongHu = jsonObject.getString("id");
+            mLogin = mLoginModel.getLogin(1);
+            mLogin.setUid(Integer.valueOf(jsonObject.getString("id")));
+            mLoginModel.updateLogin(mLogin);
+
             JSONArray jsongong_si = new JSONArray(jsonObject.getString("gong_si").toString());
             if(jsongong_si.length() > 1){
                 mStringsGS = new String[jsongong_si.length()];
@@ -522,7 +530,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     // 机器码
                     if(isYOU == 1){
-                        getData();
+                        getUserData();
                     }else{
                         // 验证跳转
                         YanZheng(TOKEN);

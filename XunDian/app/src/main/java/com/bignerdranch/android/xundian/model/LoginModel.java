@@ -91,6 +91,17 @@ public class LoginModel {
     }
 
     /**
+     * 更新记录
+     * @param login
+     */
+    public void updateLogin(Login login){
+        ContentValues values = getContentValues(login);
+        mDatabase.update(DbSchema.LoginTable.NAME,values,
+                DbSchema.LoginTable.Cols.ID+"=?",
+                new String[] {"1"});
+    }
+
+    /**
      * 添加Login
      * @param l
      */
@@ -112,6 +123,7 @@ public class LoginModel {
         values.put(LoginTable.Cols.ZHANGHAO,login.getZhangHao());
         values.put(LoginTable.Cols.MIMA,login.getMiMa());
         values.put(LoginTable.Cols.ISBAOCUN,login.getIsBaoCun());
+        values.put(LoginTable.Cols.USERID,login.getUid());
         return values;
     }
 

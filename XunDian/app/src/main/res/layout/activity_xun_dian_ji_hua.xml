@@ -21,7 +21,7 @@
                 <LinearLayout
                     android:id="@+id/ji_hua_an_pai"
                     style="@style/GongZuoZhongXin.3LinearLayout"
-                    android:background="@drawable/right_border">
+                    android:background="@drawable/calendar_right_border">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
                         android:src="@drawable/xundian"

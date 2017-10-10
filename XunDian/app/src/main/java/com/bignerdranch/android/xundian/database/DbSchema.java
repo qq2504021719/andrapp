@@ -26,6 +26,8 @@ public class DbSchema {
             public static final String MIMA ="mima";
             // 是否保存账号
             public static final String ISBAOCUN = "isbaocun";
+            // 用户id
+            public static final String USERID = "uid";
         }
     }
 
@@ -47,6 +49,8 @@ public class DbSchema {
             public static final String XUNKAISHITIME = "xunkaishitime";
             // 巡店结束时间
             public static final String XUNJIESHITIME = "xunjieshutime";
+            // 用户id
+            public static final String USERID = "uid";
 
         }
     }
@@ -67,6 +71,7 @@ public class DbSchema {
             public static final String WEICHAOSHI = "weichaoshi";
             // 总时间
             public static final String ZHONGSHI = "zhongshi";
+
         }
     }
 

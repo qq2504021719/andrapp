@@ -17,6 +17,7 @@ public class ChaoShi {
     // 总时间
     private int mZhongShi;
 
+
     public void setZhongShi(int zhongShi) {
         mZhongShi = zhongShi;
     }

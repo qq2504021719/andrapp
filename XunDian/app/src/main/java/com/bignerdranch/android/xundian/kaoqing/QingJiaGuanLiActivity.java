@@ -11,9 +11,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bignerdranch.android.calendarmultiselect.CalendarMultiSelectActivity;
+import com.bignerdranch.android.calendarmultiselect.DayColor;
+import com.bignerdranch.android.calendarmultiselect.Config;
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -131,16 +135,24 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mTextview_an_tian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
-                new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
-                        mTextview_an_tian_value.setText(string);
-
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                // 清空默认选中
+                Config.mYiXuanZheData = new ArrayList<DayColor>();
+//                // 编辑模式
+                Config.mMoShi = 1;
+//                // 启动
+                Intent intent = new Intent(QingJiaGuanLiActivity.this, CalendarMultiSelectActivity.class);
+//                startActivityForResult(intent, REQUEST_PHOTO);
+                startActivity(intent);
+//                Calendar c = Calendar.getInstance();
+//                new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                        // TODO Auto-generated method stub
+//                        String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
+//                        mTextview_an_tian_value.setText(string);
+//
+//                    }
+//                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
     }

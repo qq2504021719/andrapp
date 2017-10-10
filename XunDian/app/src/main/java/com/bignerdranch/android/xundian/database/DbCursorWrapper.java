@@ -33,6 +33,7 @@ public class DbCursorWrapper extends CursorWrapper {
         String zhanghao = getString(getColumnIndex(LoginTable.Cols.ZHANGHAO));
         String mima = getString(getColumnIndex(LoginTable.Cols.MIMA));
         int isbaocun = getInt(getColumnIndex(LoginTable.Cols.ISBAOCUN));
+        int uid = getInt(getColumnIndex(LoginTable.Cols.USERID));
 
         Login login = new Login();
         login.setId(id);
@@ -41,7 +42,7 @@ public class DbCursorWrapper extends CursorWrapper {
         login.setZhangHao(zhanghao);
         login.setMiMa(mima);
         login.setIsBaoCun(isbaocun);
-
+        login.setUid(uid);
         return login;
     }
 
@@ -54,12 +55,15 @@ public class DbCursorWrapper extends CursorWrapper {
         String phone = getString(getColumnIndex(XunDianTable.Cols.PHONE));
         String xunKaiShiTime = getString(getColumnIndex(XunDianTable.Cols.XUNKAISHITIME));
         String xunJieShuTime = getString(getColumnIndex(XunDianTable.Cols.XUNJIESHITIME));
+        String userid = getString(getColumnIndex(XunDianTable.Cols.USERID));
+
 
         XunDianCanShu xunDianCanShu = new XunDianCanShu();
         xunDianCanShu.setValue(values);
         xunDianCanShu.setPhontPath(phone);
         xunDianCanShu.setXunKaiShiTime(xunKaiShiTime);
         xunDianCanShu.setXunJieShuTime(xunJieShuTime);
+        xunDianCanShu.setUserId(userid);
 
         return xunDianCanShu;
     }
@@ -76,12 +80,14 @@ public class DbCursorWrapper extends CursorWrapper {
         int weiChaoShi = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.WEICHAOSHI));
         int zhongshi = getInt(getColumnIndex(DbSchema.ChaoShiTable.Cols.ZHONGSHI));
 
+
         ChaoShi chaoShi = new ChaoShi();
         chaoShi.setId(id);
         chaoShi.setIsChaoShi(isChaoShi);
         chaoShi.setChaoShi(chaoSHi);
         chaoShi.setWeiChaoShi(weiChaoShi);
         chaoShi.setZhongShi(zhongshi);
+
         return chaoShi;
     }
 

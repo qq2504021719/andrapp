@@ -1,1 +1,1 @@
-include ':app', 'loading', ':MPChartLib'
+include ':app', 'loading', ':MPChartLib', ':appCalendar'

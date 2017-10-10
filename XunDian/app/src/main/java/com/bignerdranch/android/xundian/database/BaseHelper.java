@@ -32,6 +32,7 @@ public class BaseHelper extends SQLiteOpenHelper {
                 LoginTable.Cols.TIME+", "+
                 LoginTable.Cols.ZHANGHAO+", "+
                 LoginTable.Cols.MIMA+", "+
+                LoginTable.Cols.USERID+", "+
                 LoginTable.Cols.ISBAOCUN+");"
         );
 
@@ -45,6 +46,7 @@ public class BaseHelper extends SQLiteOpenHelper {
                 XunDianTable.Cols.VALUES+", "+
                 XunDianTable.Cols.XUNKAISHITIME+", "+
                 XunDianTable.Cols.XUNJIESHITIME+", "+
+                XunDianTable.Cols.USERID+", "+
                 XunDianTable.Cols.PHONE+");"
         );
 

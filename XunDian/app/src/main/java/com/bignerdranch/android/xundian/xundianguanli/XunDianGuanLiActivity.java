@@ -35,9 +35,11 @@ import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.TongZhiZhongXinFragment;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
+import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
 import com.bignerdranch.android.xundian.kaoqing.RiChangKaoQingActivity;
+import com.bignerdranch.android.xundian.model.LoginModel;
 import com.bignerdranch.android.xundian.model.XunDianModel;
 
 
@@ -92,6 +94,10 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     // 巡店数据
     public XunDianCanShu mXunDianCanShu;
 
+    // LoginModel 登录模型
+    private static LoginModel mLoginModel;
+    private Login mLogin;
+
     /**
      * 封装创建Intent对象,并传入参数
      * @param packageContext
@@ -112,8 +118,6 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         // 注意该方法要再setContentView方法之前实现
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_xun_dian_guan_li);
-
-
 
         mContext = this;
 
@@ -141,6 +145,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
      * 值接收处理
      */
     public void values(){
+        mLoginModel = LoginModel.get(mContext);
         // Token赋值
         setToken(mContext);
         // 品牌请求
@@ -320,7 +325,11 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         String[] strings = new String[2];
         strings[0] = "true";
         // 查询数据库所有的记录
-        List<XunDianCanShu> xunDianCanShuList = mXunDianModel.getXunDianID();
+        mLogin = mLoginModel.getLogin(1);
+
+        List<XunDianCanShu> xunDianCanShuList = mXunDianModel.getXunDianID(String.valueOf(mLogin.getUid()));
+
+//        Log.i("巡店",xunDianCanShuList.get(0).getUserId()+"|"+String.valueOf(mLogin.getUid())+"|"+String.valueOf(mLogin.getToken()));
 
         if(xunDianCanShuList.size() > 0){
             try {
@@ -344,7 +353,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
             }
         }
 
-
+//        Log.i("巡店",strings[0]+"|"+strings[1]);
         return strings;
     }
 

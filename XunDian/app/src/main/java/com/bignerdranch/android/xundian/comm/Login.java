@@ -11,6 +11,15 @@ public class Login {
     private String mZhangHao;
     private String mMiMa;
     private int mIsBaoCun;
+    private int mUid;
+
+    public void setUid(int uid) {
+        mUid = uid;
+    }
+
+    public int getUid() {
+        return mUid;
+    }
 
     public void setIsBaoCun(int isBaoCun) {
         mIsBaoCun = isBaoCun;
