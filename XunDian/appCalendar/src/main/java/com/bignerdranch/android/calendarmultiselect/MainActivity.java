@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 清空默认选中
-                Config.mYiXuanZheData = new ArrayList<DayColor>();
+                CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
                 // 编辑模式
-                Config.mMoShi = 1;
+                CalendarConfig.mMoShi = 1;
                 // 启动
                 Intent intent = new Intent(MainActivity.this, CalendarMultiSelectActivity.class);
                 startActivityForResult(intent, REQUEST_PHOTO);
@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 查询模式
-                Config.mMoShi = 0;
+                CalendarConfig.mMoShi = 0;
                 // 默认选中赋值
-                Config.mYiXuanZheData = mMoRenData;
+                CalendarConfig.mYiXuanZheData = mMoRenData;
                 // 启动
                 Intent intent = new Intent(MainActivity.this, CalendarMultiSelectActivity.class);
                 startActivity(intent);

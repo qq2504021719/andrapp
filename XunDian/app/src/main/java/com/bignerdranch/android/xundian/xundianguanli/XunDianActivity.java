@@ -282,7 +282,9 @@ public class XunDianActivity extends NeiYeCommActivity {
 //                            tiShi(mContext,"图片上传 : "+mCanShuYiTiJiao+"/"+mCanShuNums);
                         }
                         // 提交数据
+                        Log.i("巡店",mCanShuNums+"提交参数"+mCanShuYiTiJiao);
                         if(mCanShuNums == mCanShuYiTiJiao){
+                            Log.i("巡店","提交参数");
                             TiJiao(mXunDianCanShus);
                         }
 
@@ -442,6 +444,8 @@ public class XunDianActivity extends NeiYeCommActivity {
     public void canShuTiJiao(){
         if(isNetworkAvailableAndConnected(mContext)){
             if(mXunDianCanShus.size() > 0){
+                mCanShuYiTiJiao = 0;
+                mCanShuNums = 0;
 //            tiShi(mContext,"上传中,请稍等");
                 /**
                  * 图片的数量
@@ -457,6 +461,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                  * 图片上传
                  */
                 if(mCanShuNums > 0){
+                    Log.i("巡店",""+mCanShuNums);
                     for(Integer key:mXunDianCanShus.keySet()){
                         if(mXunDianCanShus.get(key) != null){
                             PhoneTiJiao(mXunDianCanShus.get(key));
@@ -569,7 +574,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                     jsonObject.put("xun_kai_si_time",mXunDianCanShus.get(key).getXunKaiShiTime());
                     // 完成时间
                     jsonObject.put("xun_jie_shu_time",mXunDianCanShus.get(key).getXunJieShuTime());
-//                    Log.i("巡店",mXunDianCanShus.get(key).getXunKaiShiTime()+"|"+mXunDianCanShus.get(key).getXunJieShuTime());
+                    Log.i("巡店",jsonObject.toString());
                     jsonObjects.put(""+key,jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -644,8 +649,9 @@ public class XunDianActivity extends NeiYeCommActivity {
             mXunDianJson = new JSONArray(jsonStrings);
             mCanShuNum = 0;
             for(int i = 0;i<mXunDianJson.length();i++){
-
-                if(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")) == 1){
+                mCanShuNum++;
+                if(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")) == 1
+                        && mXunDianJson.getJSONObject(i).getString("is_pai_zhao").equals("是")){
                     // 不为空数量
                     mCanShuNum++;
                 }
@@ -1260,7 +1266,11 @@ public class XunDianActivity extends NeiYeCommActivity {
                                         tiShi(mContext, c + " : " + mXunDianCanShus.get(i).getName() + "图片不能为空");
                                         break;
                                     } else {
-                                        inWenTi++;
+                                        inWenTi++; // 输入框累加
+
+                                        if(mXunDianCanShus.get(i).getIs_pai_zhao().equals("是") && mXunDianCanShus.get(i).getIs_bi_tian() == 1){
+                                            inWenTi++;
+                                        }
                                     }
                                 }
                             } else {
@@ -1271,10 +1281,10 @@ public class XunDianActivity extends NeiYeCommActivity {
                         }
                     }
 
+                    Log.i("巡店",mCanShuNum+"|"+inWenTi);
 
                     // 提交 18817610991  34805
                     if(mIsTijiao == 1){
-//                        Log.i("巡店",mCanShuNum+"|"+inWenTi);
                         if(mCanShuNum == inWenTi){
                             LoadingStringEdit("提交中...");
                             mIsTijiao = 0;

@@ -247,15 +247,19 @@ public class TongZhiZhongXinFragment extends Fragment {
     public void shanChuHongDian(){
         if(mGongGaoNum == 0){
             mGong_gao_yuan_view.setVisibility(View.INVISIBLE);
+            mGongGaoNum = 0;
         }else{
             mGong_gao_yuan_view.setVisibility(View.VISIBLE);
         }
         if(mTongZhiNum == 0){
             mTong_zhi_yuan_view.setVisibility(View.INVISIBLE);
+            mTongZhiNum = 0;
         }else{
             mTong_zhi_yuan_view.setVisibility(View.VISIBLE);
         }
+
         Log.i("巡店","通知公告-公告"+mGongGaoNum+"|通知"+mTongZhiNum);
+
         if(mGongGaoNum == 0 && mTongZhiNum == 0){
             mCallbacks.IsHong(1);
         }else{
@@ -404,6 +408,8 @@ public class TongZhiZhongXinFragment extends Fragment {
     public void getTongZhis(String str){
         mTongZhis = new ArrayList<TongZhi>();
         mGongGaos = new ArrayList<TongZhi>();
+        mGongGaoNum = 0;
+        mTongZhiNum = 0;
         try {
             JSONArray jsonArray = new JSONArray(str);
             if(jsonArray.length() > 0){

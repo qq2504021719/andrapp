@@ -73,7 +73,10 @@
                         android:id="@+id/editText_yuan_ying"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="#f5f5f5"/>
+                        android:padding="5dp"
+                        android:textSize="14dp"
+                        android:background="#f5f5f5"
+                        android:textCursorDrawable="@drawable/edit_cursor_color"/>
 
                 </LinearLayout>
 
@@ -99,6 +102,7 @@
 
                     <TextView
                         android:id="@+id/textview_an_tian_value"
+                        android:layout_width="200dp"
                         style="@style/TjJiHuaTextView1"/>
 
                     <ImageView

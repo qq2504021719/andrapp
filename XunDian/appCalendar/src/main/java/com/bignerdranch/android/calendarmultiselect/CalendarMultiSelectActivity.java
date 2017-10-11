@@ -13,17 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class CalendarMultiSelectActivity extends AppCompatActivity {
@@ -68,10 +65,10 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
     private AlertDialog alertDialog1;
 
     // 1 编辑模式 0 显示模式
-    public int mMoShi = Config.mMoShi;
+    public int mMoShi = CalendarConfig.mMoShi;
 
     // 已选择数据
-    List<DayColor> myiXuanZheData = Config.mYiXuanZheData;
+    List<DayColor> myiXuanZheData = CalendarConfig.mYiXuanZheData;
 
     // 选择日期返回标识
     public static final String mFanHuiBiao = "data";
@@ -234,11 +231,15 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
      * 值操作
      */
     public void value(){
+        // 单选模式
+        if(CalendarConfig.mDanXuanMoShi == 1){
+            Toast.makeText(mContext,"单选模式,只会取第一次选择", Toast.LENGTH_SHORT).show();
+        }
         // 按钮样式
-        mFan_hui.setTextSize(Config.mButtonFontSize);
-        mFan_hui.setText(Config.mButtonText);
-        mFan_hui.setTextColor(getResources().getColor(Config.mButtonTextColor));
-        mFan_hui.setBackground(getResources().getDrawable(Config.mButtonBackground));
+        mFan_hui.setTextSize(CalendarConfig.mButtonFontSize);
+        mFan_hui.setText(CalendarConfig.mButtonText);
+        mFan_hui.setTextColor(getResources().getColor(CalendarConfig.mButtonTextColor));
+        mFan_hui.setBackground(getResources().getDrawable(CalendarConfig.mButtonBackground));
         // 当前年赋值
         stringsNian[0] = getYearMonth(1);
         // 下一年赋值
@@ -307,7 +308,7 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
                 LinearLayout neiBuZuJian = CreateLinearLayout(2);
                 TextView textView = CreateTextView(strings[i],0,0,0);
                 // 查看是否创建背景色
-                String[] stringsc = ValueIs(mXuanYear+mXuanMonth+strings[i]);
+                String[] stringsc = ValueIs(mXuanYear+"-"+mXuanMonth+"-"+strings[i]);
                 if(stringsc[0].equals("true")){
                     DayColor dayColor = myiXuanZheData.get(Integer.valueOf(stringsc[1]));
                     textView = CreateTextView(strings[i],1,dayColor.getFontColor(),dayColor.getColor());
@@ -432,7 +433,8 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
             textView.setBackground(getResources().getDrawable(backgr));
         }
 
-        if(mMoShi == 1){
+        if(mMoShi == 1 && string != ""){
+
             final String XinShiStr = string;
             final TextView textView1 = textView;
             textView.setOnClickListener(new View.OnClickListener() {
@@ -440,7 +442,7 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
                 int isDianJi = 0;
                 @Override
                 public void onClick(View view) {
-                    String day = mXuanYear+mXuanMonth+XinShiStr;
+                    String day = mXuanYear+"-"+mXuanMonth+"-"+XinShiStr;
                     String[] strings = ValueIs(day);
                     if(strings[0].equals("true")){
                         textView1.setTextColor(getResources().getColor(R.color.huise6Calendar));
@@ -452,16 +454,19 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
                     }else{
                         Log.i(TAG,day);
 
-                        textView1.setTextColor(getResources().getColor(Config.mMoRenZiTiSe));
-                        textView1.setBackground(getResources().getDrawable(Config.mMoRenBeiJingSe));
+                        textView1.setTextColor(getResources().getColor(CalendarConfig.mMoRenZiTiSe));
+                        textView1.setBackground(getResources().getDrawable(CalendarConfig.mMoRenBeiJingSe));
 
                         // 存储选择
                         DayColor dayColor = new DayColor();
                         dayColor.setDay(day);
+                        dayColor.setColor(CalendarConfig.mMoRenBeiJingSe);
+                        dayColor.setFontColor(CalendarConfig.mMoRenZiTiSe);
                         myiXuanZheData.add(dayColor);
                     }
                 }
             });
+
         }
 
 
@@ -488,7 +493,7 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
         if(leix == 1){
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setPadding(0,30,0,30);
-            linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border));
+            linearLayout.setBackground(getResources().getDrawable(R.drawable.calendar_bottom_border));
         }else if(leix == 2){
             linearLayout.setGravity(Gravity.CENTER);
         }
