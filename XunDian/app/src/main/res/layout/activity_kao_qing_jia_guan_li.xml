@@ -129,6 +129,7 @@
                     android:id="@+id/linear_an_shi_jian"
                     android:layout_width="match_parent"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:background="#f5f5f5">
                     <!--按时间段-日期选择-->
@@ -220,6 +221,199 @@
                     android:id="@+id/button_ti_jiao_shen_qing"
                     android:text="提交申请"
                     style="@style/XunDianButton"/>
+            </LinearLayout>
+
+            <!-- 请假记录    -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/heise"
+                    android:textSize="16dp"
+                    android:text="@string/qing_jia_ji_lv"
+                    android:layout_marginTop="10dp"/>
+
+                <!--请假数据-->
+                <LinearLayout
+                    android:id="@+id/linear_qing_jia_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="30dp">
+
+                    <!--1-->
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+                        <!--第一行-->
+                        <!--2-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingLeft="5dp">
+                            <!--3-->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:orientation="vertical">
+                                <!--1-->
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/heise"
+                                    android:textSize="15dp"
+                                    android:text="1 余雷"/>
+                                <!--2-->
+                                <TextView
+                                    android:layout_marginTop="5dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="15dp"
+                                    android:textSize="12dp"
+                                    android:text="2017-10-12 事假 找房"/>
+                            </LinearLayout>
+                            <!--4-->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="right"
+                                android:orientation="horizontal">
+                                <!--3-->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hongse1"
+                                    android:text="待审核"/>
+                                <!--1-->
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/kao_qing_xing"/>
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                        <!--第二行-->
+                        <!--5-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="5dp"
+                            android:paddingLeft="15dp">
+                            <!--6-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <!--7-->
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="bottom"
+                                    android:layout_weight="1"
+                                    android:layout_marginRight="10dp"
+                                    >
+                                    <!--2-->
+                                    <ImageView
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:src="@drawable/kao_qing_yong_hu"/>
+                                    <!--4-->
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" 1:吴绍康 "
+                                        android:textColor="@color/heise"
+                                        android:textSize="12dp"/>
+                                    <!--3-->
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ka_qing_xiao_lian"/>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_weight="1"
+                                    android:layout_marginRight="10dp"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:src="@drawable/kao_qing_yong_hu"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:text=" 2:何进 "
+                                        android:textColor="@color/heise"
+                                        android:textSize="12dp"/>
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_gravity="bottom"
+                                        android:src="@drawable/ka_qing_ku_lian"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom"
+                                    android:layout_marginRight="10dp"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:src="@drawable/kao_qing_yong_hu"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="bottom"
+                                        android:text=" 3:董事 "
+                                        android:textColor="@color/heise"
+                                        android:textSize="12dp"/>
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ka_qing_dai_shen_he"/>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
             </LinearLayout>

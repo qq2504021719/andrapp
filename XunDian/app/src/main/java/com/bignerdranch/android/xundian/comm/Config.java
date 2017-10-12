@@ -9,9 +9,9 @@ public class Config {
     public static String URL = "http://xd.trc-demo.com:3002";
 
     // 巡店参数图片压缩宽
-    public static int XunCanImgWidth = 150;
+    public static int XunCanImgWidth = 300;
     // 巡店参数图片压缩高
-    public static int XunCanImgHeight = 240;
+    public static int XunCanImgHeight = 480;
 
     // 用户id
     public static String ChaoJiYongHu = "0";

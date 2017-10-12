@@ -66,4 +66,7 @@
     <string name="qian_dao">签到</string>
     <string name="shang_ban_qian_dao">上班签到</string>
     <string name="xia_ban_qian_dao">下班签到</string>
+
+    <string name="qing_jia_ji_lv">请假记录:</string>
+
 </resources>

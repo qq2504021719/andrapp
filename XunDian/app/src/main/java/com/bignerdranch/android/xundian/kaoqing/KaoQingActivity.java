@@ -87,6 +87,15 @@ public class KaoQingActivity extends KaoQingCommonActivity{
             }
         });
 
+        // 考勤记录
+        mKao_qing_ji_lu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = KaoQingJiLuActivity.newIntent(mContext,1);
+                startActivity(i);
+            }
+        });
+
         // 请假管理
         mQing_jia_guan_li.setOnClickListener(new View.OnClickListener() {
             @Override

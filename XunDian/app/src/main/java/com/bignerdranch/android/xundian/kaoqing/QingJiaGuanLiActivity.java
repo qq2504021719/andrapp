@@ -98,12 +98,21 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     // 提交申请
     public Button mButton_ti_jiao_shen_qing;
 
+    // 请假记录 linear
+    public LinearLayout mLinear_qing_jia_data;
+    // 请假数据
+    private String mQingJiaData = "";
+
     // 请假对象
     public QingJia mQingJia = new QingJia();
     // 时间对象
     public Calendar ct;
     // 请假数据提交地址
     public String mTiJiao = Config.URL+"/app/qing_jia_add";
+    // 请假数据请求地址
+    public String mQingQiuDataUrl = Config.URL+"/app/qing_jia_cha_xun";
+
+
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,QingJiaGuanLiActivity.class);
@@ -159,13 +168,15 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
 
         // 提交申请
         mButton_ti_jiao_shen_qing = (Button)findViewById(R.id.button_ti_jiao_shen_qing);
+
+        // 请假数据
+        mLinear_qing_jia_data = (LinearLayout)findViewById(R.id.linear_qing_jia_data);
     }
     /**
      * 值操作
      */
     public void values(){
         // 类型背景色赋值
-
         mLeiXingBeiJingSe.put("事假",R.drawable.ri_qi_background_zi_se);
         mLeiXingBeiJingSe.put("病假",R.drawable.ri_qi_background_hong_se);
         mLeiXingBeiJingSe.put("年假",R.drawable.ri_qi_background_lv_se);
@@ -173,8 +184,6 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
 
         // Token赋值
         setToken(mContext);
-
-//        Log.i("巡店",mToken);
 
         // 类型默认值
         mQingJia.setLeiXing("");
@@ -186,10 +195,14 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mQingJia.setXiaWuKaiShi("");
         mQingJia.setXiaWuJieShu("");
         mQingJia.setYuanYing("");
+
+        // 本月请假数据显示
+        QingJiaDataXianShi();
+        // 清空请假内容
+        mLinear_qing_jia_data.removeAllViews();
+
     }
 
-    private float mDensity;
-    private int mHiddenViewMeasuredHeight;
     /**
      * 组件操作, 操作
      */
@@ -260,7 +273,17 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mTextview_an_shi_jian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                float mDensity = getResources().getDisplayMetrics().density;
 
+                int height = (int) (mDensity * 120 + 0.5);
+
+                if (mLinear_an_shi_jian.getVisibility() == View.GONE) {
+                    animateOpen(mLinear_an_shi_jian,height);
+                    animationIvOpen();
+                } else {
+                    animateClose(mLinear_an_shi_jian);
+                    animationIvClose();
+                }
             }
         });
 
@@ -454,36 +477,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         }
     }
 
-    /**
-     * 日期选择解析
-     * @param str
-     * @param c 1 多选 2 单选
-     * @return
-     */
-    public String JieXi(String str,int c){
-        String string = "";
-        try {
-            JSONArray jsonArray = new JSONArray(str);
 
-            if (jsonArray.length()>0){
-                if(c == 2){
-                    string = String.valueOf(jsonArray.get(0));
-                }else if(c == 1) {
-                    for (int i = 0;i<jsonArray.length();i++){
-                        if(string.equals("")){
-                            string = String.valueOf(jsonArray.get(i));
-                        }else{
-                            string += ","+String.valueOf(jsonArray.get(i));
-                        }
-                    }
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return string;
-    }
 
     /**
      * 数据提交
@@ -541,15 +535,15 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                     .build();
 
 
-//新建一个线程，用于得到服务器响应的参数
+            //新建一个线程，用于得到服务器响应的参数
             mThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     Response response = null;
                     try {
-//回调
+                        //回调
                         response = client.newCall(request).execute();
-//将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
                         mHandler.obtainMessage(1, response.body().string()).sendToTarget();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -572,6 +566,10 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             if(msg.what==1){
                 tiShi(mContext,msg.obj.toString());
                 NeiRongQingKong();
+            }else if(msg.what==2){
+                mQingJiaData = msg.obj.toString();
+
+                QingJiaDataShow(mQingJiaData,mLinear_qing_jia_data);
             }
 
         }
@@ -596,4 +594,44 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mShang_wu_qing_jia.setChecked(false);
         mTextview_an_shi_jian_xia_wu_value.setText("");
     }
+
+    public void QingJiaDataQingQiu(){
+        if(mToken != ""){
+            final OkHttpClient client = new OkHttpClient();
+            MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            body.addFormDataPart("xx","xx");
+
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(mQingQiuDataUrl)
+                    .post(body.build())
+                    .build();
+
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
+    /**
+     * 请假数据显示
+     */
+    public void QingJiaDataXianShi(){
+        // 请求数据
+        QingJiaDataQingQiu();
+    }
+
 }
