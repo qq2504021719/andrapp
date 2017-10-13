@@ -176,6 +176,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
      * 值操作
      */
     public void values(){
+        mActivityLeiXing = 0;
         // 类型背景色赋值
         mLeiXingBeiJingSe.put("事假",R.drawable.ri_qi_background_zi_se);
         mLeiXingBeiJingSe.put("病假",R.drawable.ri_qi_background_hong_se);
@@ -489,6 +490,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             body.addFormDataPart("bu_meng",mQingJia.getBuMeng());
             body.addFormDataPart("qing_jia_lei_xing",mQingJia.getLeiXing());
             body.addFormDataPart("qing_jia_yuan_yin",mQingJia.getYuanYing());
+//            Log.i("巡店",mQingJia.getBuMeng()+"|"+mQingJia.getLeiXing()+"|"+mQingJia.getYuanYing());
             if(!mQingJia.getDay().equals("")){
                 body.addFormDataPart("an_tian_qing_jia",mQingJia.getDay());
                 body.addFormDataPart("an_shi_jian_dun","");
@@ -497,35 +499,42 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                 body.addFormDataPart("an_shi_jian_duan_xia_wu_kai_shi","");
                 body.addFormDataPart("an_shi_jian_duan_xia_wu_jie_shu","");
             }else{
+                body.addFormDataPart("an_tian_qing_jia","");
+                // 请假时间段
                 String an_shi_jian_dun = "";
                 if (!mQingJia.getShiJianDuan().equals("")) {
                     an_shi_jian_dun = mQingJia.getShiJianDuan();
                 }
                 body.addFormDataPart("an_shi_jian_dun",an_shi_jian_dun);
 
+                // 请假上午开始时间
                 String an_shi_jian_duan_shang_wu_kai_shi = "";
                 if (!mQingJia.getShangWuKaiShi().equals("")) {
                     an_shi_jian_duan_shang_wu_kai_shi = mQingJia.getShangWuKaiShi();
                 }
                 body.addFormDataPart("an_shi_jian_duan_shang_wu_kai_shi",an_shi_jian_duan_shang_wu_kai_shi);
 
+                // 请假上午结束时间
                 String an_shi_jian_duan_shang_wu_jie_shu = "";
                 if (!mQingJia.getShangWuJieShu().equals("")) {
                     an_shi_jian_duan_shang_wu_jie_shu = mQingJia.getShangWuJieShu();
                 }
                 body.addFormDataPart("an_shi_jian_duan_shang_wu_jie_shu",an_shi_jian_duan_shang_wu_jie_shu);
 
+                // 请假下午开始时间
                 String an_shi_jian_duan_xia_wu_kai_shi = "";
                 if (!mQingJia.getXiaWuKaiShi().equals("")) {
                     an_shi_jian_duan_xia_wu_kai_shi = mQingJia.getXiaWuKaiShi();
                 }
                 body.addFormDataPart("an_shi_jian_duan_xia_wu_kai_shi",an_shi_jian_duan_xia_wu_kai_shi);
 
+                // 请假下午结束时间
                 String an_shi_jian_duan_xia_wu_jie_shu = "";
                 if (!mQingJia.getXiaWuJieShu().equals("")) {
                     an_shi_jian_duan_xia_wu_jie_shu = mQingJia.getXiaWuJieShu();
                 }
                 body.addFormDataPart("an_shi_jian_duan_xia_wu_jie_shu",an_shi_jian_duan_xia_wu_jie_shu);
+//                Log.i("巡店",an_shi_jian_dun+"|"+an_shi_jian_duan_shang_wu_kai_shi+"|"+an_shi_jian_duan_shang_wu_jie_shu);
             }
 
             final Request request = new Request.Builder()
@@ -565,10 +574,11 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
              */
             if(msg.what==1){
                 tiShi(mContext,msg.obj.toString());
+                // 请求请假数据
+                QingJiaDataQingQiu();
                 NeiRongQingKong();
             }else if(msg.what==2){
                 mQingJiaData = msg.obj.toString();
-
                 QingJiaDataShow(mQingJiaData,mLinear_qing_jia_data);
             }
 
@@ -587,14 +597,18 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mEditText_yuan_ying.setText("");
         // 清空按天请假
         mTextview_an_tian_value.setText("");
+        mTextview_an_shi_jian_ri_qi_value.setText("");
 
         mShang_wu_qing_jia.setChecked(false);
         mTextview_an_shi_jian_shang_wu_value.setText("");
 
-        mShang_wu_qing_jia.setChecked(false);
+        mXia_wu_qing_jia.setChecked(false);
         mTextview_an_shi_jian_xia_wu_value.setText("");
     }
 
+    /**
+     * 请求请假数据
+     */
     public void QingJiaDataQingQiu(){
         if(mToken != ""){
             final OkHttpClient client = new OkHttpClient();

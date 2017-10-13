@@ -81,6 +81,9 @@
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
         <!--考勤记录-->
         <activity android:name=".kaoqing.KaoQingJiLuActivity"></activity>
+        <!--拜访记录-->
+        <activity android:name=".kaoqing.BaiFangGuanLiActivity"></activity>
+
         <!--Android N 相机调用问题-->
         <provider
             android:authorities="com.bignerdranch.android.xundian.provider"

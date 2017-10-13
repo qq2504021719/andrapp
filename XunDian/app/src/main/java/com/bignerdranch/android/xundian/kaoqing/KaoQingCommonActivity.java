@@ -52,6 +52,11 @@ public class KaoQingCommonActivity extends CommActivity {
     // dialog,加载
     public Dialog mWeiboDialog;
 
+    // 考勤记录-请假记录列表高度
+    public int mQingJiaHeight = 0;
+    // activity 类型
+    public int mActivityLeiXing = 0;
+
     /**
      * 默认连接数据库
      * @param context
@@ -157,6 +162,7 @@ public class KaoQingCommonActivity extends CommActivity {
      * @param linearLayout 显示父布局
      */
     public void QingJiaDataShow(String dataStr, LinearLayout linearLayout){
+        mQingJiaHeight = 0;
         // 清空布局
         linearLayout.removeAllViews();
         // 请假数据不为空
@@ -164,14 +170,55 @@ public class KaoQingCommonActivity extends CommActivity {
             try {
                 JSONArray jsonArray = new JSONArray(dataStr);
                 if(jsonArray.length() > 0){
-                    for (int i = 0;i<jsonArray.length();i++){
+                    if(mActivityLeiXing == 1){
+                        int biaoShi = 0;
+                        for (int i = 0;i<jsonArray.length();i++){
+                            // time data 成
+                            JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
 
-                        LinearLayout linearLayout1 = CreateLinear(1);
-                        // 第一行
-                        CreateDiYiHang(linearLayout1,jsonArray.get(i).toString(),i);
-                        // 添加到父布局
-                        linearLayout.addView(linearLayout1);
+                            // data 拆分
+                            JSONArray jsonArray1 = new JSONArray(jsonObject.getString("data"));
+
+                            int IsNianYue = 0;
+                            if(jsonArray1.length() > 0){
+                                for(int c = 0;c<jsonArray1.length();c++){
+                                    // 考勤记录-请假记录列表
+                                    mQingJiaHeight += 120;
+
+                                    LinearLayout linearLayout1 = CreateLinear(1);
+
+                                    if(IsNianYue == 0){
+                                        LinearLayout linearLayout1_2 = CreateLinear(8);
+                                        TextView textView = CreateTextView(5,jsonObject.getString("time"));
+                                        linearLayout1_2.addView(textView);
+                                        linearLayout.addView(linearLayout1_2);
+                                        IsNianYue = 1;
+                                    }
+
+
+                                    // 第一行
+                                    CreateDiYiHang(linearLayout1,jsonArray1.get(c).toString(),biaoShi);
+                                    // 添加到父布局
+                                    linearLayout.addView(linearLayout1);
+
+                                    biaoShi++;
+                                }
+                            }
+                        }
+                    }else{
+                        for (int i = 0;i<jsonArray.length();i++){
+                            // 考勤记录-请假记录列表
+                            mQingJiaHeight += 120;
+
+                            LinearLayout linearLayout1 = CreateLinear(1);
+                            // 第一行
+                            CreateDiYiHang(linearLayout1,jsonArray.get(i).toString(),i);
+                            // 添加到父布局
+                            linearLayout.addView(linearLayout1);
+                        }
                     }
+
+
                 }
 
 
@@ -335,47 +382,48 @@ public class KaoQingCommonActivity extends CommActivity {
 
 
                 // 无审核权限
-                if(jsonObject_users_id_s.getString("shenheren_jibie").equals("null")){
+                if(jsonObject_users_id_s.getString("shenheren_jibie").equals("null") || jsonObject_users_id_s.getString("shenheren_jibie").equals("")){
 
+                    linearLayout7_1.addView(imageView2_1);
+                    linearLayout7_1.addView(textView4_1);
+                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
+
+                    linearLayout7_2.addView(imageView2_2);
+                    linearLayout7_2.addView(textView4_2);
+                    isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
 
                     linearLayout7_3.addView(imageView2_3);
                     linearLayout7_3.addView(textView4_3);
                     isTuBiao(linearLayout7_3,imageView3_3,jsonObject.getString("zhuang_tai_3"));
 
-                    linearLayout7_2.addView(imageView2_2);
-                    linearLayout7_2.addView(textView4_2);
-                    isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
+                    linearLayout.addView(linearLayout7_3);
+                    linearLayout.addView(linearLayout7_2);
+                    linearLayout.addView(linearLayout7_1);
 
-                    linearLayout7_1.addView(imageView2_1);
-                    linearLayout7_1.addView(textView4_1);
-                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
                 }
 
                 // 3级权限
                 if(jsonObject_users_id_s.getString("shenheren_jibie").equals("3")){
+                    linearLayout7_1.addView(imageView2_1);
+                    linearLayout7_1.addView(textView4_1);
+                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
 
                     linearLayout7_2.addView(imageView2_2);
                     linearLayout7_2.addView(textView4_2);
                     isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
 
-                    linearLayout7_1.addView(imageView2_1);
-                    linearLayout7_1.addView(textView4_1);
-                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
+                    linearLayout.addView(linearLayout7_2);
+                    linearLayout.addView(linearLayout7_1);
+
                 }
 
                 // 2级权限
                 if(jsonObject_users_id_s.getString("shenheren_jibie").equals("2")){
                     linearLayout7_1.addView(imageView2_1);
                     linearLayout7_1.addView(textView4_1);
-
                     isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
+                    linearLayout.addView(linearLayout7_1);
                 }
-
-
-                linearLayout.addView(linearLayout7_1);
-                linearLayout.addView(linearLayout7_2);
-                linearLayout.addView(linearLayout7_3);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -407,7 +455,7 @@ public class KaoQingCommonActivity extends CommActivity {
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 
         if(is == 1){
-            layoutParam.setMargins(0,15,0,0);
+            layoutParam.setMargins(0,10,0,20);
         }else if(is == 2){
             layoutParam.setMargins(0,5,0,0);
         }
@@ -415,11 +463,14 @@ public class KaoQingCommonActivity extends CommActivity {
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
         }else if( is == 4){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,4);
+            layoutParam.setMargins(0,0,30,0);
         }else if(is == 5){
             layoutParam.setMargins(0,5,0,0);
         }else if(is == 7){
             layoutParam.setMargins(0,0,10,0);
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
+        }else if(is == 8){
+            layoutParam.setMargins(0,35,0,0);
         }
 
 
@@ -427,15 +478,22 @@ public class KaoQingCommonActivity extends CommActivity {
 
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-        if(is == 2 || is == 4 || is == 7 || is == 6){
+        if(is == 1){
+            linearLayout.setPadding(0,0,0,30);
+            linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border));
+        }else if(is == 2 || is == 6){
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         }else if(is == 4){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setGravity(Gravity.RIGHT);
         }else if(is == 5){
             linearLayout.setPadding(15,0,0,0);
         }else if(is == 7){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setGravity(Gravity.BOTTOM);
 
+        }else if(is == 8){
+            linearLayout.setPadding(0,0,0,10);
         }
 
         return linearLayout;
@@ -476,7 +534,12 @@ public class KaoQingCommonActivity extends CommActivity {
         }else if(is == 4){
             textView.setGravity(Gravity.BOTTOM);
             textView.setTextColor(getResources().getColor(R.color.heise));
-            textView.setTextSize(12);
+            textView.setTextSize(14);
+            textView.setText(string);
+        }else if(is == 5){
+            textView.setTextColor(getResources().getColor(R.color.zhuti));
+            textView.setPadding(0,0,0,10);
+            textView.setBackground(getResources().getDrawable(R.drawable.bottom_border));
             textView.setText(string);
         }
 
@@ -497,7 +560,7 @@ public class KaoQingCommonActivity extends CommActivity {
         if(is == 1){
             layoutParam = new LinearLayout.LayoutParams(58,58);
         }else if(is == 2){
-            layoutParam = new LinearLayout.LayoutParams(88,88);
+            layoutParam = new LinearLayout.LayoutParams(68,68);
         }else if(is == 3){
             layoutParam = new LinearLayout.LayoutParams(58,58);
         }

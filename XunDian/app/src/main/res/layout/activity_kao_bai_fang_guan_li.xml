@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/title_nei_ye"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.bignerdranch.android.xundian.ui.BounceScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    style="@style/IndexBuJuLinearLayout"
+                    android:paddingLeft="10dp">
+
+                    <!--客户详情-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="客户详情"/>
+
+                        <TextView
+                            android:text="添加"
+                            android:textColor="@color/zhuti"
+                            android:paddingRight="10dp"
+                            android:textSize="16dp"
+                            style="@style/TjJiHuaTextView1"/>
+
+
+                    </LinearLayout>
+
+                    <!--公司名称-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            android:id="@+id/text_bf_gong_si_ming_cheng"
+                            style="@style/TjJiHuaTextView"
+                            android:text="公司名称"/>
+
+                        <TextView
+                            android:id="@+id/text_bf_gong_si_ming_cheng_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--公司品牌-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="公司品牌"/>
+
+                        <TextView
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--公司编号-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="公司编号"/>
+
+                        <TextView
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--开始时间-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="开始时间"/>
+
+                        <TextView
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--结束时间-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="结束时间"/>
+
+                        <TextView
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--定位-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:textColor="@color/huise6"
+                            android:text="定位"/>
+
+                        <ImageButton
+                            android:id="@+id/ri_chang_ding_wei"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/ding_wei_qie_huan"/>
+                    </LinearLayout>
+
+                    <!--现场采集照片-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bottom_border">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:paddingTop="10dp"
+                            android:textSize="14dp"
+                            android:paddingBottom="10dp"
+                            android:textColor="@color/huise6"
+                            android:text="现场采集照片"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                style="@style/baiFnagImageView"/>
+
+                            <ImageView
+                                style="@style/baiFnagImageView"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                style="@style/baiFnagImageView"/>
+
+                            <ImageView
+                                style="@style/baiFnagImageView"/>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--拜访内容-->
+                    <LinearLayout
+                        android:paddingTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bottom_border"
+                        android:layout_marginBottom="20dp">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="拜访内容"/>
+
+                        <EditText
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:id="@+id/editText_bf_yuan_ying"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:textSize="14dp"
+                            android:background="#f5f5f5"
+                            android:textCursorDrawable="@drawable/edit_cursor_color"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </com.bignerdranch.android.xundian.ui.BounceScrollView>
+    </LinearLayout>
+
+    <!--提交-->
+    <LinearLayout
+        android:background="@color/colorAccent"
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_height="60dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
+        <Button
+            android:id="@+id/button_bf_ti_jiao_gzb"
+            android:text="@string/ti_jiao"
+            style="@style/XunDianButton"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

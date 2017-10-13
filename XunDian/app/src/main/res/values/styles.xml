@@ -290,5 +290,13 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="baiFnagImageView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:background">@color/zhuti</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 
 </resources>

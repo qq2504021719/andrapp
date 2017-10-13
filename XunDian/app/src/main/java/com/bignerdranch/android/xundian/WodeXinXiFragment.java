@@ -249,10 +249,10 @@ public class WodeXinXiFragment extends Fragment {
 
                 // 工号
                 if(jsonObject.getString("bian_hao") != null){
-                    gongHao = "工号 : "+jsonObject.getString("bian_hao");
+                    gongHao = "账号 : "+jsonObject.getString("bian_hao");
                 }
                 if(jsonObject.getString("roles") != null){
-                    zhiWu = "工号 : "+jsonObject.getString("roles");
+                    zhiWu = "工号 : "+jsonObject.getString("gong_hao");
                 }
 
             } catch (JSONException e) {

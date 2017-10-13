@@ -6,4 +6,226 @@
 
     <include layout="@layout/title_nei_ye"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:orientation="vertical">
+
+        <com.bignerdranch.android.xundian.ui.BounceScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    style="@style/IndexBuJuLinearLayout"
+                    android:paddingLeft="10dp">
+
+                    <!--日期选择-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            android:id="@+id/text_ji_lu_ri_qi"
+                            style="@style/TjJiHuaTextView"
+                            android:text="日期选择"/>
+
+                        <TextView
+                            android:id="@+id/text_ji_lu_ri_qi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--本月应上小时数-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            android:id="@+id/text_ben_yue_ying_shang_xiao_shi"
+                            style="@style/TjJiHuaTextView"
+                            android:text="本月应上小时数"/>
+
+                        <TextView
+                            android:id="@+id/text_ben_yue_ying_shang_xiao_shi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--实际工作小时数-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            android:id="@+id/text_shi_ji_gong_zhuo_xiao_shi"
+                            style="@style/TjJiHuaTextView"
+                            android:text="实际工作小时数"/>
+
+                        <TextView
+                            android:id="@+id/text_shi_ji_gong_zhuo_xiao_shi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--请假记录-->
+                    <LinearLayout
+                            style="@style/LinearLayoutHorizontal">
+                            <TextView
+                                android:id="@+id/text_ji_lu_qing_jia_ji_lu"
+                                style="@style/TjJiHuaTextView"
+                                android:text="请假记录"/>
+
+                            <ImageView
+                                style="@style/TjJiHuaImageView"/>
+                        </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/kao_qing_ji_lu_qing_jia_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <!--请假数据-->
+                        <LinearLayout
+                            android:id="@+id/linear_qing_jia_data"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="30dp"
+                            android:paddingBottom="10dp">
+                            <!--8-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:orientation="vertical">
+                                <!--5-->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/zhuti"
+                                    android:text="待审核"/>
+                            </LinearLayout>
+                            <!--1-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:orientation="vertical">
+                                <!--第一行-->
+                                <!--2-->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="5dp">
+                                    <!--3-->
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="4"
+                                        android:orientation="vertical">
+                                        <!--1-->
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/heise"
+                                            android:textSize="15dp"
+                                            android:text="1 余雷"/>
+                                        <!--2-->
+                                        <TextView
+                                            android:layout_marginTop="5dp"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:paddingLeft="15dp"
+                                            android:textSize="12dp"
+                                            android:text="2017-10-12 事假 找房"/>
+                                    </LinearLayout>
+                                    <!--4-->
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="right"
+                                        android:orientation="horizontal">
+                                        <!--3-->
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/hongse1"
+                                            android:text="待审核"/>
+                                        <!--1-->
+                                        <ImageView
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
+                                            android:src="@drawable/kao_qing_xing"/>
+
+
+                                    </LinearLayout>
+
+
+
+                                </LinearLayout>
+
+                                <!--第二行-->
+                                <!--5-->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="5dp"
+                                    android:paddingLeft="15dp">
+                                    <!--6-->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+                                        <!--7-->
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal"
+                                            android:gravity="bottom"
+                                            android:layout_weight="1"
+                                            android:layout_marginRight="10dp"
+                                            >
+                                            <!--2-->
+                                            <ImageView
+                                                android:layout_width="22dp"
+                                                android:layout_height="22dp"
+                                                android:src="@drawable/kao_qing_yong_hu"/>
+                                            <!--4-->
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text=" 1:吴绍康 "
+                                                android:textColor="@color/heise"
+                                                android:textSize="12dp"/>
+                                            <!--3-->
+                                            <ImageView
+                                                android:layout_width="16dp"
+                                                android:layout_height="16dp"
+                                                android:src="@drawable/ka_qing_xiao_lian"/>
+
+                                        </LinearLayout>
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </com.bignerdranch.android.xundian.ui.BounceScrollView>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -104,5 +104,13 @@ public class KaoQingActivity extends KaoQingCommonActivity{
                 startActivity(i);
             }
         });
+        // 拜访管理
+        mPai_fang_guan_li.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = BaiFangGuanLiActivity.newIntent(mContext,1);
+                startActivity(i);
+            }
+        });
     }
 }
