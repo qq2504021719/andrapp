@@ -16,7 +16,7 @@ public class Config {
     // 用户id
     public static String ChaoJiYongHu = "0";
 
-    // 巡店免验证机器码 357516116566245
+    // 巡店免验证机器码
     public static String[] XunDianMianyanZheng = new String[]{"358615524688244","357516116566245"};
 
 }

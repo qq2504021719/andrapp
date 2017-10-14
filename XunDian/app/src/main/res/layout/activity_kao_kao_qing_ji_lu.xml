@@ -90,6 +90,7 @@
                         android:id="@+id/kao_qing_ji_lu_qing_jia_data"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:orientation="vertical">
                         <!--请假数据-->
                         <LinearLayout

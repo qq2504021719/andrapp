@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorAccent">
+
+    <LinearLayout
+        android:id="@+id/mSearchPlate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        >
+
+        <!--搜索-->
+        <EditText
+            android:id="@+id/bf_men_dian_ming_cheng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gong_zuo_zhong_xin_button"
+            android:hint="请输入门店名称/门店店号"
+            android:iconifiedByDefault="false"
+            android:layout_marginRight="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:textCursorDrawable="@drawable/edit_gong_cursor_color"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.bignerdranch.android.xundian.ui.BounceScrollView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/bf_search_men_dian"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bottom_border"
+                        android:text="真北路店"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bottom_border"
+                        android:text="真北路店"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bottom_border"
+                        android:text="真北路店"/>
+
+                </LinearLayout>
+
+            </com.bignerdranch.android.xundian.ui.BounceScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -118,6 +118,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
         void shuJuHuiDiao(String string,int is);
     }
 
+
     /**
      * 获取当前时间
      * @return 当前时间y-m-d h-i-s

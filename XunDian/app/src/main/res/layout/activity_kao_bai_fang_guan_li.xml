@@ -68,6 +68,7 @@
                             android:text="公司品牌"/>
 
                         <TextView
+                            android:id="@+id/text_bf_gong_si_pin_pai_value"
                             style="@style/TjJiHuaTextView1"/>
 
                         <ImageView
@@ -82,6 +83,7 @@
                             android:text="公司编号"/>
 
                         <TextView
+                            android:id="@+id/text_bf_gong_si_bian_hao_value"
                             style="@style/TjJiHuaTextView1"/>
 
                         <ImageView
@@ -92,10 +94,12 @@
                     <LinearLayout
                         style="@style/LinearLayoutHorizontal">
                         <TextView
+                            android:id="@+id/text_bf_kai_shi_time"
                             style="@style/TjJiHuaTextView"
                             android:text="开始时间"/>
 
                         <TextView
+                            android:id="@+id/text_bf_kai_shi_time_value"
                             style="@style/TjJiHuaTextView1"/>
 
                         <ImageView
@@ -106,30 +110,16 @@
                     <LinearLayout
                         style="@style/LinearLayoutHorizontal">
                         <TextView
+                            android:id="@+id/text_bf_jie_shu_time"
                             style="@style/TjJiHuaTextView"
                             android:text="结束时间"/>
 
                         <TextView
+                            android:id="@+id/text_bf_jie_shu_time_value"
                             style="@style/TjJiHuaTextView1"/>
 
                         <ImageView
                             style="@style/TjJiHuaImageView"/>
-                    </LinearLayout>
-
-                    <!--定位-->
-                    <LinearLayout
-                        style="@style/LinearLayoutHorizontal">
-                        <TextView
-                            style="@style/TjJiHuaTextView"
-                            android:textColor="@color/huise6"
-                            android:text="定位"/>
-
-                        <ImageButton
-                            android:id="@+id/ri_chang_ding_wei"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:background="@drawable/ding_wei_qie_huan"/>
                     </LinearLayout>
 
                     <!--现场采集照片-->
@@ -152,9 +142,11 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:id="@+id/imageview_bf_phone1"
                                 style="@style/baiFnagImageView"/>
 
                             <ImageView
+                                android:id="@+id/imageview_bf_phone2"
                                 style="@style/baiFnagImageView"/>
 
 
@@ -166,9 +158,11 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:id="@+id/imageview_bf_phone3"
                                 style="@style/baiFnagImageView"/>
 
                             <ImageView
+                                android:id="@+id/imageview_bf_phone4"
                                 style="@style/baiFnagImageView"/>
 
 
@@ -182,8 +176,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="@drawable/bottom_border"
-                        android:layout_marginBottom="20dp">
+                        android:background="@drawable/bottom_border">
                         <TextView
                             style="@style/TjJiHuaTextView"
                             android:text="拜访内容"/>
@@ -191,7 +184,7 @@
                         <EditText
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="5dp"
-                            android:id="@+id/editText_bf_yuan_ying"
+                            android:id="@+id/editText_bf_nei_rong"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
@@ -200,6 +193,36 @@
                             android:textCursorDrawable="@drawable/edit_cursor_color"/>
 
                     </LinearLayout>
+
+                    <!--定位-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="5dp">
+
+                        <ImageButton
+                            android:id="@+id/bf_ri_chang_ding_wei"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/ding_wei_qie_huan"/>
+
+                        <TextView
+                            android:id="@+id/text_bf_ding_wei_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="14dp"
+                            android:gravity="center_vertical"
+                            android:paddingBottom="5dp"
+                            android:text="北京天安门"/>
+                    </LinearLayout>
+
+                    <com.baidu.mapapi.map.MapView
+                        android:id="@+id/bmapView_bf"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_height="match_parent"
+                        android:clickable="true"/>
 
                 </LinearLayout>
             </LinearLayout>
