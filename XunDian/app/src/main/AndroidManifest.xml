@@ -70,7 +70,8 @@
         <activity android:name=".xundianjihua.RiChengActivity"></activity>
 
         <!--客户拓展-->
-        <activity android:name=".kehutuozhan.KeHuActivity"></activity>
+        <activity android:name=".kehutuozhan.KeHuActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
 
         <!--考勤-->
         <activity android:name=".kaoqing.KaoQingActivity"></activity>

@@ -35,6 +35,7 @@
                             android:text="客户详情"/>
 
                         <TextView
+                            android:id="@+id/text_bf_tian_jia"
                             android:text="添加"
                             android:textColor="@color/zhuti"
                             android:paddingRight="10dp"

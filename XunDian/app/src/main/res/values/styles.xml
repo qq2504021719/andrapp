@@ -228,12 +228,26 @@
     <!--TextView-->
     <style name="TjJiHuaTextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16dp</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/heise</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+    <!--客户拓展EditText-->
+    <style name="keHuTuoZhanEditText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:background">@drawable/ke_hu_edittext_border</item>
+        <item name="android:textCursorDrawable">@drawable/edit_cursor_color</item>
+        <item name="android:gravity">right|center</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_weight">5</item>
+        <item name="android:textColorHint">@color/huise</item>
+    </style>
+
     <!--TextView-->
     <style name="TjJiHuaTextView1">
         <item name="android:layout_width">wrap_content</item>
@@ -291,7 +305,7 @@
     </style>
 
     <style name="baiFnagImageView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">120dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:layout_marginRight">10dp</item>

@@ -25,12 +25,20 @@ public class BaiFangGuanli {
     public String mJieShuShiJian;
     // 照片1
     public File mPhont1;
+    // 照片上传地址
+    public String mShangChuanFilePath1;
     // 照片2
     public File mPhont2;
+    // 照片上传地址
+    public String mShangChuanFilePath2;
     // 照片3
     public File mPhont3;
+    // 照片上传地址
+    public String mShangChuanFilePath3;
     // 照片4
     public File mPhont4;
+    // 照片上传地址
+    public String mShangChuanFilePath4;
     // 拜访内容
     public String mBaiFangNeiRong;
     // 经度
@@ -39,6 +47,48 @@ public class BaiFangGuanli {
     public String mLat;
     // 地址信息
     public String mAddr;
+    // 地址语义化
+    public String mAddr1;
+
+    public void setShangChuanFilePath1(String shangChuanFilePath1) {
+        mShangChuanFilePath1 = shangChuanFilePath1;
+    }
+
+    public void setShangChuanFilePath2(String shangChuanFilePath2) {
+        mShangChuanFilePath2 = shangChuanFilePath2;
+    }
+
+    public void setShangChuanFilePath3(String shangChuanFilePath3) {
+        mShangChuanFilePath3 = shangChuanFilePath3;
+    }
+
+    public void setShangChuanFilePath4(String shangChuanFilePath4) {
+        mShangChuanFilePath4 = shangChuanFilePath4;
+    }
+
+    public String getShangChuanFilePath1() {
+        return mShangChuanFilePath1;
+    }
+
+    public String getShangChuanFilePath2() {
+        return mShangChuanFilePath2;
+    }
+
+    public String getShangChuanFilePath3() {
+        return mShangChuanFilePath3;
+    }
+
+    public String getShangChuanFilePath4() {
+        return mShangChuanFilePath4;
+    }
+
+    public void setAddr1(String addr1) {
+        mAddr1 = addr1;
+    }
+
+    public String getAddr1() {
+        return mAddr1;
+    }
 
     public void setMenDianId(String menDianId) {
         mMenDianId = menDianId;

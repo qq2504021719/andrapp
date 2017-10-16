@@ -122,12 +122,15 @@ public class KaoQingCommonActivity extends CommActivity {
     // 回调函数存储变量
     public Callbacks mCallbacksc;
 
+    // 图片提交url
+    public String mTuPanTJURL = Config.URL+"/app/xun_dian_ti_jiao/tuPian";
 
     /**
      * 实现回调接口
      */
     public interface Callbacks{
         void shuJuHuiDiao(String string,int is);
+        void dingWeiData();
     }
 
     /**
@@ -793,6 +796,8 @@ public class KaoQingCommonActivity extends CommActivity {
     public void DingWeiChengGong(){
         // 设置显示地址信息
         mDingWeiTextView.setText("当前地址 : "+mLocationBaiDu.getAddr()+"\n详细地址 : "+mLocationBaiDu.getLocationDescribe());
+        // 定位成功回调
+        mCallbacksc.dingWeiData();
         // 停止定位
         mLocClient.stop();
     }

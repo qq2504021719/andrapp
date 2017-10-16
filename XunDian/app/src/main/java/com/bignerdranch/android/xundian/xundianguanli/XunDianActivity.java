@@ -493,9 +493,6 @@ public class XunDianActivity extends NeiYeCommActivity {
             }else{
                 file = new File(xunDianCanShu.getPhontPath());
             }
-            // 图片压缩
-//            String pathPhoto = imgYaSuo(file.getPath(),Config.XunCanImgWidth,Config.XunCanImgHeight);
-//            File files = new File(pathPhoto);
 
             // MediaType.parse() 里面是上传的文件类型。 MediaType.parse("image/*")
             body.addFormDataPart(

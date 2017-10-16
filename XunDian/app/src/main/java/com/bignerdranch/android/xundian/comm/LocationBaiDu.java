@@ -12,10 +12,10 @@ public class LocationBaiDu {
     // 定位时间
     private String mDingQeiTime;
 
-    // 经度
+    // 维度
     private double mLatitude;
 
-    // 维度
+    // 经度
     private double mLontitude;
 
     // 半径

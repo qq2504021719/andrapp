@@ -13,10 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.MapView;
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.BaiDuActivity;
 import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +39,9 @@ import okhttp3.Response;
  * Created by Administrator on 2017/9/23.
  */
 
-public class KeHuActivity extends NeiYeCommActivity{
+public class KeHuActivity extends NeiYeCommActivity implements BaiDuActivity.Callbacks{
+
+    public MapView mMapView;
 
     // 门店品牌
     private EditText mEditview_ke_pin_pai;
@@ -49,6 +55,10 @@ public class KeHuActivity extends NeiYeCommActivity{
     // 门店地址
     private EditText mEditview_ke_di_zhi;
     private String mKe_di_zhi = "";
+
+    // 定位地址
+    private TextView mText_tian_jiao_ding_wei_value;
+
     // 联系人
     private EditText mEditview_ke_lian_xi_ren;
     private String mKe_lian_xi_ren = "";
@@ -64,9 +74,24 @@ public class KeHuActivity extends NeiYeCommActivity{
     // 联系人职务
     private EditText mEditview_ke_zhi_wu;
     private String mKe_zhi_wu = "";
+    // 其他备注
+    private EditText mEditview_qi_ta_bei_zhu;
+    private String mBei_zhu = "";
+
+    // 经度
+    private String mLng = "";
+    // 纬度
+    private String mlat = "";
+    // 地址
+    private String mDing_wei_addr = "";
+    // 语义化地址
+    private String mDing_wei_addr1 = "";
 
     // 提交
     private Button mButton_ke_ti_jiao;
+
+    // 百度地图定位
+    private BaiDuActivity mBaiDuActivity = null;
 
     // 提交数据库地址
     private String mUrl = Config.URL+"/app/ke_hu_tuo_zhan";
@@ -96,6 +121,10 @@ public class KeHuActivity extends NeiYeCommActivity{
      */
     public void ZhuJianInit(){
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
+
+        // 地图控件
+        mMapView = (MapView) findViewById(R.id.bmapView_ti_jiao);
+
         // 门店品牌
         mEditview_ke_pin_pai = (EditText) findViewById(R.id.editview_ke_pin_pai);
         // 门店名称
@@ -104,6 +133,8 @@ public class KeHuActivity extends NeiYeCommActivity{
         mEditview_ke_dian_hao = (EditText)findViewById(R.id.editview_ke_dian_hao);
         // 门店地址
         mEditview_ke_di_zhi = (EditText)findViewById(R.id.editview_ke_di_zhi);
+        // 定位地址
+        mText_tian_jiao_ding_wei_value = (TextView)findViewById(R.id.text_tian_jiao_ding_wei_value);
         // 联系人
         mEditview_ke_lian_xi_ren = (EditText)findViewById(R.id.editview_ke_lian_xi_ren);
         // 联系电话
@@ -114,6 +145,8 @@ public class KeHuActivity extends NeiYeCommActivity{
         mEditview_ke_email = (EditText)findViewById(R.id.editview_ke_email);
         // 联系人职务
         mEditview_ke_zhi_wu = (EditText)findViewById(R.id.editview_ke_zhi_wu);
+        // 其他备注
+        mEditview_qi_ta_bei_zhu = (EditText)findViewById(R.id.editview_qi_ta_bei_zhu);
         // 提交
         mButton_ke_ti_jiao = (Button)findViewById(R.id.button_ke_ti_jiao);
     }
@@ -123,7 +156,29 @@ public class KeHuActivity extends NeiYeCommActivity{
     public void values(){
         // Token赋值
         setToken(mContext);
+
+        // 百度地图
+        mBaiDuActivity = new BaiDuActivity();
+        mBaiDuActivity.mMapView = mMapView;
+        mBaiDuActivity.mDingWeiTextView = mText_tian_jiao_ding_wei_value;
+        mBaiDuActivity.BaiDuDingWeiDiaoYong(mContext);
+
     }
+
+    /**
+     * 定位数据回调
+     */
+    public void dingWeiData(LocationBaiDu locationBaiDu){
+        // 经度
+        mLng = String.valueOf(locationBaiDu.getLontitude());
+        // 纬度
+        mlat = String.valueOf(locationBaiDu.getLatitude());
+        // 地址
+        mDing_wei_addr = locationBaiDu.getAddr();
+        // 语义化地址
+        mDing_wei_addr1 = locationBaiDu.getLocationDescribe();
+    }
+
     /**
      * 组件操作, 操作
      */
@@ -282,6 +337,24 @@ public class KeHuActivity extends NeiYeCommActivity{
                 mKe_zhi_wu = String.valueOf(editable);
             }
         });
+        // 其他备注
+        mEditview_qi_ta_bei_zhu.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mBei_zhu = String.valueOf(editable);
+            }
+        });
+
         // 提交
         mButton_ke_ti_jiao.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,14 +368,14 @@ public class KeHuActivity extends NeiYeCommActivity{
      * 客户拓展提交
      */
     public void isTiJiao(){
-        if(!mKe_pin_pai.trim().isEmpty()){
-            if(!mKe_men_dian.trim().isEmpty()){
+        if(!mKe_men_dian.trim().isEmpty()){
+            if(!mKe_pin_pai.trim().isEmpty()){
                 TiJiaokehu();
             }else{
-                tiShi(mContext,"门店名称不能为空");
+                tiShi(mContext,"品牌不能为空");
             }
         }else{
-            tiShi(mContext,"品牌不能为空");
+            tiShi(mContext,"门店名称不能为空");
         }
     }
 
@@ -349,6 +422,10 @@ public class KeHuActivity extends NeiYeCommActivity{
         String zhi_wu = "";
         if(!mKe_zhi_wu.trim().isEmpty()) zhi_wu = mKe_zhi_wu;
 
+        String bei_zhu = "";
+        if(!mBei_zhu.trim().isEmpty()) bei_zhu = mBei_zhu;
+
+
         //3, 发起新的请求,获取返回信息
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
         body.addFormDataPart("pin_pai",pin_pai);
@@ -360,6 +437,11 @@ public class KeHuActivity extends NeiYeCommActivity{
         body.addFormDataPart("shou_ji",shou_ji);
         body.addFormDataPart("email",email);
         body.addFormDataPart("zhi_wu",zhi_wu);
+        body.addFormDataPart("bei_zhu",bei_zhu);
+        body.addFormDataPart("md_lng",mLng);
+        body.addFormDataPart("md_lat",mlat);
+        body.addFormDataPart("ding_wei_addr",mDing_wei_addr);
+        body.addFormDataPart("ding_wei_addr1",mDing_wei_addr1);
 
 
         final Request request = new Request.Builder()
@@ -384,5 +466,28 @@ public class KeHuActivity extends NeiYeCommActivity{
             }
         });
         mThread.start();
+    }
+
+    @Override
+    public void onAttachedToWindow(){
+        mBaiDuActivity.mCallbacksc = (BaiDuActivity.Callbacks)mContext;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mBaiDuActivity != null){
+            // 退出时销毁定位
+            mBaiDuActivity.mLocClient.stop();
+            // 关闭定位图层
+            mBaiDuActivity.mBaiduMap.setMyLocationEnabled(false);
+            mMapView.onDestroy();
+            mMapView = null;
+            // 销毁回调
+            mBaiDuActivity.mCallbacksc = null;
+            // 弹窗销毁
+        }
+
+
     }
 }
