@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.XunDianJiHua;
 import com.bignerdranch.android.xundian.model.XunDianJiHuaModel;
@@ -26,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +37,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/19.
@@ -108,6 +117,12 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
     // 周日节点
     public LinearLayout mLinear_zhou_ri;
 
+    // 巡店日期请求
+    public String mRiQiQingQiu = Config.URL+"/app/xun_dian_zhou_ri_qi";
+
+    // 巡店日期String
+    public String mXunDianRiQiData = "";
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
@@ -155,6 +170,32 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         // 数据/值设置
         values();
 
+    }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             *  msg.obj
+             */
+            if(msg.what==1){
+                mXunDianRiQiData = msg.obj.toString();
+                // 日期请求后处理才在
+                RiQiQingQiuHouCZ();
+            }
+        }
+    };
+
+    /**
+     * 日期请求后处理才在
+     */
+    public void RiQiQingQiuHouCZ(){
+        setZhouData();
+        // 显示数据库计划
+        setShowJH();
     }
 
     /**
@@ -222,15 +263,49 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         // 巡店计划model
         mXunDianJiHuaModel = XunDianJiHuaModel.get(mContext);
         // 设置周数据,日期数据
-        setZhouData();
+//        setZhouData();
         // 品牌请求
         pinPaiSearch();
         // 请求店铺
         menDianSearch();
         // 数据库查询巡店计划
         DatabaseXunDian();
-        // 显示数据库计划
-        setShowJH();
+        // 查询签到日期
+        ChaXunQianDaoRiQi();
+
+
+    }
+
+
+
+    /**
+     * 查询签到日期
+     */
+    public void ChaXunQianDaoRiQi(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("XXX","XXX");
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mRiQiQingQiu)
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -247,10 +322,18 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                 alertBuilder.setItems(mZhouData, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
-                        // 显示选择周
-                        mTextview_zhou_value.setText(mZhouData[index]);
-                        // 更新用户选择周
-                        mXunDianJiHua.setZhou(mZhouData[index]);
+                        if(mXunDianJiHuas.size() > 0){
+                            if(mXunDianJiHuas.get(0).getZhou().trim().equals(mZhouData[index])){
+                                // 显示选择周
+                                mTextview_zhou_value.setText(mZhouData[index]);
+                                // 更新用户选择周
+                                mXunDianJiHua.setZhou(mZhouData[index]);
+                                // 更新日期
+                                setRiqi(mXunDianJiHua.getZhou());
+                            }else{
+                                tiShi(mContext,mXunDianJiHuas.get(0).getZhou()+"未提交,请先提交");
+                            }
+                        }
 
                         alertDialog1.dismiss();
                     }
@@ -272,7 +355,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                         mTextview_ri_qi_value.setText(mRiQiData[index]);
                         // 更新用户选择日期
                         mXunDianJiHua.setRiQi(mRiQiData[index]);
-
+                        Log.i("巡店",mRiQiData[0]+"|"+mXunDianJiHua.getRiQi());
                         alertDialog1.dismiss();
                     }
                 });
@@ -322,34 +405,34 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         });
 
         // 品牌选择
-        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int index) {
-
-                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
-                        // 门店品牌
-                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
-
-                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
-                        // 请求店铺
-                        menDianSearch();
-
-                        // 存入id
-                        mXunDianJiHua.setPingPaiId(id);
-                        // 存入名称
-                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
-
-                        alertDialog1.dismiss();
-                    }
-                });
-                alertDialog1 = alertBuilder.create();
-                alertDialog1.show();
-            }
-        });
+//        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+//                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface arg0, int index) {
+//
+//                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
+//                        // 门店品牌
+//                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
+//
+//                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
+//                        // 请求店铺
+//                        menDianSearch();
+//
+//                        // 存入id
+//                        mXunDianJiHua.setPingPaiId(id);
+//                        // 存入名称
+//                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
+//
+//                        alertDialog1.dismiss();
+//                    }
+//                });
+//                alertDialog1 = alertBuilder.create();
+//                alertDialog1.show();
+//            }
+//        });
 
         // 门店选择
         mTextview_ming_cheng.setOnClickListener(new View.OnClickListener() {
@@ -361,21 +444,26 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
 
-                        mTextview_ming_cheng_value.setText(mMengDianData[index]);
+                        String[] strings = ChanKanIds(mMengDianJsonData,mMengDianData[index]);
 
-                        int id = ChanKanId(mMengDianJsonData,mMengDianData[index]);
+                        // 门店显示
+                        mTextview_ming_cheng_value.setText(mMengDianData[index]);
+                        // 品牌显示
+                        mTextview_pin_pai_value.setText(strings[3]);
+                        mXunDianJiHua.setPingPaiStr(strings[3]);
                         // 店号
-                        String dianHao = ChanKanKey(mMengDianJsonData,mMengDianData[index],"men_dian_hao");
+                        String dianHao = strings[2];
                         // 显示店号
                         mTextview_dian_hao_value.setText(dianHao);
                         // 存入店号
                         mXunDianJiHua.setMenDianHao(dianHao);
 
                         // 存储选择门店id
-                        mXunDianJiHua.setMenDianId(id);
+                        mXunDianJiHua.setMenDianId(Integer.valueOf(strings[0]));
                         // 存储用户选择门店
                         mXunDianJiHua.setMenDianStr(mMengDianData[index]);
 
+                        // 关闭
                         alertDialog1.dismiss();
 
                     }
@@ -419,31 +507,52 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
     }
 
     /**
-     * 设置周数据,得到下周周一日期,日期数据
+     * 设置周数据
      */
     public void setZhouData(){
-        mZhouData = new String[1];
-        mRiQiData = new String[7];
+        try {
+            if(!mXunDianRiQiData.equals("")){
+                JSONArray jsonArray = new JSONArray(mXunDianRiQiData);
+                JSONArray JSONArray1 = new JSONArray(jsonArray.get(0).toString());
+                mZhouData = new String[JSONArray1.length()];
+                for(int i = 0;i<JSONArray1.length();i++){
+                    mZhouData[i] = JSONArray1.get(i).toString().trim()+"周";
+                }
+            }
 
-//        mZhouData[0] = "2017-09-18周";
-        SimpleDateFormat simpleDateFormats =new SimpleDateFormat("y-M-d", Locale.CHINA);
-        Calendar calendar=Calendar.getInstance(Locale.CHINA);
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        //当前时间，貌似多余，其实是为了所有可能的系统一致
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        // 获取当前周的周日
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        // 周日加一天
-        calendar.add(Calendar.DATE,1);
-        // 添加周数据
-        mZhouData[0] = simpleDateFormats.format(calendar.getTime())+"周";
-        mRiQiData[0] = simpleDateFormats.format(calendar.getTime());
-        // 添加日期数据
-        for(int i = 1;i<7;i++){
-            calendar.add(Calendar.DATE,1);
-            mRiQiData[i] = simpleDateFormats.format(calendar.getTime());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+    }
 
+    /**
+     * 更新日期信息 mXunDianJiHua.setMenDianStr
+     */
+    public void setRiqi(String stringc){
+        mRiQiData = new String[7];
+        try {
+            if(!mXunDianRiQiData.equals("")){
+                JSONArray jsonArray = new JSONArray(mXunDianRiQiData);
+                // 周json对象
+                JSONArray JSONArray1 = new JSONArray(jsonArray.get(0).toString());
+                // 日期json对象
+                JSONArray jsonArray1 = new JSONArray(jsonArray.get(1).toString());
+
+                for(int i = 0;i<JSONArray1.length();i++){
+
+                    if(stringc.trim().equals(JSONArray1.get(i).toString()+"周".trim())){
+
+                        JSONArray jsonArray2 = new JSONArray(jsonArray1.get(i).toString());
+
+                        for(int c = 0;c<jsonArray2.length();c++){
+                            mRiQiData[c] = jsonArray2.get(c).toString().trim();
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -513,7 +622,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         // 初始化显示组件
         initShowView();
         if(mXunDianJiHuas.size() > 0){
-
+            // 根据数据库查询设置日期
+            setRiqi(mXunDianJiHuas.get(0).getZhou());
 
             List<XunDianJiHua> xunDianJiHuaList = new ArrayList<>();
             xunDianJiHuaList = mXunDianJiHuas;
@@ -576,6 +686,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         String GongZhuo = xunDianJiHua.getShiJian()+"-"+xunDianJiHua.getJSShiJian()+" "
                 +xunDianJiHua.getPingPaiStr()+" "+xunDianJiHua.getMenDianHao()+" "+xunDianJiHua.getMenDianStr();
 
+//        Log.i("巡店",mRiQiData.length+"|"+xunDianJiHua.getRiQi());
         if(mRiQiData[0].equals(xunDianJiHua.getRiQi())){
             // 周一
             String strs = stringRiQi+" 周一";

@@ -342,7 +342,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
      * @return
      */
     public String[] ChanKanIds(String Jsonstring,String string){
-        String[] strings = new String[3];
+        String[] strings = new String[4];
         strings[0] = "0";
         strings[2] = "0";
         try {
@@ -355,6 +355,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
                         strings[0] = jsonObject.getString("id");
                         strings[1] = jsonObject.getString("name");
                         strings[2] = jsonObject.getString("men_dian_hao");
+                        strings[3] = jsonObject.getString("men_dian_ping_pai");
 //                        return Integer.valueOf(jsonObject.getString("id"));
                     }
                 }
