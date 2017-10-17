@@ -90,6 +90,7 @@ public class XunDianModel {
         String xunKaiShiTime = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.XUNKAISHITIME));
         String xunJieShuTime = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.XUNJIESHITIME));
         String uid = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.USERID));
+        String bian_name = cursor.getString(cursor.getColumnIndex(XunDianTable.Cols.NAME));
 
         XunDianCanShu xunDianCanShu = new XunDianCanShu();
         xunDianCanShu.setMenDianId(id);
@@ -98,6 +99,7 @@ public class XunDianModel {
         xunDianCanShu.setXunKaiShiTime(xunKaiShiTime);
         xunDianCanShu.setXunJieShuTime(xunJieShuTime);
         xunDianCanShu.setUserId(uid);
+        xunDianCanShu.setBian_hao_name(bian_name);
 
         return xunDianCanShu;
     }
@@ -165,6 +167,7 @@ public class XunDianModel {
         values.put(XunDianTable.Cols.XUNKAISHITIME,xunDianCanShu.getXunKaiShiTime());
         values.put(XunDianTable.Cols.XUNJIESHITIME,xunDianCanShu.getXunJieShuTime());
         values.put(XunDianTable.Cols.USERID,xunDianCanShu.getUserId());
+        values.put(XunDianTable.Cols.NAME,xunDianCanShu.getBian_hao_name());
 
         if(xunDianCanShu.getPhontPath() != null){
             values.put(XunDianTable.Cols.PHONE,xunDianCanShu.getPhontPath());

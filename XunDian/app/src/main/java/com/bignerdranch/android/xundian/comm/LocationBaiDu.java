@@ -36,6 +36,16 @@ public class LocationBaiDu {
     private int mMenDianPingPaiId;
     // 门店名称
     private String mMenDianMingCheng;
+    // 门店编号
+    private String mBianHao;
+
+    public void setBianHao(String bianHao) {
+        mBianHao = bianHao;
+    }
+
+    public String getBianHao() {
+        return mBianHao;
+    }
 
     public void setMenDianMingCheng(String menDianMingCheng) {
         mMenDianMingCheng = menDianMingCheng;

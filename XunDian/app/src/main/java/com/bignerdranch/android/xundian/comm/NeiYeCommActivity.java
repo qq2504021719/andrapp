@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -78,6 +79,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
     // 门店品牌数据
     public String mMengDianPingpaiJsonData = "[{\"id\":2,\"name\":\"\\u4f0d\\u7f18\"},{\"id\":5,\"name\":\"\\u53ef\\u7684\\u4fbf\\u5229\"},{\"id\":10,\"name\":\"\\u597d\\u5fb7\\u4fbf\\u5229\"},{\"id\":12,\"name\":\"\\u7f57\\u68ee\\u4fbf\\u5229\"}]";
     public String[] mMengDianPingPaiData;
+    public HashMap<String,String> mMengDianHashMapData;
 
 
     // 门店数据
@@ -337,6 +339,37 @@ public class NeiYeCommActivity extends AppCompatActivity{
      * 将string转为JSON对象,匹配string1，返回对应的id
      * @param Jsonstring
      * @param string
+     * @return
+     */
+    public String[] ChanKanIds(String Jsonstring,String string){
+        String[] strings = new String[3];
+        strings[0] = "0";
+        strings[2] = "0";
+        try {
+            JSONArray jsonArray = new JSONArray(Jsonstring);
+            if(jsonArray.length() > 0){
+                for(int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    String bjString = jsonObject.getString("men_dian_hao")+"-"+jsonObject.getString("name");
+                    if(bjString.equals(string)){
+                        strings[0] = jsonObject.getString("id");
+                        strings[1] = jsonObject.getString("name");
+                        strings[2] = jsonObject.getString("men_dian_hao");
+//                        return Integer.valueOf(jsonObject.getString("id"));
+                    }
+                }
+            }
+            return strings;
+        }catch (JSONException e){
+
+        }
+        return strings;
+    }
+
+    /**
+     * 将string转为JSON对象,匹配string1，返回对应的id
+     * @param Jsonstring
+     * @param string
      * @param key 查询的key
      * @return
      */
@@ -379,8 +412,9 @@ public class NeiYeCommActivity extends AppCompatActivity{
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                     if(is == 1){
                         mMengDianPingPaiData[i] = jsonObject.getString("name");
+//                        mMengDianHashMapData
                     }else if(is == 2){
-                        mMengDianData[i] = jsonObject.getString("name");
+                        mMengDianData[i] = jsonObject.getString("men_dian_hao")+"-"+jsonObject.getString("name");
                     }
                 }
             }else{

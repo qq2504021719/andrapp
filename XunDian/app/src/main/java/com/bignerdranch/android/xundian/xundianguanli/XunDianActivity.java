@@ -244,6 +244,8 @@ public class XunDianActivity extends NeiYeCommActivity {
                                 if(!jsonObject.getString("tian_xie_shi").isEmpty()){
                                     mDaoJiShi = Integer.valueOf(jsonObject.getString("tian_xie_shi"))*60;
                                     mDaoJiShi1 = mDaoJiShi;
+                                    Log.i("巡店","倒计时请求 mDaoJiShi:"+mDaoJiShi+"| mDaoJiShi1:"+mDaoJiShi1+"|mDaoJiShi2:"+mDaoJiShi2);
+
 
                                 }
                             }
@@ -320,7 +322,7 @@ public class XunDianActivity extends NeiYeCommActivity {
      */
     public void diaoYongDaoJiShi(){
         // 本地服务器存储倒计时计算
-        benDitimeDaoJiShi();
+//        benDitimeDaoJiShi();
         handler.postDelayed(runnable, mTIME); //每隔1s执行
     }
 
@@ -329,14 +331,24 @@ public class XunDianActivity extends NeiYeCommActivity {
      *
      */
     public void setDaoJiShi(){
+        String XunKaiShiTime = mXunDianCanShu.getXunKaiShiTime();
+
+        String date1 = dataTime(getDangQianTime());
+        String date2 = dataTime(XunKaiShiTime);
+
+        // 计算退出时间
+        int time = Integer.valueOf(date1)-Integer.valueOf(date2);
+
         if(mXunDianCanShus != null  &&  mXunDianCanShus.size() > 0){
             String str = "";
-            if(mDaoJiShi1 > 0 && mDaoJiShi2 == 0){
-                mDaoJiShi1 -= 1;
+            if(mDaoJiShi > time){
+                int mIsChaoShiData = mDaoJiShi-time;
+                mDaoJiShi1 = mIsChaoShiData;
                 str = ""+mDaoJiShi1+"秒";
             }else{
                 mIsChaoShi = 0;
-                mDaoJiShi2 += 1;
+                int mIsChaoShiData = time-mDaoJiShi;
+                mDaoJiShi2 = mIsChaoShiData;
                 str = "已超时"+mDaoJiShi2+"秒";
             }
             mTextview_dao_ji_shi.setText(str);
@@ -354,17 +366,17 @@ public class XunDianActivity extends NeiYeCommActivity {
             String date1 = dataTime(getDangQianTime());
             String date2 = dataTime(XunKaiShiTime);
 
-            // 退出没有计算时间
+            // 计算时间退出时间
             int time = Integer.valueOf(date1)-Integer.valueOf(date2);
 
 
             // 赋值,剩余时间大于没有计算时间,剩余时间-没有计算时间并且大于0 超时时间为0
             if(mDaoJiShi1 > time && (mDaoJiShi1-time) > 0 && mDaoJiShi2 == 0){
                 mDaoJiShi1 = mDaoJiShi-time;
-            }else{
+            }else if(time > 1){
                 mDaoJiShi2 = time;
             }
-//            Log.i("巡店",getDangQianTime()+":"+date1+"|"+XunKaiShiTime+":"+date2+"|"+mDaoJiShi1+"|"+time);
+            Log.i("巡店","mDaoJiShi:"+mDaoJiShi+"|mDaoJiShi2:"+mDaoJiShi2+"|time:"+time);
         }
     }
 
@@ -680,7 +692,8 @@ public class XunDianActivity extends NeiYeCommActivity {
                 mXunDianCanShu.setXuan_ze_qi(mXunDianJson.getJSONObject(i).getString("xuan_ze_qis"));
                 // 是否必须拍照
                 mXunDianCanShu.setIs_bi_tian(Integer.valueOf(mXunDianJson.getJSONObject(i).getString("is_bi_tian")));
-
+                // 编号+name
+                mXunDianCanShu.setBian_hao_name(mXunDian.getString("mBianHao")+"-"+mXunDianCanShu.getMenDianMingCheng());
 
                 // 查询数据库是否有值
                 ChaKanFuZhi();

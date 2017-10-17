@@ -51,6 +51,8 @@ public class DbSchema {
             public static final String XUNJIESHITIME = "xunjieshutime";
             // 用户id
             public static final String USERID = "uid";
+            // 店铺名称
+            public static final String NAME = "menDianName";
 
         }
     }

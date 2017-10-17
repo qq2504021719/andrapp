@@ -39,6 +39,7 @@ import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.XunDianCanShu;
 import com.bignerdranch.android.xundian.kaoqing.RiChangKaoQingActivity;
+import com.bignerdranch.android.xundian.model.ChaoShiModel;
 import com.bignerdranch.android.xundian.model.LoginModel;
 import com.bignerdranch.android.xundian.model.XunDianModel;
 
@@ -98,6 +99,12 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     private static LoginModel mLoginModel;
     private Login mLogin;
 
+    // 用户开始巡店弹窗
+    public String[] tishiS;
+
+    // 巡店超时表
+    public ChaoShiModel mChaoShiModel;
+
     /**
      * 封装创建Intent对象,并传入参数
      * @param packageContext
@@ -146,6 +153,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
      */
     public void values(){
         mLoginModel = LoginModel.get(mContext);
+        mChaoShiModel = ChaoShiModel.get(mContext);
         // Token赋值
         setToken(mContext);
         // 品牌请求
@@ -253,7 +261,6 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
                         mLocationBaiDu.setMenDianId(0);
                         // 从新搜索内容
                         menDianSearch();
-
                         mLocationBaiDu.setMenDianPingPaiId(Integer.valueOf(id));
                         alertDialog1.dismiss();
                     }
@@ -272,13 +279,17 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
                 alertBuilder.setItems(mMengDianData, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
-
-                        mMen_Dian = mMengDianData[index];
+                        // 获取门店信息
+                        String[] strings = ChanKanIds(mMengDianJsonData,mMengDianData[index]);
+                        mMen_Dian = strings[1];
                         mXuan_zhe_men_dian_button.setText(mMengDianData[index]);
+
+                        mLocationBaiDu.setBianHao(strings[2]);
+
                         // 存储选择门店id
-                        mLocationBaiDu.setMenDianId(ChanKanId(mMengDianJsonData,mMengDianData[index]));
+                        mLocationBaiDu.setMenDianId(Integer.valueOf(strings[0]));
                         // 存储用户选择门店
-                        mLocationBaiDu.setMenDianMingCheng(mMengDianData[index]);
+                        mLocationBaiDu.setMenDianMingCheng(strings[1]);
                         alertDialog1.dismiss();
 
                     }
@@ -301,12 +312,9 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
                         // 验证是否有其他店铺未提交
                         String[] strings = DianIDgetData(mMengDianJsonData);
                         if(strings[0].equals("true")){
-                            String string = mGson.toJson(mLocationBaiDu);
-                            // 存储容器
-                            Intent i = XunDianActivity.newIntent(XunDianGuanLiActivity.this,string);
-                            startActivity(i);
+                            XunDianTiaoZhuan();
                         }else{
-                            tiShi(mContext,strings[1]+"未提交,请先提交");
+                            WeiTiJiaoChuLi(strings);
                         }
                     }
                 }else{
@@ -317,35 +325,67 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     }
 
     /**
+     * 巡店跳转
+     */
+    public void XunDianTiaoZhuan(){
+        String string = mGson.toJson(mLocationBaiDu);
+        // 存储容器
+        Intent i = XunDianActivity.newIntent(XunDianGuanLiActivity.this,string);
+        startActivity(i);
+    }
+
+    /**
+     * 巡店数据为提交
+     * @param strings
+     */
+    public void WeiTiJiaoChuLi(final String[] strings){
+        tishiS = new String[2];
+        tishiS[0] = "继续巡 "+strings[1];
+        tishiS[1] = "否";
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+
+        alertBuilder.setItems(tishiS, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int index) {
+                if(index == 0){
+                    // 继续巡店
+                    mLocationBaiDu.setMenDianId(Integer.valueOf(strings[2]));
+                    mLocationBaiDu.setMenDianMingCheng(strings[1].substring(strings[1].indexOf("-")+1,strings[1].length()));
+                    XunDianTiaoZhuan();
+                }else if(index == 1){
+                    // 删除巡店表数据
+                    mXunDianModel.deleteXunDian(strings[2],String.valueOf(mLogin.getUid()));
+                    // 删除本地超时数据
+                    mChaoShiModel.deleteCaoShi(strings[2]);
+                }
+
+                alertDialog1.dismiss();
+            }
+        });
+        alertDialog1 = alertBuilder.create();
+        alertDialog1.show();
+    }
+
+
+    /**
      * 查询数据库是否有巡店数据
      * @param Jsonstring
      * @return [0=>true/false] 有/无数据 [1=>"棋盘点"] 店铺名称
      */
     public String[] DianIDgetData(String Jsonstring){
-        String[] strings = new String[2];
+        String[] strings = new String[3];
         strings[0] = "true";
         // 查询数据库所有的记录
         mLogin = mLoginModel.getLogin(1);
 
         List<XunDianCanShu> xunDianCanShuList = mXunDianModel.getXunDianID(String.valueOf(mLogin.getUid()));
 
-//        Log.i("巡店",xunDianCanShuList.get(0).getUserId()+"|"+String.valueOf(mLogin.getUid())+"|"+String.valueOf(mLogin.getToken()));
+//        Log.i("巡店",xunDianCanShuList.get(0).getName());
 
         if(xunDianCanShuList.size() > 0){
-            try {
-                JSONArray jsonArray = new JSONArray(Jsonstring);
-                if(jsonArray.length() > 0){
-                    for(int i = 0;i<jsonArray.length();i++){
-                        JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
-                        if(xunDianCanShuList.get(0).getMenDianId() == Integer.valueOf(jsonObject.getString("id"))){
-                            strings[1] = jsonObject.getString("name");
-                        }else{
-                            strings[0] = "false";
-                        }
-                    }
-                }
-            }catch (JSONException e){
-            }
+            strings[1] = xunDianCanShuList.get(0).getBian_hao_name();
+            strings[0] = "false";
+            strings[2] = String.valueOf(xunDianCanShuList.get(0).getMenDianId());
 
             // 用户选择门店和数据存储门店相同
             if(mLocationBaiDu.getMenDianId() == xunDianCanShuList.get(0).getMenDianId()){
@@ -353,7 +393,6 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
             }
         }
 
-//        Log.i("巡店",strings[0]+"|"+strings[1]);
         return strings;
     }
 

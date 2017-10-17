@@ -56,6 +56,7 @@ public class DbCursorWrapper extends CursorWrapper {
         String xunKaiShiTime = getString(getColumnIndex(XunDianTable.Cols.XUNKAISHITIME));
         String xunJieShuTime = getString(getColumnIndex(XunDianTable.Cols.XUNJIESHITIME));
         String userid = getString(getColumnIndex(XunDianTable.Cols.USERID));
+        String bian_name = getString(getColumnIndex(XunDianTable.Cols.NAME));
 
 
         XunDianCanShu xunDianCanShu = new XunDianCanShu();
@@ -64,6 +65,7 @@ public class DbCursorWrapper extends CursorWrapper {
         xunDianCanShu.setXunKaiShiTime(xunKaiShiTime);
         xunDianCanShu.setXunJieShuTime(xunJieShuTime);
         xunDianCanShu.setUserId(userid);
+        xunDianCanShu.setBian_hao_name(bian_name);
 
         return xunDianCanShu;
     }

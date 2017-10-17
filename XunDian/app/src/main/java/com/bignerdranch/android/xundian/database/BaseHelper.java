@@ -47,6 +47,7 @@ public class BaseHelper extends SQLiteOpenHelper {
                 XunDianTable.Cols.XUNKAISHITIME+", "+
                 XunDianTable.Cols.XUNJIESHITIME+", "+
                 XunDianTable.Cols.USERID+", "+
+                XunDianTable.Cols.NAME+", "+
                 XunDianTable.Cols.PHONE+");"
         );
 

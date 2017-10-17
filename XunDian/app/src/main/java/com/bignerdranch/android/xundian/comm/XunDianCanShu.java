@@ -17,6 +17,8 @@ import java.io.Serializable;
 
 public class XunDianCanShu{
 
+    // 编号-name
+    private String mBian_hao_name;
     // 标题
     private String mName;
     // 填写方式
@@ -62,6 +64,14 @@ public class XunDianCanShu{
 
     // 用户id
     private String mUserId;
+
+    public void setBian_hao_name(String bian_hao_name) {
+        mBian_hao_name = bian_hao_name;
+    }
+
+    public String getBian_hao_name() {
+        return mBian_hao_name;
+    }
 
     public void setUserId(String userId) {
         mUserId = userId;
