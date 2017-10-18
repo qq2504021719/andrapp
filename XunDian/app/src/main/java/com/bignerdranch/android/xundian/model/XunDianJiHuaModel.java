@@ -61,10 +61,10 @@ public class XunDianJiHuaModel {
     /**
      * 查询巡店表所有数据
      */
-    public List<XunDianJiHua> getXunDianJiHuas(){
+    public List<XunDianJiHua> getXunDianJiHuas(String uid){
         List<XunDianJiHua> xunDianJiHuaList = new ArrayList<>();
 
-        String sql = "select * from "+XunDianJiHuaTable.NAME;
+        String sql = "select * from "+XunDianJiHuaTable.NAME+" where "+XunDianJiHuaTable.Cols.UID+" = '"+uid+"'";
         Cursor cursor = mDatabase.rawQuery(sql,null);
         while (cursor.moveToNext()) {
             XunDianJiHua xunDianJiHua =getXundianJiHuaCursor(cursor);
@@ -81,6 +81,8 @@ public class XunDianJiHuaModel {
     public XunDianJiHua getXundianJiHuaCursor(Cursor cursor){
         // id
         int id = cursor.getInt(cursor.getColumnIndex(XunDianJiHuaTable.Cols.ID));
+        // 用户id
+        int uid = cursor.getInt(cursor.getColumnIndex(XunDianJiHuaTable.Cols.UID));
         // 周
         String zhou = cursor.getString(cursor.getColumnIndex(XunDianJiHuaTable.Cols.ZHOU));
         // 日期
@@ -103,6 +105,7 @@ public class XunDianJiHuaModel {
         XunDianJiHua xunDianJiHua = new XunDianJiHua();
 
         xunDianJiHua.setId(id);
+        xunDianJiHua.setUid(uid);
         xunDianJiHua.setZhou(zhou);
         xunDianJiHua.setRiQi(riqi);
         xunDianJiHua.setShiJian(kstime);
@@ -121,10 +124,10 @@ public class XunDianJiHuaModel {
      * @param id id
      * @return
      */
-    public XunDianJiHua getXunDianJiHua(String id){
+    public XunDianJiHua getXunDianJiHua(String id,String uid){
         DbCursorWrapper cursor = queryXunDianJiHua(
-                XunDianJiHuaTable.Cols.ID +" = ?",
-                new String[] {id}
+                XunDianJiHuaTable.Cols.ID +" = ? and "+XunDianJiHuaTable.Cols.UID +" = ?",
+                new String[] {id,uid}
         );
         try{
             if(cursor.getCount() == 0){
@@ -147,11 +150,23 @@ public class XunDianJiHuaModel {
      * 根据id删除记录
      * @param id
      */
-    public void deleteXunDianJiHua(String id){
+    public void deleteXunDianJiHua(String id,String uid){
         mDatabase.delete(
                 XunDianJiHuaTable.NAME,
-                XunDianJiHuaTable.Cols.ID+"=?",
-                new String[] {id}
+                XunDianJiHuaTable.Cols.ID+"=? and "+XunDianJiHuaTable.Cols.UID +" = ?",
+                new String[] {id,uid}
+        );
+    }
+
+    /**
+     * 根据用户id删除记录
+     * @param uid
+     */
+    public void deleteXunDianJiHua(String uid){
+        mDatabase.delete(
+                XunDianJiHuaTable.NAME,
+                XunDianJiHuaTable.Cols.UID+"=?",
+                new String[] {uid}
         );
     }
 
@@ -172,6 +187,7 @@ public class XunDianJiHuaModel {
     public static ContentValues getContentValuesXun(XunDianJiHua xunDianJiHua){
         ContentValues values = new ContentValues();
         values.put(XunDianJiHuaTable.Cols.ID,String.valueOf(xunDianJiHua.getId()));
+        values.put(XunDianJiHuaTable.Cols.UID,String.valueOf(xunDianJiHua.getUid()));
         values.put(XunDianJiHuaTable.Cols.ZHOU,xunDianJiHua.getZhou());
         values.put(XunDianJiHuaTable.Cols.RIQI,xunDianJiHua.getRiQi());
         values.put(XunDianJiHuaTable.Cols.KSJIAN,xunDianJiHua.getShiJian());
@@ -191,10 +207,11 @@ public class XunDianJiHuaModel {
      */
     public void updateXunDianJiHua(XunDianJiHua xunDianJiHua){
         String id = String.valueOf(xunDianJiHua.getId());
+        String uid = String.valueOf(xunDianJiHua.getUid());
         ContentValues values = getContentValuesXun(xunDianJiHua);
         mDatabase.update(XunDianJiHuaTable.NAME,values,
-                DbSchema.XunDianTable.Cols.ID+"=?",
-                new String[] {id});
+                DbSchema.XunDianTable.Cols.ID+"=? and "+XunDianJiHuaTable.Cols.UID +" = ?",
+                new String[] {id,uid});
     }
 
     /**
@@ -203,7 +220,8 @@ public class XunDianJiHuaModel {
      */
     public void addIsUpdate(XunDianJiHua xunDianJiHua){
         XunDianJiHua mxunDianJiHua = getXunDianJiHua(
-                String.valueOf(xunDianJiHua.getId())
+                String.valueOf(xunDianJiHua.getId()),
+                String.valueOf(xunDianJiHua.getUid())
         );
         if(mxunDianJiHua != null){
             updateXunDianJiHua(xunDianJiHua);

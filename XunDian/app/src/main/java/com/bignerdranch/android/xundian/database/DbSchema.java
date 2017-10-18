@@ -85,6 +85,8 @@ public class DbSchema {
         public static final class Cols{
             // 计划id
             public static final String ID = "id";
+            // 用户id
+            public static final String UID = "uid";
             // 周
             public static final String ZHOU = "zhou";
             // 日期

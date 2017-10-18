@@ -1,7 +1,10 @@
 package com.bignerdranch.android.xundian.xundianjihua;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,20 +12,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.Login;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.comm.XunDianJiHua;
+import com.bignerdranch.android.xundian.model.LoginModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/20.
@@ -37,7 +51,7 @@ public class BenZhouFragment extends Fragment{
     private TextView mTextview_zhou_title;
 
     // 周工作数据String
-    private String mZhouJsonData = "[{\"zhou\":\"2017-09-18\",\"riRi\":\"2017-09-18\",\"KSShijian\":\"09:10\",\"JSShiJian\":\"09:30\",\"pingPai\":\"\\u4f0d\\u7f18\",\"menDianHao\":\"10057\",\"menMingCheng\":\"\\u5929\\u5c71\\u5e97\",\"isWC\":1},{\"zhou\":\"2017-09-18\",\"riRi\":\"2017-09-18\",\"KSShijian\":\"11:10\",\"JSShiJian\":\"11:40\",\"pingPai\":\"\\u53ef\\u8fea\",\"menDianHao\":\"10057\",\"menMingCheng\":\"\\u4e0a\\u6d77\\u5b9c\\u5ddd\\u5e97\",\"isWC\":1},{\"zhou\":\"2017-09-18\",\"riRi\":\"2017-09-19\",\"KSShijian\":\"10:10\",\"JSShiJian\":\"10:30\",\"pingPai\":\"\\u4f0d\\u7f18\",\"menDianHao\":\"10057\",\"menMingCheng\":\"\\u5408\\u80a5\\u5e97\",\"isWC\":1},{\"zhou\":\"2017-09-18\",\"riRi\":\"2017-09-20\",\"KSShijian\":\"13:10\",\"JSShiJian\":\"14:30\",\"pingPai\":\"\\u597d\\u5fb7\",\"menDianHao\":\"10057\",\"menMingCheng\":\"\\u8398\\u5e84\\u5e97\",\"isWC\":0}]";
+    private String mZhouJsonData = "[{\"id\":4,\"zhou\":\"2017-10-17\",\"ri_qi\":\"2017-10-17\",\"kai_shi_time\":\"09:50\",\"jie_shu_time\":\"11:10\",\"mendian_pin_pai\":\"\\u79d1\\u96f6\\u56fd\\u9645\\u98df\\u54c1\",\"mendian_id\":6483,\"mendian_name\":\"\\u79d1\\u96f6\\u4e9a\\u6d32\\u5e97\",\"mendian_hao\":\"65868\",\"uid\":13,\"gongsi_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u6709\\u9650\\u516c\\u53f8\",\"gongsi_id\":34,\"gongsi_week_start\":\"2017-03-14\",\"updated_at\":\"2017-10-18 12:23:27\",\"created_at\":\"2017-10-18 12:23:27\",\"deleted_at\":null,\"zhuang_tai\":\"\\u6b63\\u5e38\",\"bo_hui_yi_jian\":null,\"shen_he_id\":1,\"isWC\":1},{\"id\":5,\"zhou\":\"2017-10-17\",\"ri_qi\":\"2017-10-18\",\"kai_shi_time\":\"12:00\",\"jie_shu_time\":\"06:00\",\"mendian_pin_pai\":\"\\u79d1\\u96f6\\u56fd\\u9645\\u98df\\u54c1\",\"mendian_id\":6483,\"mendian_name\":\"\\u79d1\\u96f6\\u4e9a\\u6d32\\u5e97\",\"mendian_hao\":\"65868\",\"uid\":13,\"gongsi_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u6709\\u9650\\u516c\\u53f8\",\"gongsi_id\":34,\"gongsi_week_start\":\"2017-03-14\",\"updated_at\":\"2017-10-18 12:23:27\",\"created_at\":\"2017-10-18 12:23:27\",\"deleted_at\":null,\"zhuang_tai\":\"\\u6b63\\u5e38\",\"bo_hui_yi_jian\":null,\"shen_he_id\":1,\"isWC\":0},{\"id\":6,\"zhou\":\"2017-10-17\",\"ri_qi\":\"2017-10-19\",\"kai_shi_time\":\"09:00\",\"jie_shu_time\":\"11:00\",\"mendian_pin_pai\":\"\\u79d1\\u96f6\\u56fd\\u9645\\u98df\\u54c1\",\"mendian_id\":6483,\"mendian_name\":\"\\u79d1\\u96f6\\u4e9a\\u6d32\\u5e97\",\"mendian_hao\":\"65868\",\"uid\":13,\"gongsi_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u6709\\u9650\\u516c\\u53f8\",\"gongsi_id\":34,\"gongsi_week_start\":\"2017-03-14\",\"updated_at\":\"2017-10-18 12:24:26\",\"created_at\":\"2017-10-18 12:24:26\",\"deleted_at\":null,\"zhuang_tai\":\"\\u6b63\\u5e38\",\"bo_hui_yi_jian\":null,\"shen_he_id\":1,\"isWC\":0},{\"id\":7,\"zhou\":\"2017-10-17\",\"ri_qi\":\"2017-10-20\",\"kai_shi_time\":\"06:00\",\"jie_shu_time\":\"08:00\",\"mendian_pin_pai\":\"\\u79d1\\u96f6\",\"mendian_id\":6474,\"mendian_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u771f\\u5317\\u5e97\",\"mendian_hao\":\"666666\",\"uid\":13,\"gongsi_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u6709\\u9650\\u516c\\u53f8\",\"gongsi_id\":34,\"gongsi_week_start\":\"2017-03-14\",\"updated_at\":\"2017-10-18 13:31:49\",\"created_at\":\"2017-10-18 13:31:49\",\"deleted_at\":null,\"zhuang_tai\":\"\\u6b63\\u5e38\",\"bo_hui_yi_jian\":null,\"shen_he_id\":1,\"isWC\":1},{\"id\":8,\"zhou\":\"2017-10-17\",\"ri_qi\":\"2017-10-21\",\"kai_shi_time\":\"10:00\",\"jie_shu_time\":\"14:10\",\"mendian_pin_pai\":\"\\u79d1\\u96f6\\u56fd\\u9645\\u98df\\u54c1\",\"mendian_id\":6483,\"mendian_name\":\"\\u79d1\\u96f6\\u4e9a\\u6d32\\u5e97\",\"mendian_hao\":\"65868\",\"uid\":13,\"gongsi_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u6709\\u9650\\u516c\\u53f8\",\"gongsi_id\":34,\"gongsi_week_start\":\"2017-03-14\",\"updated_at\":\"2017-10-18 13:31:49\",\"created_at\":\"2017-10-18 13:31:49\",\"deleted_at\":null,\"zhuang_tai\":\"\\u6b63\\u5e38\",\"bo_hui_yi_jian\":null,\"shen_he_id\":1,\"isWC\":1},{\"id\":9,\"zhou\":\"2017-10-17\",\"ri_qi\":\"2017-10-20\",\"kai_shi_time\":\"11:00\",\"jie_shu_time\":\"01:00\",\"mendian_pin_pai\":\"\\u79d1\\u96f6\\u56fd\\u9645\\u98df\\u54c1\",\"mendian_id\":6483,\"mendian_name\":\"\\u79d1\\u96f6\\u4e9a\\u6d32\\u5e97\",\"mendian_hao\":\"65868\",\"uid\":13,\"gongsi_name\":\"\\u79d1\\u96f6\\u98df\\u54c1\\u6709\\u9650\\u516c\\u53f8\",\"gongsi_id\":34,\"gongsi_week_start\":\"2017-03-14\",\"updated_at\":\"2017-10-18 13:31:49\",\"created_at\":\"2017-10-18 13:31:49\",\"deleted_at\":null,\"zhuang_tai\":\"\\u6b63\\u5e38\",\"bo_hui_yi_jian\":null,\"shen_he_id\":1,\"isWC\":0}]";
 
     // 周工作数据list
     private List<XunDianJiHua> mXunDianJiHuas = new ArrayList<>();
@@ -102,6 +116,22 @@ public class BenZhouFragment extends Fragment{
     private TextView mTextview_title_ri;
     private TextView mTextview_title_ri_baifbi;
 
+    // Token
+    public String mToken = null;
+
+    // LoginModel 登录模型
+    public static LoginModel mLoginModel = null;
+    // 登录对象
+    public static Login mLogin = null;
+
+    // 开启线程
+    public static Thread mThread = null;
+
+    // 本周工作请求地址
+    public String mBenZhouQingQiuURL = Config.URL+"/app/ben_zhou_xun_dian_ji_hua";
+
+    // dialog,加载
+    public Dialog mWeiboDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -170,14 +200,18 @@ public class BenZhouFragment extends Fragment{
      * 值操作
      */
     public void values(){
-        // Token赋值
+        // loading
+        LoadingStringEdit("加载中");
+        // 登录数据库连接
+        mLoginModel = LoginModel.get(getActivity());
+        // Token查询,赋值
+        mLogin = mLoginModel.getLogin(1);
+        mToken = mLogin.getToken();
 
-        // 获取本周周一时间
-        setBenZhou();
-        // 值处理
-        setXunDianJiHuas();
-        // 显示计划
-        setShowJH();
+        // 本周计划请求
+        qingQiuBenZhouJiHua();
+
+
 
     }
 
@@ -186,29 +220,102 @@ public class BenZhouFragment extends Fragment{
      */
     public void ZhuJianCaoZhuo(){
         mTextview_zhou_title.setText(mBenZhou+"周");
+
+        // 关闭loading
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
 
     /**
-     * 设置当前周周一时间,本周每天的日期
+     * 数据请求后处理
+     * @param string
      */
-    public void setBenZhou() {
-        SimpleDateFormat simpleDateFormats =new SimpleDateFormat("y-MM-d", Locale.CHINA);
-        Calendar calendar=Calendar.getInstance(Locale.CHINA);
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        //当前时间，貌似多余，其实是为了所有可能的系统一致
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        // 获取当前周周一的日期
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        // 添加周数据
-        mBenZhou = simpleDateFormats.format(calendar.getTime());
+    public void JiHuaQingQiuFanHui(String string){
 
-        mRiQiData = new String[7];
-        mRiQiData[0] = simpleDateFormats.format(calendar.getTime());
-        // 添加日期数据
-        for(int i = 1;i<7;i++){
-            calendar.add(Calendar.DATE,1);
-            mRiQiData[i] = simpleDateFormats.format(calendar.getTime());
+        if(!string.equals("")){
+            try {
+
+                JSONObject jsonObject = new JSONObject(string);
+                JSONArray jsonArray = new JSONArray(jsonObject.getString("riqi").toString());
+                if(jsonArray.length() > 0){
+                    // 周赋值
+                    mBenZhou = jsonArray.get(0).toString();
+
+                    // 日期赋值
+                    mRiQiData = new String[7];
+                    mRiQiData[0] = jsonArray.get(0).toString();
+                    mRiQiData[1] = jsonArray.get(1).toString();
+                    mRiQiData[2] = jsonArray.get(2).toString();
+                    mRiQiData[3] = jsonArray.get(3).toString();
+                    mRiQiData[4] = jsonArray.get(4).toString();
+                    mRiQiData[5] = jsonArray.get(5).toString();
+                    mRiQiData[6] = jsonArray.get(6).toString();
+
+                    // 数据赋值
+                    mZhouJsonData = jsonObject.getString("data").toString();
+
+                    // 值处理
+                    setXunDianJiHuas();
+                    // 显示计划
+                    setShowJH();
+                    // 组件操作
+                    ZhuJianCaoZhuo();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
+
+    }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             *  msg.obj
+             */
+            if(msg.what==1){
+                if(msg.obj.toString().equals("暂无数据")){
+                    tiShi(getActivity(),"暂无数据");
+                }else{
+                    JiHuaQingQiuFanHui(msg.obj.toString());
+                }
+            }
+        }
+    };
+
+    /**
+     * 请求本周数据
+     */
+    public void qingQiuBenZhouJiHua(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("is","1");
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mBenZhouQingQiuURL)
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -223,12 +330,13 @@ public class BenZhouFragment extends Fragment{
                     if(jsonArray.get(i) != null){
                         JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                         xunDianJiHua.setZhou(jsonObject.getString("zhou").trim());
-                        xunDianJiHua.setRiQi(jsonObject.getString("riRi").trim());
-                        xunDianJiHua.setShiJian(jsonObject.getString("KSShijian").trim());
-                        xunDianJiHua.setJSShiJian(jsonObject.getString("JSShiJian").trim());
-                        xunDianJiHua.setPingPaiStr(jsonObject.getString("pingPai").trim());
-                        xunDianJiHua.setMenDianHao(jsonObject.getString("menDianHao").trim());
-                        xunDianJiHua.setMenDianStr(jsonObject.getString("menMingCheng").trim());
+                        xunDianJiHua.setRiQi(jsonObject.getString("ri_qi").trim());
+                        xunDianJiHua.setShiJian(jsonObject.getString("kai_shi_time").trim());
+                        xunDianJiHua.setJSShiJian(jsonObject.getString("jie_shu_time").trim());
+                        xunDianJiHua.setPingPaiStr(jsonObject.getString("mendian_pin_pai").trim());
+                        xunDianJiHua.setMenDianHao(jsonObject.getString("mendian_hao").trim());
+                        xunDianJiHua.setMenDianStr(jsonObject.getString("mendian_name").trim());
+                        xunDianJiHua.setZhouStr(jsonObject.getString("zhouStr").trim());
                         xunDianJiHua.setIsWC(Integer.valueOf(jsonObject.getString("isWC").trim()));
                     }
                     mXunDianJiHuas.add(xunDianJiHua);
@@ -345,7 +453,7 @@ public class BenZhouFragment extends Fragment{
         int bianhao = 0;
 
         // 周几字符串
-        String strs = null;
+        String strs = xunDianJiHua.getZhouStr();
         //周几title
         LinearLayout ll_title = null;
         TextView tv_text = null;
@@ -355,7 +463,6 @@ public class BenZhouFragment extends Fragment{
 
         if(mRiQiData[0].equals(xunDianJiHua.getRiQi())){
             // 周一
-            strs = stringRiQi+" 周一";
 
             ll = mLinear_zhou_yi;
 
@@ -373,7 +480,6 @@ public class BenZhouFragment extends Fragment{
 
         }else if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
             // 周二
-            strs = stringRiQi+" 周二";
             ll = mLinear_zhou_er;
             bianhao = ZhouEr;
             ll_title = mLinear_zhou_er_title;
@@ -387,7 +493,6 @@ public class BenZhouFragment extends Fragment{
             ZhouEr++;
         }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
             // 周三
-            strs = stringRiQi+" 周三";
             ll = mLinear_zhou_san;
             bianhao = ZhouSan;
             ll_title = mLinear_zhou_san_title;
@@ -401,7 +506,6 @@ public class BenZhouFragment extends Fragment{
             ZhouSan++;
         }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
             // 周四
-            strs = stringRiQi+" 周四";
             ll = mLinear_zhou_si;
             bianhao = ZhouSi;
             ll_title = mLinear_zhou_si_title;
@@ -415,7 +519,6 @@ public class BenZhouFragment extends Fragment{
             ZhouSi++;
         }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
             // 周五
-            strs = stringRiQi+" 周五";
             ll = mLinear_zhou_wu;
             bianhao = ZhouWu;
             ll_title = mLinear_zhou_wu_title;
@@ -429,7 +532,6 @@ public class BenZhouFragment extends Fragment{
             ZhouWu++;
         }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
             // 周六
-            strs = stringRiQi+" 周六";
             ll = mLinear_zhou_liu;
             bianhao = ZhouLiu;
             ll_title = mLinear_zhou_liu_title;
@@ -443,7 +545,6 @@ public class BenZhouFragment extends Fragment{
             ZhouLiu++;
         }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
             // 周日
-            strs = stringRiQi+" 周日";
             ll = mLinear_zhou_ri;
             bianhao = ZhouQi;
             ll_title = mLinear_zhou_ri_title;
@@ -567,4 +668,21 @@ public class BenZhouFragment extends Fragment{
         return ll;
     }
 
+    /**
+     * 提示
+     *
+     * @param context
+     */
+    public static void tiShi(Context context, String string) {
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * loading 浮层
+     *
+     * @param logingString 提示文字
+     */
+    public void LoadingStringEdit(String logingString){
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(getActivity(),logingString);
+    }
 }

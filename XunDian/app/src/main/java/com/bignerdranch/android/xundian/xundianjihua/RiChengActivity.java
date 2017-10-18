@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.TongZhi;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
@@ -28,12 +31,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/20.
@@ -130,6 +141,15 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
     // 周日节点
     public LinearLayout mLinear_zhou_ri;
 
+    // 本周工作请求地址
+    public String mBenZhouQingQiuURL = Config.URL+"/app/ben_zhou_xun_dian_ji_hua";
+
+    // 删除巡店计划
+    public String mShanChuXunDianURL = Config.URL+"/app/shan_chu_xun_dian_ji_hua";
+
+    // 修改数据提交
+    public String mXiuGaiJiHuaURL = Config.URL+"/app/xiu_gai_xun_dian_ji_hua";
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
@@ -220,6 +240,108 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
     }
 
     /**
+     * 数据请求后处理
+     * @param string
+     */
+    public void JiHuaQingQiuFanHui(String string){
+
+        if(!string.equals("")){
+            try {
+
+                JSONObject jsonObject = new JSONObject(string);
+                JSONArray jsonArray = new JSONArray(jsonObject.getString("riqi").toString());
+                if(jsonArray.length() > 0){
+                    // 周赋值
+                    mZhouData = new String[1];
+                    mZhouData[0] = jsonArray.get(0).toString()+"周";
+
+                    // 日期赋值
+                    mRiQiData = new String[7];
+                    mRiQiData[0] = jsonArray.get(0).toString();
+                    mRiQiData[1] = jsonArray.get(1).toString();
+                    mRiQiData[2] = jsonArray.get(2).toString();
+                    mRiQiData[3] = jsonArray.get(3).toString();
+                    mRiQiData[4] = jsonArray.get(4).toString();
+                    mRiQiData[5] = jsonArray.get(5).toString();
+                    mRiQiData[6] = jsonArray.get(6).toString();
+
+                    // 数据赋值
+                    mZhouJsonData = jsonObject.getString("data").toString();
+
+                    // 值处理
+                    setXunDianJiHuas();
+                    // 显示计划
+                    setShowJH();
+                    // 组件操作
+                    ZhuJianCaoZhuo();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             *  msg.obj
+             */
+            if(msg.what==1){
+                if(msg.obj.toString().equals("暂无数据")){
+                    tiShi(mContext,"暂无数据");
+                }else{
+                    JiHuaQingQiuFanHui(msg.obj.toString());
+                }
+            }else if(msg.what == 2){
+                tiShi(mContext,msg.obj.toString());
+            }else if(msg.what == 3){
+                tiShi(mContext,msg.obj.toString());
+                // 删除数据
+                mXunDianJiHuas = new ArrayList<>();
+                // 刷新视图
+                setShowJH();
+            }
+        }
+    };
+
+    /**
+     * 请求本周数据
+     */
+    public void qingQiuBenZhouJiHua(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("is","2");
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mBenZhouQingQiuURL)
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+    /**
      * 处理请求数据
      */
     public void setXunDianJiHuas() {
@@ -230,14 +352,16 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     XunDianJiHua xunDianJiHua = new XunDianJiHua();
                     if(jsonArray.get(i) != null){
                         JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                        xunDianJiHua.setId(Integer.valueOf(jsonObject.getString("id")));
                         xunDianJiHua.setZhou(jsonObject.getString("zhou").trim());
-                        xunDianJiHua.setRiQi(jsonObject.getString("riRi").trim());
-                        xunDianJiHua.setShiJian(jsonObject.getString("KSShijian").trim());
-                        xunDianJiHua.setJSShiJian(jsonObject.getString("JSShiJian").trim());
-                        xunDianJiHua.setPingPaiStr(jsonObject.getString("pingPai").trim());
-                        xunDianJiHua.setMenDianHao(jsonObject.getString("menDianHao").trim());
-                        xunDianJiHua.setMenDianStr(jsonObject.getString("menMingCheng").trim());
-                        xunDianJiHua.setIsWC(Integer.valueOf(jsonObject.getString("isWC").trim()));
+                        xunDianJiHua.setRiQi(jsonObject.getString("ri_qi").trim());
+                        xunDianJiHua.setShiJian(jsonObject.getString("kai_shi_time").trim());
+                        xunDianJiHua.setJSShiJian(jsonObject.getString("jie_shu_time").trim());
+                        xunDianJiHua.setPingPaiStr(jsonObject.getString("mendian_pin_pai").trim());
+                        xunDianJiHua.setMenDianHao(jsonObject.getString("mendian_hao").trim());
+                        xunDianJiHua.setMenDianStr(jsonObject.getString("mendian_name").trim());
+                        xunDianJiHua.setMenDianId(Integer.valueOf(jsonObject.getString("mendian_id")));
+                        xunDianJiHua.setZhouStr(jsonObject.getString("zhouStr").trim());
                     }
                     mXunDianJiHuas.add(xunDianJiHua);
                 }
@@ -246,6 +370,57 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 修改数据提交
+     */
+    public void gongZuoBiaoTiJiao(){
+        JSONObject jsonObjects = new JSONObject();
+        for(int i = 0;i<mXunDianJiHuas.size();i++){
+            if(mXunDianJiHuas.get(i) != null){
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    XunDianJiHua xunDianJiHua = mXunDianJiHuas.get(i);
+
+                    jsonObject.put("id",xunDianJiHua.getId());
+                    jsonObject.put("zhou",xunDianJiHua.getZhou());
+                    jsonObject.put("ri_qi",xunDianJiHua.getRiQi());
+                    jsonObject.put("kai_shi_time",xunDianJiHua.getShiJian());
+                    jsonObject.put("jie_shu_time",xunDianJiHua.getJSShiJian());
+                    jsonObject.put("mendian_id",xunDianJiHua.getMenDianId());
+
+                    jsonObjects.put(""+i,jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+//        Log.i(" ",jsonObjects.toString());
+        final OkHttpClient client = new OkHttpClient();
+        //3, 发起新的请求,获取返回信息
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonObjects.toString());
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mXiuGaiJiHuaURL)
+                .post(requestBody)
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(3, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -323,10 +498,12 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         setToken(mContext);
         // 巡店计划model
         mXunDianJiHuaModel = XunDianJiHuaModel.get(mContext);
+        // 数据请求
+        qingQiuBenZhouJiHua();
         // 请求驳回数据处理
         setXunDianJiHuas();
         // 设置周数据,日期数据
-        setZhouData();
+//        setZhouData();
         // 品牌请求
         pinPaiSearch();
         // 请求店铺
@@ -451,34 +628,34 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         });
 
         // 品牌选择
-        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int index) {
-
-                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
-                        // 门店品牌
-                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
-
-                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
-                        // 请求店铺
-                        menDianSearch();
-
-                        // 存入id
-                        mXunDianJiHua.setPingPaiId(id);
-                        // 存入名称
-                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
-
-                        alertDialog1.dismiss();
-                    }
-                });
-                alertDialog1 = alertBuilder.create();
-                alertDialog1.show();
-            }
-        });
+//        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+//                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface arg0, int index) {
+//
+//                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
+//                        // 门店品牌
+//                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
+//
+//                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
+//                        // 请求店铺
+//                        menDianSearch();
+//
+//                        // 存入id
+//                        mXunDianJiHua.setPingPaiId(id);
+//                        // 存入名称
+//                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
+//
+//                        alertDialog1.dismiss();
+//                    }
+//                });
+//                alertDialog1 = alertBuilder.create();
+//                alertDialog1.show();
+//            }
+//        });
 
         // 门店选择
         mTextview_ming_cheng.setOnClickListener(new View.OnClickListener() {
@@ -490,20 +667,25 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
 
-                        mTextview_ming_cheng_value.setText(mMengDianData[index]);
+                        String[] strings = ChanKanIds(mMengDianJsonData,mMengDianData[index]);
 
-                        int id = ChanKanId(mMengDianJsonData,mMengDianData[index]);
+                        // 门店显示
+                        mTextview_ming_cheng_value.setText(mMengDianData[index]);
+                        // 品牌显示
+                        mTextview_pin_pai_value.setText(strings[3]);
+                        mXunDianJiHua.setPingPaiStr(strings[3]);
                         // 店号
-                        String dianHao = ChanKanKey(mMengDianJsonData,mMengDianData[index],"men_dian_hao");
+                        String dianHao = strings[2];
                         // 显示店号
                         mTextview_dian_hao_value.setText(dianHao);
                         // 存入店号
                         mXunDianJiHua.setMenDianHao(dianHao);
 
                         // 存储选择门店id
-                        mXunDianJiHua.setMenDianId(id);
+                        mXunDianJiHua.setMenDianId(Integer.valueOf(strings[0]));
                         // 存储用户选择门店
                         mXunDianJiHua.setMenDianStr(mMengDianData[index]);
+
 
                         alertDialog1.dismiss();
 
@@ -519,10 +701,13 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             @Override
             public void onClick(View view) {
                 if(mXiuGaiKey != 1000){
+                    // 数据发送服务器删除
+                    shanChuJiLv(String.valueOf(mXunDianJiHuas.get(mXiuGaiKey).getId()));
                     // list删除
                     mXunDianJiHuas.remove(mXiuGaiKey);
                     // 更新操作
                     initAddDelete();
+
                 }
             }
         });
@@ -540,9 +725,40 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mButton_ti_jiao_gzb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(mXunDianJiHuas.size() > 0){
+                    gongZuoBiaoTiJiao();
+                }else{
+                    tiShi(mContext,"数据为空不能提交");
+                }
             }
         });
+    }
+
+    public void shanChuJiLv(String strid){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("id",strid);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mShanChuXunDianURL)
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -817,7 +1033,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             mButton_gong_zuo.setVisibility(View.VISIBLE);
 
             mXunDianJiHua = mXunDianJiHuas.get(mXiuGaiKey);
-            mTextview_zhou_value.setText(mXunDianJiHua.getZhou());
+            mTextview_zhou_value.setText(mXunDianJiHua.getZhou()+"周");
             mTextview_ri_qi_value.setText(mXunDianJiHua.getRiQi());
             mTextview_shi_jian_value.setText(mXunDianJiHua.getShiJian());
             mTextview_js_shi_jian_value.setText(mXunDianJiHua.getJSShiJian());

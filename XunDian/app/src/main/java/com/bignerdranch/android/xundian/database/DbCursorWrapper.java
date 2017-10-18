@@ -100,6 +100,8 @@ public class DbCursorWrapper extends CursorWrapper {
     public XunDianJiHua getXunDianJiHua(){
         // id
         int id = getInt(getColumnIndex(XunDianJiHuaTable.Cols.ID));
+        // 用户id
+        int uid = getInt(getColumnIndex(XunDianJiHuaTable.Cols.UID));
         // 周
         String zhou = getString(getColumnIndex(XunDianJiHuaTable.Cols.ZHOU));
         // 日期
@@ -122,6 +124,7 @@ public class DbCursorWrapper extends CursorWrapper {
         XunDianJiHua xunDianJiHua = new XunDianJiHua();
 
         xunDianJiHua.setId(id);
+        xunDianJiHua.setUid(uid);
         xunDianJiHua.setZhou(zhou);
         xunDianJiHua.setRiQi(riqi);
         xunDianJiHua.setShiJian(kstime);

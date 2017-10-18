@@ -11,6 +11,9 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // id
     public int mId;
 
+    // UID
+    public int mUid;
+
     // 周
     public String mZhou;
 
@@ -41,7 +44,24 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // 是否完成 0 1
     public int mIsWC;
 
+    // 日期 周
+    public String mZhouStr;
 
+    public void setZhouStr(String zhouStr) {
+        mZhouStr = zhouStr;
+    }
+
+    public String getZhouStr() {
+        return mZhouStr;
+    }
+
+    public void setUid(int uid) {
+        mUid = uid;
+    }
+
+    public int getUid() {
+        return mUid;
+    }
 
     public void setIsWC(int isWC) {
         mIsWC = isWC;

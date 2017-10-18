@@ -69,6 +69,7 @@ public class BaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table "+ XunDianJiHuaTable.NAME+"("+
                 "_id integer primary key autoincrement, "+
                 XunDianJiHuaTable.Cols.ID+", "+
+                XunDianJiHuaTable.Cols.UID+", "+
                 XunDianJiHuaTable.Cols.ZHOU+", "+
                 XunDianJiHuaTable.Cols.RIQI+", "+
                 XunDianJiHuaTable.Cols.KSJIAN+", "+

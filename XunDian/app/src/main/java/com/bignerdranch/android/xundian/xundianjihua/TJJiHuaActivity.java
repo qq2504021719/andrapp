@@ -38,9 +38,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -149,6 +151,9 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
     // 修改下标
     public int mXiuGaiKey = 1000;
 
+    // 巡店数据提交地址
+    public String mTiJiaoDiZhi = Config.URL+"/app/xun_dian_ji_hua_ti_jiao";
+
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,TJJiHuaActivity.class);
         i.putExtra(EXTRA,intIsId);
@@ -185,6 +190,14 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                 mXunDianRiQiData = msg.obj.toString();
                 // 日期请求后处理才在
                 RiQiQingQiuHouCZ();
+            }else if(msg.what == 2){
+                tiShi(mContext,msg.obj.toString());
+                // 删除数据
+                mXunDianJiHuaModel.deleteXunDianJiHua(String.valueOf(mLogin.getUid()));
+                // 对象数据清空
+                mXunDianJiHuas = new ArrayList<>();
+                // 刷新视图
+                initAddDelete();
             }
         }
     };
@@ -272,7 +285,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         DatabaseXunDian();
         // 查询签到日期
         ChaXunQianDaoRiQi();
-
+        // 存储用户id
+        mXunDianJiHua.setUid(mLogin.getUid());
 
     }
 
@@ -322,17 +336,22 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                 alertBuilder.setItems(mZhouData, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
+                        Boolean is = true;
                         if(mXunDianJiHuas.size() > 0){
                             if(mXunDianJiHuas.get(0).getZhou().trim().equals(mZhouData[index])){
-                                // 显示选择周
-                                mTextview_zhou_value.setText(mZhouData[index]);
-                                // 更新用户选择周
-                                mXunDianJiHua.setZhou(mZhouData[index]);
-                                // 更新日期
-                                setRiqi(mXunDianJiHua.getZhou());
+                                is = true;
                             }else{
+                                is = false;
                                 tiShi(mContext,mXunDianJiHuas.get(0).getZhou()+"未提交,请先提交");
                             }
+                        }
+                        if(is){
+                            // 显示选择周
+                            mTextview_zhou_value.setText(mZhouData[index]);
+                            // 更新用户选择周
+                            mXunDianJiHua.setZhou(mZhouData[index]);
+                            // 更新日期
+                            setRiqi(mXunDianJiHua.getZhou());
                         }
 
                         alertDialog1.dismiss();
@@ -488,7 +507,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             public void onClick(View view) {
                 if(mXiuGaiKey != 1000){
                     // 数据库删除
-                    mXunDianJiHuaModel.deleteXunDianJiHua(String.valueOf(mXunDianJiHuas.get(mXiuGaiKey).getId()));
+                    mXunDianJiHuaModel.deleteXunDianJiHua(String.valueOf(mXunDianJiHuas.get(mXiuGaiKey).getId()),String.valueOf(mLogin.getUid()));
                     // list删除
                     mXunDianJiHuas.remove(mXiuGaiKey);
                     // 更新操作
@@ -501,9 +520,63 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mButton_ti_jiao_gzb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(mXunDianJiHuas.size() > 0){
+                    gongZuoBiaoTiJiao();
+                }else{
+                    tiShi(mContext,"请录入计划");
+                }
             }
         });
+    }
+
+    /**
+     * 工作表提交
+     */
+    public void gongZuoBiaoTiJiao(){
+        JSONObject jsonObjects = new JSONObject();
+        for(int i = 0;i<mXunDianJiHuas.size();i++){
+            if(mXunDianJiHuas.get(i) != null){
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    XunDianJiHua xunDianJiHua = mXunDianJiHuas.get(i);
+                    jsonObject.put("zhou",xunDianJiHua.getZhou());
+                    jsonObject.put("ri_qi",xunDianJiHua.getRiQi());
+                    jsonObject.put("kai_shi_time",xunDianJiHua.getShiJian());
+                    jsonObject.put("jie_shu_time",xunDianJiHua.getJSShiJian());
+                    jsonObject.put("mendian_id",xunDianJiHua.getMenDianId());
+
+
+                    jsonObjects.put(""+i,jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+//        Log.i(" ",jsonObjects.toString());
+        final OkHttpClient client = new OkHttpClient();
+        //3, 发起新的请求,获取返回信息
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonObjects.toString());
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mTiJiaoDiZhi)
+                .post(requestBody)
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -598,6 +671,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mXiuGaiKey = 1000;
         // 初始化对象
         mXunDianJiHua = new XunDianJiHua();
+        // 存储用户id
+        mXunDianJiHua.setUid(mLogin.getUid());
         // 清空输入内容
         qingKongNeiRong();
         // 刷新显示
@@ -609,7 +684,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
      */
     public void DatabaseXunDian(){
         // 查询数据
-        mXunDianJiHuas = mXunDianJiHuaModel.getXunDianJiHuas();
+        mXunDianJiHuas = mXunDianJiHuaModel.getXunDianJiHuas(String.valueOf(mLogin.getUid()));
         //
         mId = mXunDianJiHuas.size();
     }
