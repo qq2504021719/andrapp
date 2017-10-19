@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingActivity;
 import com.bignerdranch.android.xundian.kehutuozhan.KeHuActivity;
+import com.bignerdranch.android.xundian.shujuyushenhe.ShuJuYuShenHeActivity;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
 import com.bignerdranch.android.xundian.xundianjihua.JiHuaActivity;
 
@@ -30,6 +31,9 @@ public class GongZuoZhongXinFragment extends Fragment{
 
     // 考勤
     public LinearLayout mGong_kao_qing_linearLayout;
+
+    // 数据与审核
+    public LinearLayout mShu_ju_yu_shen_he_linearLayout;
 
     // 客户拓展
     public LinearLayout mButton_ke_hu;
@@ -58,6 +62,8 @@ public class GongZuoZhongXinFragment extends Fragment{
         mButton_ji_hua = (LinearLayout)mView.findViewById(R.id.button_ji_hua);
         // 考勤
         mGong_kao_qing_linearLayout = (LinearLayout)mView.findViewById(R.id.gong_kao_qing_linearLayout);
+        // 数据与审核
+        mShu_ju_yu_shen_he_linearLayout = (LinearLayout)mView.findViewById(R.id.shu_ju_yu_shen_he_llinearLayout);
         // 客户拓展
         mButton_ke_hu = (LinearLayout)mView.findViewById(R.id.button_ke_hu);
     }
@@ -92,6 +98,15 @@ public class GongZuoZhongXinFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 Intent i = KaoQingActivity.newIntent(getActivity(),1);
+                startActivity(i);
+            }
+        });
+
+        // 数据与审核
+        mShu_ju_yu_shen_he_linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = ShuJuYuShenHeActivity.newIntent(getActivity(),1);
                 startActivity(i);
             }
         });

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@color/colorAccent">
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:textColor="@color/heise"
+        android:textSize="16dp"
+        android:text="不同意原因"/>
+
+    <EditText
+        android:id="@+id/edittext_qing_jia_bu_tong_yi_ti_jiao"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:textCursorDrawable="@drawable/edit_gong_cursor_color"
+        android:background="@drawable/gong_zuo_zhong_xin_button"
+        android:padding="10dp"
+        android:hint="请填写不同意原因"/>
+
+    <!--提交-->
+    <LinearLayout
+        android:background="@color/colorAccent"
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/button_qing_jia_bu_tong_yi_ti_jiao"
+            android:text="不同意提交"
+            style="@style/XunDianButton"/>
+    </LinearLayout>
+
+</LinearLayout>

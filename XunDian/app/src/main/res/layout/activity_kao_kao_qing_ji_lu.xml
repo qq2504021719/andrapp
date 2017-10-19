@@ -76,7 +76,8 @@
 
                     <!--请假记录-->
                     <LinearLayout
-                            style="@style/LinearLayoutHorizontal">
+                            style="@style/LinearLayoutHorizontal"
+                            android:gravity="center_vertical">
                             <TextView
                                 android:id="@+id/text_ji_lu_qing_jia_ji_lu"
                                 style="@style/TjJiHuaTextView"

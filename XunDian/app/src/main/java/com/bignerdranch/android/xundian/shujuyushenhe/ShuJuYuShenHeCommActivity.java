@@ -1,4 +1,4 @@
-package com.bignerdranch.android.xundian.kaoqing;
+package com.bignerdranch.android.xundian.shujuyushenhe;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,10 +8,11 @@ import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,14 +32,13 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.bignerdranch.android.xundian.LoginActivity;
 import com.bignerdranch.android.xundian.R;
-import com.bignerdranch.android.xundian.comm.BaiDuActivity;
 import com.bignerdranch.android.xundian.comm.CommActivity;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.LocationBaiDu;
 import com.bignerdranch.android.xundian.comm.Login;
-import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.PictureUtils;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
+import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 import com.bignerdranch.android.xundian.model.LoginModel;
 
 import org.json.JSONArray;
@@ -60,10 +60,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by Administrator on 2017/9/26.
+ * Created by Administrator on 2017/10/19.
  */
 
-public class KaoQingCommonActivity extends CommActivity {
+public class ShuJuYuShenHeCommActivity extends CommActivity {
+
     public TextView mTitle_nei_ye = null; // 设置显示标题
     public Context mContext = null;
 
@@ -100,10 +101,10 @@ public class KaoQingCommonActivity extends CommActivity {
 
     // 考勤记录-请假记录列表高度
     public int mQingJiaHeight = 0;
-    // activity 类型
+    // 数据显示类型 0 未审核  1 已审核
     public int mActivityLeiXing = 0;
 
-
+    public Dialog dialog = null;
 
     // 百度地图定位
     public LocationBaiDu mLocationBaiDu = new LocationBaiDu(); //定位信息存储
@@ -129,8 +130,12 @@ public class KaoQingCommonActivity extends CommActivity {
      * 实现回调接口
      */
     public interface Callbacks{
+        // 巡店数据查询回调
         void shuJuHuiDiao(String string,int is);
+        // 定位回调
         void dingWeiData();
+        // 未审核数据同意 不同意 数据回调
+        void weiShenHe(String string,int id,String BString);
     }
 
     /**
@@ -161,9 +166,9 @@ public class KaoQingCommonActivity extends CommActivity {
     public String getDangQianTime(int is){
         SimpleDateFormat simpleDateFormats = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         if(is == 1){
-             simpleDateFormats = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            simpleDateFormats = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         }else if(is == 2){
-             simpleDateFormats =new SimpleDateFormat("yyyy-MM-dd hh:ii:ss", Locale.CHINA);
+            simpleDateFormats =new SimpleDateFormat("yyyy-MM-dd hh:ii:ss", Locale.CHINA);
         }
         Calendar calendar=Calendar.getInstance(Locale.CHINA);
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -246,53 +251,16 @@ public class KaoQingCommonActivity extends CommActivity {
             try {
                 JSONArray jsonArray = new JSONArray(dataStr);
                 if(jsonArray.length() > 0){
-                    if(mActivityLeiXing == 1){
-                        int biaoShi = 0;
-                        for (int i = 0;i<jsonArray.length();i++){
-                            // time data 成
-                            JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    for (int i = 0;i<jsonArray.length();i++){
+                        // 考勤记录-请假记录列表
+                        mQingJiaHeight += 120;
 
-                            // data 拆分
-                            JSONArray jsonArray1 = new JSONArray(jsonObject.getString("data"));
-
-                            int IsNianYue = 0;
-                            if(jsonArray1.length() > 0){
-                                for(int c = 0;c<jsonArray1.length();c++){
-                                    // 考勤记录-请假记录列表
-                                    mQingJiaHeight += 120;
-
-                                    LinearLayout linearLayout1 = CreateLinear(1);
-
-                                    if(IsNianYue == 0){
-                                        LinearLayout linearLayout1_2 = CreateLinear(8);
-                                        TextView textView = CreateTextView(5,jsonObject.getString("time"));
-                                        linearLayout1_2.addView(textView);
-                                        linearLayout.addView(linearLayout1_2);
-                                        IsNianYue = 1;
-                                    }
-                                    // 第一行
-                                    CreateDiYiHang(linearLayout1,jsonArray1.get(c).toString(),biaoShi);
-                                    // 添加到父布局
-                                    linearLayout.addView(linearLayout1);
-
-                                    biaoShi++;
-                                }
-                            }
-                        }
-                    }else{
-                        for (int i = 0;i<jsonArray.length();i++){
-                            // 考勤记录-请假记录列表
-                            mQingJiaHeight += 120;
-
-                            LinearLayout linearLayout1 = CreateLinear(1);
-                            // 第一行
-                            CreateDiYiHang(linearLayout1,jsonArray.get(i).toString(),i);
-                            // 添加到父布局
-                            linearLayout.addView(linearLayout1);
-                        }
+                        LinearLayout linearLayout1 = CreateLinear(1);
+                        // 第一行
+                        CreateDiYiHang(linearLayout1,jsonArray.get(i).toString(),i);
+                        // 添加到父布局
+                        linearLayout.addView(linearLayout1);
                     }
-
-
                 }
 
 
@@ -332,9 +300,9 @@ public class KaoQingCommonActivity extends CommActivity {
 
             // 评接名称,请假详细内容
             if(jsonObject_users_id_s.length() > 0){
-                TextView textView1 = CreateTextView(1,(i+1)+" "+jsonObject_users_id_s.getString("name"));
+                TextView textView1 = CreateTextView(1,(i+1)+" "+jsonObject_users_id_s.getString("name"),0);
 
-                String string_ri_qi = "";
+                String string_ri_qi = " ";
                 // 评接显示内容
                 if(!jsonObject.getString("an_tian_qing_jia").equals("null")){
                     // 得到按钮天请假字符串
@@ -358,17 +326,25 @@ public class KaoQingCommonActivity extends CommActivity {
                 }
 
                 string_ri_qi += " "+jsonObject.getString("qing_jia_lei_xing")+" "+jsonObject.getString("qing_jia_yuan_yin");
-                TextView textView2 = CreateTextView(2,string_ri_qi);
+                TextView textView2 = CreateTextView(2,string_ri_qi,0);
                 linearLayout3.addView(textView1);
                 linearLayout3.addView(textView2);
             }
 
             // 评接审核状态
-            TextView textView3 = CreateTextView(3,jsonObject.getString("qing_jia_zhuang_tai"));
-            linearLayout4.addView(textView3);
+
+            if(mActivityLeiXing == 0){
+                TextView textView3 = CreateTextView(3,"同意",Integer.valueOf(jsonObject.getString("id")));
+                linearLayout4.addView(textView3);
+                TextView textView31 = CreateTextView(3,"不同意",Integer.valueOf(jsonObject.getString("id")));
+                linearLayout4.addView(textView31);
+            }else if(mActivityLeiXing == 1){
+                TextView textView3 = CreateTextView(3,jsonObject.getString("qing_jia_zhuang_tai"),Integer.valueOf(jsonObject.getString("id")));
+                linearLayout4.addView(textView3);
+            }
             // 不同意设置图标 CreateImageView
             if(jsonObject.getString("qing_jia_zhuang_tai").equals("不同意")){
-                linearLayout4.addView(CreateImageView(1,jsonObject.getString("bu_tong_yi_yuan_yin"),R.drawable.kao_qing_xing));
+                linearLayout4.addView(CreateImageView(1,jsonObject.getString("bu_tong_yi_yuan_yin"), R.drawable.kao_qing_xing));
             }
 
 
@@ -399,108 +375,108 @@ public class KaoQingCommonActivity extends CommActivity {
      * @param string
      */
     public void CreateDierhang(LinearLayout linearLayout,String string){
-            try {
-                JSONObject jsonObject = new JSONObject(string);
+        try {
+            JSONObject jsonObject = new JSONObject(string);
 
-                JSONObject jsonObject_users_id_s = new JSONObject();
-                JSONObject jsonObject_users_id_1_s = new JSONObject();
-                JSONObject jsonObject_users_id_2_s = new JSONObject();
-                JSONObject jsonObject_users_id_3_s = new JSONObject();
+            JSONObject jsonObject_users_id_s = new JSONObject();
+            JSONObject jsonObject_users_id_1_s = new JSONObject();
+            JSONObject jsonObject_users_id_2_s = new JSONObject();
+            JSONObject jsonObject_users_id_3_s = new JSONObject();
 
-                // 获取用户信息
-                if(!jsonObject.getString("users_id_s").equals("null")){
-                    jsonObject_users_id_s = new JSONObject(jsonObject.getString("users_id_s"));
-                }
-                if(!jsonObject.getString("users_id_1_s").equals("null")){
-                    jsonObject_users_id_1_s = new JSONObject(jsonObject.getString("users_id_1_s"));
-                }
-                if(!jsonObject.getString("users_id_2_s").equals("null")){
-                    jsonObject_users_id_2_s = new JSONObject(jsonObject.getString("users_id_2_s"));
-                }
-                if(!jsonObject.getString("users_id_3_s").equals("null")){
-                    jsonObject_users_id_3_s = new JSONObject(jsonObject.getString("users_id_3_s"));
-                }
-
-
-
-                LinearLayout linearLayout7_1 = CreateLinear(7);
-                LinearLayout linearLayout7_2 = CreateLinear(7);
-                LinearLayout linearLayout7_3 = CreateLinear(7);
-
-                // 图片
-                ImageView imageView2_1 = CreateImageView(2,"",R.drawable.kao_qing_yong_hu);
-                ImageView imageView2_2 = CreateImageView(2,"",R.drawable.kao_qing_yong_hu);
-                ImageView imageView2_3 = CreateImageView(2,"",R.drawable.kao_qing_yong_hu);
-
-                // 文字信息
-                TextView textView4_1 = CreateTextView(4,"");
-                TextView textView4_2 = CreateTextView(4,"");
-                TextView textView4_3 = CreateTextView(4,"");
-
-                // 状态图标
-                ImageView imageView3_1 = CreateImageView(3,"",R.drawable.ka_qing_ku_lian);
-                ImageView imageView3_2 = CreateImageView(3,"",R.drawable.ka_qing_ku_lian);
-                ImageView imageView3_3 = CreateImageView(3,"",R.drawable.ka_qing_ku_lian);
-
-                if(jsonObject_users_id_1_s.length() > 0){
-                    textView4_1 = CreateTextView(4,jsonObject_users_id_1_s.getString("name"));
-                }
-                if(jsonObject_users_id_2_s.length() > 0){
-                    textView4_2 = CreateTextView(4,jsonObject_users_id_2_s.getString("name"));
-                }
-                if(jsonObject_users_id_3_s.length() > 0){
-                    textView4_3 = CreateTextView(4,jsonObject_users_id_3_s.getString("name"));
-                }
-
-
-
-
-                // 无审核权限
-                if(jsonObject_users_id_s.getString("shenheren_jibie").equals("null") || jsonObject_users_id_s.getString("shenheren_jibie").equals("")){
-
-                    linearLayout7_1.addView(imageView2_1);
-                    linearLayout7_1.addView(textView4_1);
-                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
-
-                    linearLayout7_2.addView(imageView2_2);
-                    linearLayout7_2.addView(textView4_2);
-                    isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
-
-                    linearLayout7_3.addView(imageView2_3);
-                    linearLayout7_3.addView(textView4_3);
-                    isTuBiao(linearLayout7_3,imageView3_3,jsonObject.getString("zhuang_tai_3"));
-
-                    linearLayout.addView(linearLayout7_3);
-                    linearLayout.addView(linearLayout7_2);
-                    linearLayout.addView(linearLayout7_1);
-
-                }
-
-                // 3级权限
-                if(jsonObject_users_id_s.getString("shenheren_jibie").equals("3")){
-                    linearLayout7_1.addView(imageView2_1);
-                    linearLayout7_1.addView(textView4_1);
-                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
-
-                    linearLayout7_2.addView(imageView2_2);
-                    linearLayout7_2.addView(textView4_2);
-                    isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
-
-                    linearLayout.addView(linearLayout7_2);
-                    linearLayout.addView(linearLayout7_1);
-
-                }
-
-                // 2级权限
-                if(jsonObject_users_id_s.getString("shenheren_jibie").equals("2")){
-                    linearLayout7_1.addView(imageView2_1);
-                    linearLayout7_1.addView(textView4_1);
-                    isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
-                    linearLayout.addView(linearLayout7_1);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            // 获取用户信息
+            if(!jsonObject.getString("users_id_s").equals("null")){
+                jsonObject_users_id_s = new JSONObject(jsonObject.getString("users_id_s"));
             }
+            if(!jsonObject.getString("users_id_1_s").equals("null")){
+                jsonObject_users_id_1_s = new JSONObject(jsonObject.getString("users_id_1_s"));
+            }
+            if(!jsonObject.getString("users_id_2_s").equals("null")){
+                jsonObject_users_id_2_s = new JSONObject(jsonObject.getString("users_id_2_s"));
+            }
+            if(!jsonObject.getString("users_id_3_s").equals("null")){
+                jsonObject_users_id_3_s = new JSONObject(jsonObject.getString("users_id_3_s"));
+            }
+
+
+
+            LinearLayout linearLayout7_1 = CreateLinear(7);
+            LinearLayout linearLayout7_2 = CreateLinear(7);
+            LinearLayout linearLayout7_3 = CreateLinear(7);
+
+            // 图片
+            ImageView imageView2_1 = CreateImageView(2,"",R.drawable.kao_qing_yong_hu);
+            ImageView imageView2_2 = CreateImageView(2,"",R.drawable.kao_qing_yong_hu);
+            ImageView imageView2_3 = CreateImageView(2,"",R.drawable.kao_qing_yong_hu);
+
+            // 文字信息
+            TextView textView4_1 = CreateTextView(4,"",0);
+            TextView textView4_2 = CreateTextView(4,"",0);
+            TextView textView4_3 = CreateTextView(4,"",0);
+
+            // 状态图标
+            ImageView imageView3_1 = CreateImageView(3,"",R.drawable.ka_qing_ku_lian);
+            ImageView imageView3_2 = CreateImageView(3,"",R.drawable.ka_qing_ku_lian);
+            ImageView imageView3_3 = CreateImageView(3,"",R.drawable.ka_qing_ku_lian);
+
+            if(jsonObject_users_id_1_s.length() > 0){
+                textView4_1 = CreateTextView(4,jsonObject_users_id_1_s.getString("name"),0);
+            }
+            if(jsonObject_users_id_2_s.length() > 0){
+                textView4_2 = CreateTextView(4,jsonObject_users_id_2_s.getString("name"),0);
+            }
+            if(jsonObject_users_id_3_s.length() > 0){
+                textView4_3 = CreateTextView(4,jsonObject_users_id_3_s.getString("name"),0);
+            }
+
+
+
+
+            // 无审核权限
+            if(jsonObject_users_id_s.getString("shenheren_jibie").equals("null") || jsonObject_users_id_s.getString("shenheren_jibie").equals("")){
+
+                linearLayout7_1.addView(imageView2_1);
+                linearLayout7_1.addView(textView4_1);
+                isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
+
+                linearLayout7_2.addView(imageView2_2);
+                linearLayout7_2.addView(textView4_2);
+                isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
+
+                linearLayout7_3.addView(imageView2_3);
+                linearLayout7_3.addView(textView4_3);
+                isTuBiao(linearLayout7_3,imageView3_3,jsonObject.getString("zhuang_tai_3"));
+
+                linearLayout.addView(linearLayout7_3);
+                linearLayout.addView(linearLayout7_2);
+                linearLayout.addView(linearLayout7_1);
+
+            }
+
+            // 3级权限
+            if(jsonObject_users_id_s.getString("shenheren_jibie").equals("3")){
+                linearLayout7_1.addView(imageView2_1);
+                linearLayout7_1.addView(textView4_1);
+                isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
+
+                linearLayout7_2.addView(imageView2_2);
+                linearLayout7_2.addView(textView4_2);
+                isTuBiao(linearLayout7_2,imageView3_2,jsonObject.getString("zhuang_tai_2"));
+
+                linearLayout.addView(linearLayout7_2);
+                linearLayout.addView(linearLayout7_1);
+
+            }
+
+            // 2级权限
+            if(jsonObject_users_id_s.getString("shenheren_jibie").equals("2")){
+                linearLayout7_1.addView(imageView2_1);
+                linearLayout7_1.addView(textView4_1);
+                isTuBiao(linearLayout7_1,imageView3_1,jsonObject.getString("zhuang_tai_1"));
+                linearLayout.addView(linearLayout7_1);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -536,7 +512,7 @@ public class KaoQingCommonActivity extends CommActivity {
         else if(is == 3){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
         }else if( is == 4){
-            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,4);
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
             layoutParam.setMargins(0,0,30,0);
         }else if(is == 5){
             layoutParam.setMargins(0,5,0,0);
@@ -552,9 +528,16 @@ public class KaoQingCommonActivity extends CommActivity {
 
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
+
+
         if(is == 1){
             linearLayout.setPadding(0,0,0,30);
-            linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border));
+            if(mActivityLeiXing == 1){
+                linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border_huise));
+            }else{
+                linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border));
+            }
+
         }else if(is == 2 || is == 6){
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         }else if(is == 4){
@@ -570,6 +553,12 @@ public class KaoQingCommonActivity extends CommActivity {
             linearLayout.setPadding(0,0,0,10);
         }
 
+        // 背景色
+//        if(mActivityLeiXing == 1){
+//            linearLayout.setBackground(getResources().getDrawable(R.color.huisef5Calendar));
+//        }
+
+
         return linearLayout;
     }
 
@@ -577,8 +566,9 @@ public class KaoQingCommonActivity extends CommActivity {
      * 创建TextView
      * @param is 创建类型
      * @param string 显示内容
+     * @param id 请假记录id
      */
-    public TextView CreateTextView(int is,String string){
+    public TextView CreateTextView(int is,final String string,final int id){
         TextView textView = new TextView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -587,7 +577,19 @@ public class KaoQingCommonActivity extends CommActivity {
             layoutParam.setMargins(0,5,0,0);
         }
 
+        // 未审核数据
+        if(mActivityLeiXing == 0){
+            if(string.equals("同意")){
+            }else if(string.equals("不同意")){
+                layoutParam.setMargins(20,0,0,0);
+            }
+        // 已审核数据
+        }else if(mActivityLeiXing == 1){
+
+        }
+
         textView.setLayoutParams(layoutParam);
+
 
         if(is == 1){
             textView.setTextColor(getResources().getColor(R.color.heise));
@@ -598,24 +600,85 @@ public class KaoQingCommonActivity extends CommActivity {
             textView.setText(string);
             textView.setTextSize(12);
         }else if(is == 3){
-            if(string.equals("待审核") || string.equals("不同意")){
-                textView.setTextColor(getResources().getColor(R.color.hongse1));
+            if(mActivityLeiXing == 0){
+                textView.setPadding(20,5,20,5);
+                textView.setTextSize(14);
+                if(string.equals("同意")){
+                    textView.setTextColor(getResources().getColor(R.color.colorAccent));
+                    textView.setBackground(getResources().getDrawable(R.color.zhuti));
+                    // 同意点击事件 mCallbacksc
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int OnId = id;
+                            mCallbacksc.weiShenHe(string,OnId,"");
+                        }
+                    });
+                }else if(string.equals("不同意")){
+                    textView.setTextColor(getResources().getColor(R.color.heise));
+                    textView.setBackground(getResources().getDrawable(R.color.huise));
+                    // 不同意点击事件
+                    // 同意点击事件 mCallbacksc
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // 获取布局文件
+                            LayoutInflater inflater = (LayoutInflater) mContext
+                                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View mViewD = inflater.inflate(R.layout.alert_shu_qing_jia_shen_he_no, null);
+                            // 弹窗
+                            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                            // 初始化组件
+                            // 输入内容
+                            final EditText edittext_qing_jia_bu_tong_yi_ti_jiao = mViewD.findViewById(R.id.edittext_qing_jia_bu_tong_yi_ti_jiao);
+                            // 提交按钮
+                            Button button_qing_jia_bu_tong_yi_ti_jiao = mViewD.findViewById(R.id.button_qing_jia_bu_tong_yi_ti_jiao);
+                            // 设置View
+                            alertBuilder.setView(mViewD);
+
+                            // 显示
+                            alertBuilder.create();
+                            dialog = alertBuilder.show();
+
+                            // 提交事件
+                            button_qing_jia_bu_tong_yi_ti_jiao.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // 数据回调
+                                    mCallbacksc.weiShenHe(string,id,edittext_qing_jia_bu_tong_yi_ti_jiao.getText().toString());
+                                    // 弹出销毁
+                                    dialog.dismiss();
+                                }
+                            });
+
+                        }
+                    });
+                }
+
+            }else if(mActivityLeiXing == 1){
+                textView.setPadding(20,5,20,5);
+                textView.setTextSize(14);
+                textView.setTextColor(getResources().getColor(R.color.colorAccent));
+                textView.setBackground(getResources().getDrawable(R.color.zhuti));
             }
-            if(string.equals("同意")){
-                textView.setTextColor(getResources().getColor(R.color.zhuti));
-            }
+
             textView.setText(string);
         }else if(is == 4){
             textView.setGravity(Gravity.BOTTOM);
             textView.setTextColor(getResources().getColor(R.color.heise));
             textView.setTextSize(14);
             textView.setText(string);
+
+
         }else if(is == 5){
             textView.setTextColor(getResources().getColor(R.color.zhuti));
             textView.setPadding(0,0,0,10);
             textView.setBackground(getResources().getDrawable(R.drawable.bottom_border));
             textView.setText(string);
+
         }
+
+
 
         return textView;
     }
@@ -944,4 +1007,5 @@ public class KaoQingCommonActivity extends CommActivity {
         }
         return f.getPath();
     }
+
 }

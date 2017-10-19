@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/IndexBuJuLinearLayout"
+    android:background="@color/colorAccent">
+
+    <include layout="@layout/title_nei_ye"/>
+
+    <LinearLayout
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@drawable/bottom_border">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/xun_dian_cha_xun"
+                    style="@style/GongZuoZhongXin.3LinearLayout"
+                    android:background="@drawable/right_border">
+                    <ImageView
+                        style="@style/GongZuoZhongXin.ImageView"
+                        android:src="@drawable/xundian"
+                        />
+                    <TextView
+                        style="@style/GongZuoZhongXin.TextView"
+                        android:text="@string/xun_dian_cha_xun"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/bai_fang_cha_xun"
+                    style="@style/GongZuoZhongXin.3LinearLayout">
+                    <ImageView
+                        style="@style/GongZuoZhongXin.ImageView"
+                        android:src="@drawable/jihua"
+                        />
+                    <TextView
+                        style="@style/GongZuoZhongXin.TextView"
+                        android:text="@string/bai_fang_cha_xun"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@drawable/bottom_border">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/ji_hua_shen_he"
+                    style="@style/GongZuoZhongXin.3LinearLayout"
+                    android:background="@drawable/right_border">
+                    <ImageView
+                        style="@style/GongZuoZhongXin.ImageView"
+                        android:src="@drawable/xundian"
+                        />
+                    <TextView
+                        style="@style/GongZuoZhongXin.TextView"
+                        android:text="@string/ji_hua_shen_he"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/qing_jia_shen_he"
+                    style="@style/GongZuoZhongXin.3LinearLayout">
+                    <ImageView
+                        style="@style/GongZuoZhongXin.ImageView"
+                        android:src="@drawable/jihua"
+                        />
+                    <TextView
+                        style="@style/GongZuoZhongXin.TextView"
+                        android:text="@string/qing_jia_shen_he"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/IndexBuJuLinearLayout"
+        android:layout_weight="1">
+    </LinearLayout>
+
+</LinearLayout>

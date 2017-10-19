@@ -84,7 +84,10 @@
         <activity android:name=".kaoqing.KaoQingJiLuActivity"></activity>
         <!--拜访记录-->
         <activity android:name=".kaoqing.BaiFangGuanLiActivity"></activity>
-
+        <!--数据与审核-->
+        <activity android:name=".shujuyushenhe.ShuJuYuShenHeActivity"></activity>
+        <!--请假审核-->
+        <activity android:name=".shujuyushenhe.QingJiaShenHeActivity"></activity>
         <!--Android N 相机调用问题-->
         <provider
             android:authorities="com.bignerdranch.android.xundian.provider"

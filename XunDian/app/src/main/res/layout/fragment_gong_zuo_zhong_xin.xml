@@ -67,7 +67,9 @@
         <LinearLayout
             android:id="@+id/shu_ju_yu_shen_he_linearLayout"
             style="@style/GongZuoZhongXin.2LinearLayout">
-            <LinearLayout style="@style/GongZuoZhongXin.3LinearLayout">
+            <LinearLayout
+                android:id="@+id/shu_ju_yu_shen_he_llinearLayout"
+                style="@style/GongZuoZhongXin.3LinearLayout">
                 <ImageView
                     style="@style/GongZuoZhongXin.ImageView"
                     android:src="@drawable/shenhe"
