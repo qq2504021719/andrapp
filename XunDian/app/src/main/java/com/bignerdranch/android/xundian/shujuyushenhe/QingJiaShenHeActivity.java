@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 
 import java.io.IOException;
 
@@ -104,6 +105,7 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
      * 值操作
      */
     public void values(){
+        LoadingStringEdit("加载中...");
         // Token赋值
         setToken(mContext);
         // 请求未审核数据
@@ -147,6 +149,8 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
                     mActivityLeiXing = 1;
                     QingJiaDataShow(msg.obj.toString(),mLinear_yi_shen_he);
                 }
+                // 关闭loading
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
             }
         }
     };

@@ -107,7 +107,8 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mJi_hua_shen_he.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = JiHuaShenHeActivity.newIntent(mContext,1);
+                startActivity(i);
             }
         });
         // 请假审核

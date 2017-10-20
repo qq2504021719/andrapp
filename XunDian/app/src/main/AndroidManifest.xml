@@ -88,6 +88,8 @@
         <activity android:name=".shujuyushenhe.ShuJuYuShenHeActivity"></activity>
         <!--请假审核-->
         <activity android:name=".shujuyushenhe.QingJiaShenHeActivity"></activity>
+        <!--计划审核-->
+        <activity android:name=".shujuyushenhe.JiHuaShenHeActivity"></activity>
         <!--Android N 相机调用问题-->
         <provider
             android:authorities="com.bignerdranch.android.xundian.provider"

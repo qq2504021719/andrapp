@@ -82,7 +82,8 @@
 
                 <!--请假时间-->
                 <LinearLayout
-                    style="@style/LinearLayoutHorizontal">
+                    style="@style/LinearLayoutHorizontal"
+                    android:gravity="center_vertical">
                     <TextView
                         style="@style/TjJiHuaTextView"
                         android:text="请假时间"/>

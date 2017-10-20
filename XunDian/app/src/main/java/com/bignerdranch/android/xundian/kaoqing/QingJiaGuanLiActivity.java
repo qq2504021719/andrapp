@@ -276,7 +276,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             public void onClick(View view) {
                 float mDensity = getResources().getDisplayMetrics().density;
 
-                int height = (int) (mDensity * 120 + 0.5);
+                int height = (int) (mDensity * 80 + 0.5);
 
                 if (mLinear_an_shi_jian.getVisibility() == View.GONE) {
                     animateOpen(mLinear_an_shi_jian,height);

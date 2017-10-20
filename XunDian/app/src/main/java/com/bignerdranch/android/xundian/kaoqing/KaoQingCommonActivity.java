@@ -259,7 +259,7 @@ public class KaoQingCommonActivity extends CommActivity {
                             if(jsonArray1.length() > 0){
                                 for(int c = 0;c<jsonArray1.length();c++){
                                     // 考勤记录-请假记录列表
-                                    mQingJiaHeight += 120;
+                                    mQingJiaHeight += 130;
 
                                     LinearLayout linearLayout1 = CreateLinear(1);
 
