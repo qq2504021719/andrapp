@@ -114,6 +114,9 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
     // 显示门店店号
     private TextView mTextview_dian_hao_value;
 
+    // 显示驳回原因
+    private TextView mTextview_bo_hui_yuan_yi_value;
+
     // 工作录入
     private Button mButton_gong_zuo;
 
@@ -360,6 +363,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                         xunDianJiHua.setPingPaiStr(jsonObject.getString("mendian_pin_pai").trim());
                         xunDianJiHua.setMenDianHao(jsonObject.getString("mendian_hao").trim());
                         xunDianJiHua.setMenDianStr(jsonObject.getString("mendian_name").trim());
+                        xunDianJiHua.setBoHuiYuanYi(jsonObject.getString("bo_hui_yi_jian").trim());
                         xunDianJiHua.setMenDianId(Integer.valueOf(jsonObject.getString("mendian_id")));
                         xunDianJiHua.setZhouStr(jsonObject.getString("zhouStr").trim());
                     }
@@ -476,6 +480,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mTextview_ming_cheng_value = (TextView)findViewById(R.id.textview_ming_cheng_value);
         // 显示门店店号
         mTextview_dian_hao_value = (TextView)findViewById(R.id.textview_dian_hao_value);
+        // 显示驳回原因
+        mTextview_bo_hui_yuan_yi_value = (TextView)findViewById(R.id.textview_bo_hui_yuan_yi_value);
         // 工作录入
         mButton_gong_zuo = (Button)findViewById(R.id.button_gong_zuo);
         // 删除记录
@@ -1023,6 +1029,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mTextview_pin_pai_value.setText("");
         mTextview_ming_cheng_value.setText("");
         mTextview_dian_hao_value.setText("");
+        mTextview_bo_hui_yuan_yi_value.setText("");
 
         if(mXiuGaiKey != 1000){
             // 更改显示文字
@@ -1040,6 +1047,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             mTextview_pin_pai_value.setText(mXunDianJiHua.getPingPaiStr());
             mTextview_ming_cheng_value.setText(mXunDianJiHua.getMenDianStr());
             mTextview_dian_hao_value.setText(mXunDianJiHua.getMenDianHao());
+            mTextview_bo_hui_yuan_yi_value.setText(mXunDianJiHua.getBoHuiYuanYi());
         }
     }
 

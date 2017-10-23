@@ -43,8 +43,13 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
     private LinearLayout mLinear_ji_hua_wei_shen_he;
     public String mWeiSheHeData = "";
 
+
     // 数据已审核
     private LinearLayout mLinear_ji_hua_yi_shen_he;
+    public String mYiSheHeData = "";
+
+    // 1 未审核数据显示 2 已审核数据显示
+    public int mBiaoShi = 1;
 
     // 开始时间
     private String mKaiSiTime;
@@ -61,6 +66,14 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
 
     // 提交状态
     public String mTiJiaoZhuangTai = "";
+
+    // 用户选择项
+    public int mXuanZheXiang = 0;
+
+    // 用户是否同意
+    public String mIsTong = "同意";
+    // 审核提交地址
+    public String mShenHeTiJaiURL = Config.URL+"/app/ji_hua_shen_he";
 
 
     // 零时数据
@@ -117,14 +130,30 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
      * 值操作
      */
     public void values(){
+        mLingShiData[0] = "";
+        mLingShiData[1] = "";
+        mLingShiData[2] = "";
+        mLingShiData[3] = "";
         LoadingStringEdit("加载中...");
         // Token赋值
         setToken(mContext);
         // 请求未审核数据
         qingQiuWeiShenHeShuJu();
-        // 请求已审核数据
-//        qingQiuYiShenHeShuJu();
     }
+
+    public int setXuanZheXiang(){
+        if(!mLingShiData[0].equals("") && !mLingShiData[1].equals("") && !mLingShiData[2].equals("") && !mLingShiData[3].equals("")){
+            return 3;
+        }
+        if(!mLingShiData[0].equals("") && !mLingShiData[1].equals("") && !mLingShiData[2].equals("")){
+            return 2;
+        }
+        if(!mLingShiData[0].equals("") && !mLingShiData[1].equals("")){
+            return 1;
+        }
+        return 0;
+    }
+
     /**
      * 组件操作, 操作
      */
@@ -146,17 +175,23 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                 if(!msg.obj.toString().equals("")){
                     mWeiSheHeData = msg.obj.toString();
                     // 视图创建
+                    mBiaoShi = 1;
                     shiTuCreate();
+                    // 请求已审核数据
+                    qingQiuYiShenHeShuJu();
                 }
             }else if(msg.what==2){
                 if(msg.obj.toString().equals("审核成功")){
-
+                    qingQiuWeiShenHeShuJu();
                 }
                 tiShi(mContext,msg.obj.toString());
             }else if(msg.what==3){
                 // 显示未审核数据
                 if(!msg.obj.toString().equals("")){
-
+                    mYiSheHeData  = msg.obj.toString();
+                    // 视图创建
+                    mBiaoShi = 2;
+                    shiTuCreate();
                 }
                 // 关闭loading
             }
@@ -170,7 +205,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
     public void qingQiuWeiShenHeShuJu(){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        body.addFormDataPart("xxx","xxx");
+        body.addFormDataPart("is","1");
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
                 .url(mWeiShenHeURL)
@@ -200,10 +235,10 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
     public void qingQiuYiShenHeShuJu(){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        body.addFormDataPart("xxx","xxx");
+        body.addFormDataPart("is","2");
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
-                .url(mYiShenHeURL)
+                .url(mWeiShenHeURL)
                 .post(body.build())
                 .build();
         //新建一个线程，用于得到服务器响应的参数
@@ -225,22 +260,27 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
     }
 
 
-    public void ShenHeTiJiao(String string, int id,String BString){
+    /**
+     * 审核数据提交
+     * @param BString 审核状态
+     * @param BhString 驳回意见
+     */
+    public void ShenHeTiJiao(String BString,String BhString){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
-        String BuTongString = "";
-        if(!BString.equals("")){
-            BuTongString = BString;
-        }
-
-        body.addFormDataPart("zhuang_tai",string);
-        body.addFormDataPart("id",id+"");
-        body.addFormDataPart("bu_tong_yi_yuan_yin",BuTongString);
+        body.addFormDataPart("zhou",mLingShiData[0]);
+        body.addFormDataPart("uid",mLingShiData[1]);
+        body.addFormDataPart("ri_qi",mLingShiData[2]);
+        body.addFormDataPart("id",mLingShiData[3]);
+        // 审核状态
+        body.addFormDataPart("isTong",BString);
+        // 不同意意见
+        body.addFormDataPart("bo_hui_yi_jian",BhString);
 
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
-                .url(mShenHeURL)
+                .url(mShenHeTiJaiURL)
                 .post(body.build())
                 .build();
         //新建一个线程，用于得到服务器响应的参数
@@ -266,19 +306,54 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
      * 创建视图 人
      */
     public void shiTuCreate(){
-        mLinear_ji_hua_wei_shen_he.removeAllViews();
+        Log.i("巡店",mBiaoShi+"");
+        // 已审核数据
+        if(mBiaoShi == 2){
+            mLinear_ji_hua_yi_shen_he.removeAllViews();
+        }else if(mBiaoShi == 1){
+            mLinear_ji_hua_wei_shen_he.removeAllViews();
+        }
+        int qunXuan = 0;
         try {
             JSONArray jsonArray = new JSONArray(mWeiSheHeData);
+            // 已审核数据
+            if(mBiaoShi == 2){
+                jsonArray = new JSONArray(mYiSheHeData);
+            }
 
             if(jsonArray.length() > 0){
                 for (int i = 0;i<jsonArray.length();i++){
+                    // 用户基本信息
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                     LinearLayout linearLayout1 = LinearCreate(1);
 
 
+                    // 用户下周信息
+                    JSONArray jsonArray1 = new JSONArray(jsonObject.getString("jihua").toString());
+                    JSONObject jsonObject1 = new JSONObject(jsonArray1.get(0).toString());
+
                     LinearLayout linearLayout2 = LinearCreate(2);
 
                     LinearLayout linearLayout3 = LinearCreate(3);
+
+                    // 循环用户周
+                    String yongHuZhou = jsonObject1.getString("zhou");
+                    yongHuZhou += jsonObject1.getString("uid");
+                    if(mBiaoShi == 1) {
+                        // 用户选择人-周
+                        String XuanZhe = "";
+                        if (!mLingShiData[0].equals("") && !mLingShiData[1].equals("")) {
+                            XuanZhe = mLingShiData[0];
+                            XuanZhe += mLingShiData[1];
+                        }
+
+                        if (yongHuZhou.equals(XuanZhe)) {
+                            linearLayout3 = LinearCreate(31);
+                            if (mXuanZheXiang == 1) {
+                                qunXuan = 1;
+                            }
+                        }
+                    }
                     // 创建显示隐藏
                     LinearCreateShowHide(linearLayout2,linearLayout3,32*Integer.valueOf(jsonObject.getString("num")));
                     // 创建视图
@@ -290,11 +365,16 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     linearLayout2.addView(imageView3);
 
                     // 创建周
-                    CreateZhouData(linearLayout3,jsonObject);
+                    CreateZhouData(linearLayout3,jsonObject,qunXuan);
 
                     linearLayout1.addView(linearLayout2);
                     linearLayout1.addView(linearLayout3);
-                    mLinear_ji_hua_wei_shen_he.addView(linearLayout1);
+
+                    if(mBiaoShi == 2){
+                        mLinear_ji_hua_yi_shen_he.addView(linearLayout1);
+                    }else{
+                        mLinear_ji_hua_wei_shen_he.addView(linearLayout1);
+                    }
                 }
             }
 
@@ -308,8 +388,9 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
      * 创建周显示数据
      * @param linearLayout
      * @param jsonObject
+     * @param qunXuan 1 全选
      */
-    public void CreateZhouData(LinearLayout linearLayout,JSONObject jsonObject){
+    public void CreateZhouData(LinearLayout linearLayout,JSONObject jsonObject,int qunXuan){
         try {
             JSONArray jsonArray = new JSONArray(jsonObject.getString("jihua").toString());
 
@@ -327,6 +408,13 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     mXunZheData[3] = "";
                     // 创建图片
                     ImageView imageView = CreateImageView(1,mXunZheData);
+                    if(mBiaoShi == 1){
+                        // 是否选中
+                        if(qunXuan == 1 && mXuanZheXiang == 1){
+                            imageView = CreateImageView(6,mXunZheData);
+                        }
+                    }
+
                     // 创建周
                     TextView textView = CreateTextView(5,jsonObject1.getString("zhou")+" 周");
 
@@ -336,18 +424,25 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     linearLayout.addView(linearLayout4);
 
                     // 创建天数据
-                    createDay(linearLayout,jsonObject1);
+                    createDay(linearLayout,jsonObject1,qunXuan);
                 }
 
-                // 创建 同意 不同意
-                LinearLayout linearLayout41 = LinearCreate(4);
-                LinearLayout linearLayout8 = LinearCreate(8);
-                TextView textView3 = CreateTextView(3,"同意");
-                TextView textView4 = CreateTextView(4,"不同意");
-                linearLayout8.addView(textView3);
-                linearLayout8.addView(textView4);
-                linearLayout41.addView(linearLayout8);
-                linearLayout.addView(linearLayout41);
+                if(mBiaoShi == 1){
+                    // 创建 同意 不同意
+                    LinearLayout linearLayout41 = LinearCreate(4);
+                    LinearLayout linearLayout8 = LinearCreate(8);
+                    TextView textView6 = CreateTextView(6,"清除选择");
+                    TextView textView3 = CreateTextView(3,"同意");
+                    TextView textView4 = CreateTextView(4,"不同意");
+
+                    linearLayout8.addView(textView6);
+                    linearLayout8.addView(textView3);
+                    linearLayout8.addView(textView4);
+
+                    linearLayout41.addView(linearLayout8);
+                    linearLayout.addView(linearLayout41);
+                }
+
             }
 
 
@@ -361,7 +456,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
      * @param linearLayout
      * @param jsonObject
      */
-    public void createDay(LinearLayout linearLayout,JSONObject jsonObject){
+    public void createDay(LinearLayout linearLayout,JSONObject jsonObject,int qunXuan){
         try {
             JSONArray jsonArray = new JSONArray(jsonObject.getString("zhouJihua").toString());
 
@@ -379,6 +474,26 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     mXunZheData[3] = "";
                     // 创建图片
                     ImageView imageView = CreateImageView(1,mXunZheData);
+                    if(mBiaoShi == 1) {
+                        if (qunXuan == 1 && mXuanZheXiang == 1) {
+                            imageView = CreateImageView(6, mXunZheData);
+                            qunXuan = 1;
+                        } else {
+                            qunXuan = 0;
+                        }
+                    }
+
+                    // 用户选择
+                    if(!mLingShiData[0].equals("") && !mLingShiData[1].equals("") && !mLingShiData[2].equals("") && mXuanZheXiang == 2){
+                        if(mLingShiData[0].equals(mXunZheData[0]) && mLingShiData[1].equals(mXunZheData[1]) && mLingShiData[2].equals(mXunZheData[2])){
+                            imageView = CreateImageView(6,mXunZheData);
+                            qunXuan = 1;
+                        }else{
+                            qunXuan = 0;
+                        }
+
+                    }
+
                     // 创建周
                     TextView textView = CreateTextView(2,""+jsonObject1.getString("zhouDay"));
 
@@ -387,7 +502,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     linearLayout4.addView(linearLayout5);
 
                     // 创建天数据
-                    createDayMiXi(linearLayout4,jsonObject1);
+                    createDayMiXi(linearLayout4,jsonObject1,qunXuan);
                     linearLayout.addView(linearLayout4);
 
                 }
@@ -403,8 +518,9 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
      * 创建周day明细
      * @param linearLayout
      * @param jsonObject
+     * @param qunXuan 1 全选
      */
-    public void createDayMiXi(LinearLayout linearLayout,JSONObject jsonObject){
+    public void createDayMiXi(LinearLayout linearLayout,JSONObject jsonObject,int qunXuan){
         try {
             JSONArray jsonArray = new JSONArray(jsonObject.getString("day").toString());
 
@@ -421,6 +537,15 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     mXunZheData[3] = jsonObject1.getString("id");
                     // 创建图片
                     ImageView imageView = CreateImageView(1,mXunZheData);
+                    if(mBiaoShi == 1){
+                        if(!mLingShiData[3].equals("") || qunXuan == 1){
+                            if(mLingShiData[3].equals(jsonObject1.getString("id"))  || qunXuan == 1){
+                                imageView= CreateImageView(6,mXunZheData);
+                            }
+                        }
+                    }
+
+
                     // 创建周
                     TextView textView = CreateTextView(2,
                             ""+jsonObject1.getString("kai_shi_time")
@@ -472,6 +597,8 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
         }else if(is == 3){
             linearLayout.setBackground(getResources().getDrawable(R.color.colorAccent));
             linearLayout.setVisibility(View.GONE);
+        }else if(is == 31){
+            linearLayout.setBackground(getResources().getDrawable(R.color.colorAccent));
         }else if(is == 4){
             linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border));
         }else if(is == 5){
@@ -504,6 +631,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     animateOpen(linearLayout1,he);
                     animationIvOpen();
                 } else {
+                    mLingShiData = new String[4];
                     animateClose(linearLayout1);
                     animationIvClose();
                 }
@@ -522,10 +650,15 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
 
         if(is == 1){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
+        }else if(is == 2){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         }else if(is == 4){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParam.setMargins(10,0,0,0);
+            layoutParam.setMargins(20,0,0,0);
         }else if(is == 3){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParam.setMargins(20,0,0,0);
+        }else if(is == 6){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         }
 
@@ -547,7 +680,11 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("巡店","同意");
+                    if (isTiJiao()){
+                        // 审核提交
+                        ShenHeTiJiao("同意","");
+                    }
+
                 }
             });
 
@@ -560,18 +697,79 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("巡店","不同意");
+                    // 获取布局文件
+                    LayoutInflater inflater = (LayoutInflater) mContext
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View mViewD = inflater.inflate(R.layout.alert_shu_ji_hu_shen_he_bu_tong_yi, null);
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 初始化组件
+                    // 输入内容
+                    final EditText edittext_qing_jia_bu_tong_yi_ti_jiao = mViewD.findViewById(R.id.edittext_qing_jia_bu_tong_yi_ti_jiao);
+                    // 提交按钮
+                    Button button_qing_jia_bu_tong_yi_ti_jiao = mViewD.findViewById(R.id.button_qing_jia_bu_tong_yi_ti_jiao);
+                    // 设置View
+                    alertBuilder.setView(mViewD);
+
+                    // 显示
+                    alertBuilder.create();
+                    dialog = alertBuilder.show();
+
+                    // 提交事件
+                    button_qing_jia_bu_tong_yi_ti_jiao.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (isTiJiao()) {
+                                String str = "";
+                                str = edittext_qing_jia_bu_tong_yi_ti_jiao.getText().toString();
+                                ShenHeTiJiao("不同意", str);
+
+                                // 弹出销毁
+                                dialog.dismiss();
+                            }
+                        }
+                    });
                 }
             });
+
         }else if(is == 5){
             textView.setPadding(5,5,5,5);
             textView.setTextSize(14);
             textView.setTextColor(getResources().getColor(R.color.heise));
+        }else if(is == 6){
+            textView.setPadding(10,2,10,2);
+            textView.setTextColor(getResources().getColor(R.color.colorAccent));
+            textView.setTextSize(14);
+            textView.setBackground(getResources().getDrawable(R.color.zhuti));
+            // 清除选择点击
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLingShiData[2] = "";
+                    mLingShiData[3] = "";
+                    mXuanZheXiang = 0;
+                    // 刷新视图
+                    shiTuShuaXing();
+                }
+            });
         }
 
         textView.setText(string);
 
         return textView;
+    }
+
+    /**
+     * 验证是否可以提交
+     * @return
+     */
+    public boolean isTiJiao(){
+        Log.i("巡店",mLingShiData[0]+"");
+        if(!mLingShiData[0].equals("") || !mLingShiData[1].equals("") || !mLingShiData[2].equals("") || !mLingShiData[3].equals("")){
+            return true;
+        }
+        tiShi(mContext,"请选择审核记录");
+        return false;
     }
 
     /**
@@ -590,6 +788,9 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
         }else if(is == 5){
             layoutParam = new LinearLayout.LayoutParams(78,78);
             layoutParam.setMargins(10,0,0,0);
+        }else if(is == 6){
+            layoutParam = new LinearLayout.LayoutParams(58,58);
+            layoutParam.setMargins(10,0,0,0);
         }
 
         imageView.setLayoutParams(layoutParam);
@@ -597,19 +798,37 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
 
         if(is == 1){
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mLingShiData = string;
-                    Log.i("巡店","选择框"+string[0]+"|"+string[1]+"|"+string[2]+"|"+string[3]);
-                }
-            });
+            if(mBiaoShi == 1){
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mLingShiData = string;
+                        // 用户选择 1 全选周 2 全选日期  3选择天
+                        mXuanZheXiang = setXuanZheXiang();
+                        // 刷新视图
+                        shiTuShuaXing();
+                    }
+                });
+            }
+
         }else if(is == 2){
             imageView.setImageDrawable(getResources().getDrawable(R.drawable.bottom_hui_se));
+        }else if(is == 6){
+            if(mBiaoShi == 1) {
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+            }
         }
 
         return imageView;
     }
 
-
+    /**
+     * 刷新显示
+     */
+    public void shiTuShuaXing(){
+        mBiaoShi = 1;
+        shiTuCreate();
+        mBiaoShi = 2;
+        shiTuCreate();
+    }
 }

@@ -159,6 +159,23 @@
                             style="@style/TjJiHuaImageView"/>
 
                     </LinearLayout>
+                    <!--门店号-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+
+                        <TextView
+                            android:id="@+id/textview_bo_hui_yuan_yi"
+                            style="@style/TjJiHuaTextView"
+                            android:text="驳回原因"/>
+
+                        <TextView
+                            android:id="@+id/textview_bo_hui_yuan_yi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+
+                    </LinearLayout>
                     <!--工作录入-->
                     <LinearLayout
                         android:layout_width="match_parent"

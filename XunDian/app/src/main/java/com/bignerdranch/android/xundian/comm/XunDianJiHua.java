@@ -47,6 +47,17 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // 日期 周
     public String mZhouStr;
 
+    // 驳回原因
+    public String mBoHuiYuanYi;
+
+    public void setBoHuiYuanYi(String boHuiYuanYi) {
+        mBoHuiYuanYi = boHuiYuanYi;
+    }
+
+    public String getBoHuiYuanYi() {
+        return mBoHuiYuanYi;
+    }
+
     public void setZhouStr(String zhouStr) {
         mZhouStr = zhouStr;
     }
