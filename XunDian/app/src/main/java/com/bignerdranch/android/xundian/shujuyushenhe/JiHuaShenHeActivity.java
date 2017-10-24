@@ -139,6 +139,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
         setToken(mContext);
         // 请求未审核数据
         qingQiuWeiShenHeShuJu();
+
     }
 
     public int setXuanZheXiang(){
@@ -177,9 +178,9 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     // 视图创建
                     mBiaoShi = 1;
                     shiTuCreate();
-                    // 请求已审核数据
-                    qingQiuYiShenHeShuJu();
                 }
+                // 请求已审核数据
+                qingQiuYiShenHeShuJu();
             }else if(msg.what==2){
                 if(msg.obj.toString().equals("审核成功")){
                     qingQiuWeiShenHeShuJu();
@@ -315,7 +316,10 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
         }
         int qunXuan = 0;
         try {
-            JSONArray jsonArray = new JSONArray(mWeiSheHeData);
+            JSONArray jsonArray = new JSONArray();
+            if(mBiaoShi == 1){
+                jsonArray = new JSONArray(mWeiSheHeData);
+            }
             // 已审核数据
             if(mBiaoShi == 2){
                 jsonArray = new JSONArray(mYiSheHeData);
@@ -372,7 +376,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
 
                     if(mBiaoShi == 2){
                         mLinear_ji_hua_yi_shen_he.addView(linearLayout1);
-                    }else{
+                    }else if(mBiaoShi == 1){
                         mLinear_ji_hua_wei_shen_he.addView(linearLayout1);
                     }
                 }
