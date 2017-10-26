@@ -536,7 +536,7 @@ public class KaoQingCommonActivity extends CommActivity {
         else if(is == 3){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
         }else if( is == 4){
-            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,4);
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,3);
             layoutParam.setMargins(0,0,30,0);
         }else if(is == 5){
             layoutParam.setMargins(0,5,0,0);

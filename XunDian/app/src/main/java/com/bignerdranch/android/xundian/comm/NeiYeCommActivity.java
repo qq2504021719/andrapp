@@ -342,7 +342,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
      * @return
      */
     public String[] ChanKanIds(String Jsonstring,String string){
-        String[] strings = new String[4];
+        String[] strings = new String[7];
         strings[0] = "0";
         strings[2] = "0";
         try {
@@ -356,6 +356,24 @@ public class NeiYeCommActivity extends AppCompatActivity{
                         strings[1] = jsonObject.getString("name");
                         strings[2] = jsonObject.getString("men_dian_hao");
                         strings[3] = jsonObject.getString("men_dian_ping_pai");
+
+                        if(jsonObject.getString("fan_wei").trim().length() == 0 || jsonObject.getString("fan_wei").equals("null")){
+                            strings[4] = "0";
+                        }else{
+                            strings[4] = jsonObject.getString("fan_wei");
+                        }
+
+                        if(jsonObject.getString("md_lat").trim().length() == 0 || jsonObject.getString("md_lat").equals("null")){
+                            strings[5] = "0.0";
+                        }else{
+                            strings[5] = jsonObject.getString("md_lat");
+                        }
+
+                        if(jsonObject.getString("md_lng").trim().length() == 0 || jsonObject.getString("md_lng").equals("null")){
+                            strings[6] = "0.0";
+                        }else{
+                            strings[6] = jsonObject.getString("md_lng");
+                        }
 //                        return Integer.valueOf(jsonObject.getString("id"));
                     }
                 }
@@ -565,6 +583,42 @@ public class NeiYeCommActivity extends AppCompatActivity{
      */
     public void LoadingStringEdit(String logingString){
         mWeiboDialog = WeiboDialogUtils.createLoadingDialog(mContext,logingString);
+    }
+
+    /**
+     * 根据两点的经度纬度计算出距离
+     * @param lon1
+     * @param lat1
+     * @param lon2
+     * @param lat2
+     * @return
+     */
+    public double GetShortDistance(double lon1, double lat1, double lon2, double lat2)
+    {
+        double DEF_PI = 3.14159265359; // PI
+        double DEF_2PI= 6.28318530712; // 2*PI
+        double DEF_PI180= 0.01745329252; // PI/180.0
+        double DEF_R =6370693.5; // radius of earth
+        double ew1, ns1, ew2, ns2;
+        double dx, dy, dew;
+        double distance;
+        // 角度转换为弧度
+        ew1 = lon1 * DEF_PI180;
+        ns1 = lat1 * DEF_PI180;
+        ew2 = lon2 * DEF_PI180;
+        ns2 = lat2 * DEF_PI180;
+        // 经度差
+        dew = ew1 - ew2;
+        // 若跨东经和西经180 度，进行调整
+        if (dew > DEF_PI)
+            dew = DEF_2PI - dew;
+        else if (dew < -DEF_PI)
+            dew = DEF_2PI + dew;
+        dx = DEF_R * Math.cos(ns1) * dew; // 东西方向长度(在纬度圈上的投影长度)
+        dy = DEF_R * (ns1 - ns2); // 南北方向长度(在经度圈上的投影长度)
+        // 勾股定理求斜边长
+        distance = Math.sqrt(dx * dx + dy * dy);
+        return distance;
     }
 
 }

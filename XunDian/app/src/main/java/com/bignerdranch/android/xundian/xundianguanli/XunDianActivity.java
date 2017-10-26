@@ -171,6 +171,9 @@ public class XunDianActivity extends NeiYeCommActivity {
     // 点击保存后提示语
     public String mDianJiBaoCun = "您已点击保存,无法修改,请再次点击保存";
 
+    // 超出范围多少米
+    String ChaoFanWei = "0";
+
     /**
      * 设置最大下标
      * @param num
@@ -418,6 +421,57 @@ public class XunDianActivity extends NeiYeCommActivity {
     }
 
     /**
+     * 判断提交
+     */
+    public void panDuanTiJiao(){
+        java.text.DecimalFormat df=new java.text.DecimalFormat("#");
+
+        String ChaoStr = "";
+
+        try {
+            Double lat = Double.valueOf(mXunDian.getString("mLatitude"));
+            Double lng = Double.valueOf(mXunDian.getString("mLontitude"));
+            int mFanWei = Integer.valueOf(mXunDian.getString("mFanWei"));
+            Double mMenDianLat = Double.valueOf(mXunDian.getString("mMenDianLat"));
+            Double mMenDianLng = Double.valueOf(mXunDian.getString("mMenDianLng"));
+            if(mMenDianLat <= 0.0 || mMenDianLng <= 0.0 || mFanWei < 0){
+                ChaoStr = "提交超出提交范围,是否提交?";
+            }else{
+                Double juLi = GetShortDistance(lng,lat,mMenDianLng,mMenDianLat);
+                if(juLi <= mFanWei){
+                    ChaoStr = "";
+                }else{
+                    ChaoFanWei = String.valueOf(df.format(juLi-mFanWei));
+                    ChaoStr = "提交超出提交范围"+ChaoFanWei+"米,是否提交?";
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // 参数提交
+//        canShuTiJiao();
+        if(ChaoStr.equals("")){
+            canShuTiJiao();
+        }else{
+            new AlertDialog.Builder(XunDianActivity.this).setTitle("系统提示")//设置对话框标题
+                    .setMessage(ChaoStr)//设置显示的内容
+                    .setPositiveButton("确定",new DialogInterface.OnClickListener() {//添加确定按钮
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                            // 提交
+                            canShuTiJiao();
+                        }
+                    }).setNegativeButton("返回",new DialogInterface.OnClickListener() {//添加返回按钮
+                @Override
+                public void onClick(DialogInterface dialog, int which) {//响应事件
+                    // 关闭loading
+                    WeiboDialogUtils.closeDialog(mWeiboDialog);
+                }
+            }).show();//在按键响应事件中显示此对话框
+        }
+    }
+
+    /**
      * 参数数据请求
      */
     public void canShuQingQiu(){
@@ -583,6 +637,8 @@ public class XunDianActivity extends NeiYeCommActivity {
                     jsonObject.put("xun_kai_si_time",mXunDianCanShus.get(key).getXunKaiShiTime());
                     // 完成时间
                     jsonObject.put("xun_jie_shu_time",mXunDianCanShus.get(key).getXunJieShuTime());
+                    // 提交超出多少范围米
+                    jsonObject.put("chao_fan_wei",ChaoFanWei);
                     Log.i("巡店",jsonObject.toString());
                     jsonObjects.put(""+key,jsonObject);
                 } catch (JSONException e) {
@@ -1300,8 +1356,9 @@ public class XunDianActivity extends NeiYeCommActivity {
                             mIsTijiao = 0;
                             // 保存完成时间
                             baoCunWanChengTime();
-                            // 参数提交
-                            canShuTiJiao();
+
+                            // 延迟地址提交
+                            panDuanTiJiao();
                         }
                     }else{
                         tiShi(mContext,"已提交...");

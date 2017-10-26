@@ -112,13 +112,13 @@ public class GongZuoZhongXinFragment extends Fragment{
         });
 
         // 客户拓展
-//        mButton_ke_hu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent i = KeHuActivity.newIntent(getActivity(),1);
-//                startActivity(i);
-//            }
-//        });
+        mButton_ke_hu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = KeHuActivity.newIntent(getActivity(),1);
+                startActivity(i);
+            }
+        });
 
     }
 

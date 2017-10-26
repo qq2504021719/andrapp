@@ -38,6 +38,36 @@ public class LocationBaiDu {
     private String mMenDianMingCheng;
     // 门店编号
     private String mBianHao;
+    // 用户签到范围
+    private String mFanWei;
+    // 门店lat
+    private Double mMenDianLat;
+    // 门店lng
+    private Double mMenDianLng;
+
+    public void setFanWei(String fanWei) {
+        mFanWei = fanWei;
+    }
+
+    public void setMenDianLat(Double menDianLat) {
+        mMenDianLat = menDianLat;
+    }
+
+    public void setMenDianLng(Double menDianLng) {
+        mMenDianLng = menDianLng;
+    }
+
+    public String getFanWei() {
+        return mFanWei;
+    }
+
+    public Double getMenDianLat() {
+        return mMenDianLat;
+    }
+
+    public Double getMenDianLng() {
+        return mMenDianLng;
+    }
 
     public void setBianHao(String bianHao) {
         mBianHao = bianHao;

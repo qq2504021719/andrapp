@@ -290,6 +290,13 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
                         mLocationBaiDu.setMenDianId(Integer.valueOf(strings[0]));
                         // 存储用户选择门店
                         mLocationBaiDu.setMenDianMingCheng(strings[1]);
+                        // 门店范围
+                        mLocationBaiDu.setFanWei(strings[4]);
+                        // 门店lat
+                        mLocationBaiDu.setMenDianLat(Double.valueOf(strings[5]));
+                        // 门店lng
+                        mLocationBaiDu.setMenDianLng(Double.valueOf(strings[6]));
+
                         alertDialog1.dismiss();
 
                     }
@@ -330,6 +337,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
     public void XunDianTiaoZhuan(){
         String string = mGson.toJson(mLocationBaiDu);
         // 存储容器
+        Log.i("巡店",string);
         Intent i = XunDianActivity.newIntent(XunDianGuanLiActivity.this,string);
         startActivity(i);
     }

@@ -198,15 +198,17 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
      * 回调签到
      */
     public void qianDao(){
-        Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
-        Log.i("巡店","lat:"+mGongSiLng+"lng:"+mGongSiLat+"|"+juLi+"|"+mWuChaFanWei);
-        if(juLi <= mWuChaFanWei){
-//            tiShi(mContext,"上班签到成功"+juLi);
-            // 提交签到信息
+        if(mGongSiLng == 0.0 && mGongSiLat == 0.0){
             qianDaoTiJiao();
         }else{
-            java.text.DecimalFormat df=new java.text.DecimalFormat("#");
-            tiShi(mContext,"签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米");
+            Double juLi = GetShortDistance(mLocationBaiDu.getLontitude(),mLocationBaiDu.getLatitude(),mGongSiLng,mGongSiLat);
+            if(juLi <= mWuChaFanWei){
+                // 提交签到信息
+                qianDaoTiJiao();
+            }else{
+                java.text.DecimalFormat df=new java.text.DecimalFormat("#");
+                tiShi(mContext,"签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米");
+            }
         }
         mIsQian = 0;
     }
@@ -390,8 +392,11 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                         if(jsonObject.getString("qian_dao_lat").equals("null") ||
                            jsonObject.getString("qian_dao_lat").equals("null") ||
                            jsonObject.getString("qian_dao_lat").equals("null")){
-                            tiShi(mContext,"公司签到位置未设置,联系管理员");
-                            finish();
+//                            tiShi(mContext,"公司签到位置未设置,联系管理员");
+//                            finish();
+                            mGongSiLat = 0.0;
+                            mGongSiLng = 0.0;
+                            mBanCiQianDaoJson = jsonObject.getString("banCiKaoQingData");
                         }else{
                             mGongSiLat = Double.valueOf(jsonObject.getString("qian_dao_lat"));
                             mGongSiLng = Double.valueOf(jsonObject.getString("qian_dao_lng"));
