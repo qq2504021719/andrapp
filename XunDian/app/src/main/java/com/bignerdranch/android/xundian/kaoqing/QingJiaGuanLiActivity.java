@@ -63,7 +63,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     // 请假类型
     public TextView mTextview_lei_xing;
     public TextView mTextview_lei_xing_value;
-    public String[] mLeiXingData = new String[]{"事假","病假","年假","其他法定婚丧假"};
+    public String[] mLeiXingData = new String[]{"事假","病假","年假","其他带薪假"};
     public HashMap<String,Integer> mLeiXingBeiJingSe = new HashMap<>();
 
 
@@ -73,9 +73,13 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     public String mEditText_yuan_ying_value;
 
     // 按天请假
+    public LinearLayout mAn_tian_qing_jia;
     public TextView mTextview_an_tian;
     public TextView mTextview_an_tian_value;
 
+
+    // 按时间段请假父
+    public LinearLayout mLinear_an_shi_jian_fu_fu;
     // 按时间段请假
     public TextView mTextview_an_shi_jian;
     // 日期
@@ -146,9 +150,12 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         // 请假原因
         mEditText_yuan_ying = (EditText)findViewById(R.id.editText_yuan_ying);
         // 按天请假
+        mAn_tian_qing_jia = (LinearLayout)findViewById(R.id.an_tian_qing_jia);
         mTextview_an_tian = (TextView)findViewById(R.id.textview_an_tian);
         mTextview_an_tian_value = (TextView)findViewById(R.id.textview_an_tian_value);
 
+        // 按时间段请假父
+        mLinear_an_shi_jian_fu_fu = (LinearLayout)findViewById(R.id.linear_an_shi_jian_fu_fu);
         // 按时间段请假
         mTextview_an_shi_jian = (TextView)findViewById(R.id.textview_an_shi_jian);
         mLinear_an_shi_jian = (LinearLayout)findViewById(R.id.linear_an_shi_jian);
@@ -256,6 +263,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                 if(mQingJia.getLeiXing() == ""){
                     tiShi(mContext,"请选择请假类型");
                 }else{
+                    mLinear_an_shi_jian_fu_fu.setVisibility(View.GONE);
                     // 清空默认选中
                     CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
                    // 编辑模式
@@ -276,7 +284,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             public void onClick(View view) {
                 float mDensity = getResources().getDisplayMetrics().density;
 
-                int height = (int) (mDensity * 80 + 0.5);
+                int height = (int) (mDensity * 90 + 0.5);
 
                 if (mLinear_an_shi_jian.getVisibility() == View.GONE) {
                     animateOpen(mLinear_an_shi_jian,height);
@@ -295,6 +303,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                 if(mQingJia.getLeiXing() == ""){
                     tiShi(mContext,"请选择请假类型");
                 }else{
+                    mAn_tian_qing_jia.setVisibility(View.GONE);
                     // 清空默认选中
                     CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
                     // 编辑模式

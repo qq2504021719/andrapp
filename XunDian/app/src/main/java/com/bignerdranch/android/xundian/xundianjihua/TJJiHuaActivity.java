@@ -67,6 +67,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
     private TextView mTextview_ri_qi_value;
     // 日期数据
     public String[] mRiQiData;
+    // 日期数据-周
+    public String[] mRiQiDataZhou;
 
     // 选择时间
     private TextView mTextview_shi_jian;
@@ -367,11 +369,11 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                alertBuilder.setItems(mRiQiData, new DialogInterface.OnClickListener() {
+                alertBuilder.setItems(mRiQiDataZhou, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
                         // 显示选择日期
-                        mTextview_ri_qi_value.setText(mRiQiData[index]);
+                        mTextview_ri_qi_value.setText(mRiQiDataZhou[index]);
                         // 更新用户选择日期
                         mXunDianJiHua.setRiQi(mRiQiData[index]);
                         Log.i("巡店",mRiQiData[0]+"|"+mXunDianJiHua.getRiQi());
@@ -424,34 +426,45 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
         });
 
         // 品牌选择
-//        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-//                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface arg0, int index) {
-//
-//                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
-//                        // 门店品牌
-//                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
-//
-//                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
-//                        // 请求店铺
-//                        menDianSearch();
-//
-//                        // 存入id
-//                        mXunDianJiHua.setPingPaiId(id);
-//                        // 存入名称
-//                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
-//
-//                        alertDialog1.dismiss();
-//                    }
-//                });
-//                alertDialog1 = alertBuilder.create();
-//                alertDialog1.show();
-//            }
-//        });
+        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int index) {
+
+                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
+                        // 门店品牌
+                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
+
+                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
+                        // 请求店铺
+                        menDianSearch();
+
+                        // 存入id
+                        mXunDianJiHua.setPingPaiId(id);
+                        // 存入名称
+                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
+
+                        // 清空门店名称
+                        mTextview_ming_cheng_value.setText("");
+                        // 清空门店号名称
+                        mTextview_dian_hao_value.setText("");
+                        // 清空门店号
+                        mXunDianJiHua.setMenDianHao("");
+                        // 清空门店id
+                        mXunDianJiHua.setMenDianId(0);
+                        // 清空门店
+                        mXunDianJiHua.setMenDianStr("");
+
+                        alertDialog1.dismiss();
+                    }
+                });
+                alertDialog1 = alertBuilder.create();
+                alertDialog1.show();
+            }
+        });
 
         // 门店选择
         mTextview_ming_cheng.setOnClickListener(new View.OnClickListener() {
@@ -603,6 +616,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
      */
     public void setRiqi(String stringc){
         mRiQiData = new String[7];
+        mRiQiDataZhou = new String[7];
         try {
             if(!mXunDianRiQiData.equals("")){
                 JSONArray jsonArray = new JSONArray(mXunDianRiQiData);
@@ -625,6 +639,10 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        // 得到每天周几
+        for(int i = 0;i<mRiQiData.length;i++){
+            mRiQiDataZhou[i] = mRiQiData[i]+" "+getCurrentWeekOfMonth(mRiQiData[i]);
         }
     }
 

@@ -33,9 +33,11 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -619,6 +621,29 @@ public class NeiYeCommActivity extends AppCompatActivity{
         // 勾股定理求斜边长
         distance = Math.sqrt(dx * dx + dy * dy);
         return distance;
+    }
+
+    /**
+     * @author jerry.chen 2017-10-12
+     * @param dateStr
+     * @return 获取当前是星期几
+     */
+    public String getCurrentWeekOfMonth(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            String[] day_of_week = {"周日","周一","周二","周三","周四","周五","周六"};
+            c.setTime(format.parse(dateStr));
+            int dayForWeek = 0;
+
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+            return day_of_week[dayForWeek];
+
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }

@@ -1,6 +1,8 @@
 package com.bignerdranch.android.xundian.kaoqing;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.math.BigDecimal;
 import android.icu.text.DecimalFormat;
@@ -207,7 +209,21 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                 qianDaoTiJiao();
             }else{
                 java.text.DecimalFormat df=new java.text.DecimalFormat("#");
-                tiShi(mContext,"签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米");
+                String str = "签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米";
+
+                new AlertDialog.Builder(RiChangKaoQingActivity.this).setTitle("系统提示")//设置对话框标题
+                        .setMessage(str)//设置显示的内容
+                        .setPositiveButton("确定",new DialogInterface.OnClickListener() {//添加确定按钮
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                                // 提交签到信息
+                                qianDaoTiJiao();
+                            }
+                        }).setNegativeButton("返回",new DialogInterface.OnClickListener() {//添加返回按钮
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {//响应事件
+                    }
+                }).show();//在按键响应事件中显示此对话框
             }
         }
         mIsQian = 0;
@@ -414,7 +430,7 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                 }
             }else if(msg.what == 2){
                 tiShi(mContext,msg.obj.toString());
-                if(msg.obj.toString().equals("签到成功")){
+                if(msg.obj.toString().equals("签到成功") || msg.obj.toString().equals("签退成功")){
                         getGongSiQianDaoFanWei();
                 }
             }
@@ -519,9 +535,9 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                         ColorInt = R.color.hongse;
                     }
 
-                    titleTextView = CreateTextView(name+"(已签到 "+time+")",1,ColorInt);
+                    titleTextView = CreateTextView(name+"(已打卡 "+time+")",1,ColorInt);
                 }else{
-                    titleTextView = CreateTextView(name+"(未签到 "+time+")",1,R.color.heise);
+                    titleTextView = CreateTextView(name+"(未打卡 "+time+")",1,R.color.heise);
                 }
 
                 TextView timeTextView = CreateTextView(qianDaoTime,2,R.color.heise);

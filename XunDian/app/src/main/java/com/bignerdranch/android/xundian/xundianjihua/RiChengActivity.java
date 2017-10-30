@@ -89,6 +89,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
     private TextView mTextview_ri_qi_value;
     // 日期数据
     public String[] mRiQiData;
+    // 日期数据-周
+    public String[] mRiQiDataZhou;
 
     // 选择时间
     private TextView mTextview_shi_jian;
@@ -284,6 +286,11 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             }
         }
 
+        mRiQiDataZhou = new String[7];
+        // 得到每天周几
+        for(int i = 0;i<mRiQiData.length;i++){
+            mRiQiDataZhou[i] = mRiQiData[i]+" "+getCurrentWeekOfMonth(mRiQiData[i]);
+        }
 
     }
 
@@ -297,8 +304,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
              *  msg.obj
              */
             if(msg.what==1){
-                if(msg.obj.toString().equals("暂无数据")){
-                    tiShi(mContext,"暂无数据");
+                if(msg.obj.toString().equals("暂无数据驳回")){
+                    tiShi(mContext,"暂无驳回计划");
                 }else{
                     JiHuaQingQiuFanHui(msg.obj.toString());
                 }
@@ -505,9 +512,9 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         // 巡店计划model
         mXunDianJiHuaModel = XunDianJiHuaModel.get(mContext);
         // 数据请求
-        qingQiuBenZhouJiHua();
+//        qingQiuBenZhouJiHua();
         // 请求驳回数据处理
-        setXunDianJiHuas();
+//        setXunDianJiHuas();
         // 设置周数据,日期数据
 //        setZhouData();
         // 品牌请求
@@ -547,6 +554,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     mIsYeMian = 2;
                     updateButtonBackground();
                     updateUI();
+                    // 请求驳回数据
+                    qingQiuBenZhouJiHua();
                 }
             }
         });
@@ -577,11 +586,11 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                alertBuilder.setItems(mRiQiData, new DialogInterface.OnClickListener() {
+                alertBuilder.setItems(mRiQiDataZhou, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
                         // 显示选择日期
-                        mTextview_ri_qi_value.setText(mRiQiData[index]);
+                        mTextview_ri_qi_value.setText(mRiQiDataZhou[index]);
                         // 更新用户选择日期
                         mXunDianJiHua.setRiQi(mRiQiData[index]);
 
@@ -634,34 +643,46 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         });
 
         // 品牌选择
-//        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-//                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface arg0, int index) {
-//
-//                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
-//                        // 门店品牌
-//                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
-//
-//                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
-//                        // 请求店铺
-//                        menDianSearch();
-//
-//                        // 存入id
-//                        mXunDianJiHua.setPingPaiId(id);
-//                        // 存入名称
-//                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
-//
-//                        alertDialog1.dismiss();
-//                    }
-//                });
-//                alertDialog1 = alertBuilder.create();
-//                alertDialog1.show();
-//            }
-//        });
+        mTextview_pin_pai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int index) {
+
+                        mTextview_pin_pai_value.setText(mMengDianPingPaiData[index]);
+                        // 门店品牌
+                        int id =ChanKanId(mMengDianPingpaiJsonData,mMengDianPingPaiData[index]);
+
+                        mMen_Dian_ping_pai = mMengDianPingPaiData[index];
+                        // 请求店铺
+                        menDianSearch();
+
+                        // 存入id
+                        mXunDianJiHua.setPingPaiId(id);
+                        // 存入名称
+                        mXunDianJiHua.setPingPaiStr(mMengDianPingPaiData[index]);
+
+                        // 清空门店名称
+                        mTextview_ming_cheng_value.setText("");
+                        // 清空门店号名称
+                        mTextview_dian_hao_value.setText("");
+                        // 清空门店号
+                        mXunDianJiHua.setMenDianHao("");
+                        // 清空门店id
+                        mXunDianJiHua.setMenDianId(0);
+                        // 清空门店
+                        mXunDianJiHua.setMenDianStr("");
+
+
+                        alertDialog1.dismiss();
+                    }
+                });
+                alertDialog1 = alertBuilder.create();
+                alertDialog1.show();
+            }
+        });
 
         // 门店选择
         mTextview_ming_cheng.setOnClickListener(new View.OnClickListener() {
@@ -792,34 +813,6 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             // 更新下标
             initAddDelete();
         }
-    }
-
-    /**
-     * 设置周数据,得到下周周一日期,日期数据
-     */
-    public void setZhouData(){
-        mZhouData = new String[1];
-        mRiQiData = new String[7];
-
-//        mZhouData[0] = "2017-09-18周";
-        SimpleDateFormat simpleDateFormats =new SimpleDateFormat("y-MM-d", Locale.CHINA);
-        Calendar calendar=Calendar.getInstance(Locale.CHINA);
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        //当前时间，貌似多余，其实是为了所有可能的系统一致
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        // 获取当前周的周日
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        // 周日加一天
-        calendar.add(Calendar.DATE,1);
-        // 添加周数据
-        mZhouData[0] = simpleDateFormats.format(calendar.getTime())+"周";
-        mRiQiData[0] = simpleDateFormats.format(calendar.getTime());
-        // 添加日期数据
-        for(int i = 1;i<7;i++){
-            calendar.add(Calendar.DATE,1);
-            mRiQiData[i] = simpleDateFormats.format(calendar.getTime());
-        }
-
     }
 
 
@@ -1035,7 +1028,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             // 更改显示文字
             mButton_gong_zuo.setText(R.string.xiu_gai_ji_hua);
             // 显示删除
-            mButton_shan_chu_gong.setVisibility(View.VISIBLE);
+//            mButton_shan_chu_gong.setVisibility(View.VISIBLE);
             // 显示工作修改按钮
             mButton_gong_zuo.setVisibility(View.VISIBLE);
 

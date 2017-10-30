@@ -1,5 +1,6 @@
 package com.bignerdranch.android.xundian.xundianjihua;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +57,11 @@ public class BenZhouFragment extends Fragment{
 
     // 周工作数据list
     private List<XunDianJiHua> mXunDianJiHuas = new ArrayList<>();
+
+    // 选择查询如期
+    private TextView mText_cha_xun_ri_qi;
+    // 查询日期显示
+    private TextView mText_cha_xun_ri_qi_value;
 
     // 本周日期
     private String mBenZhou = "";
@@ -130,6 +137,9 @@ public class BenZhouFragment extends Fragment{
     // 本周工作请求地址
     public String mBenZhouQingQiuURL = Config.URL+"/app/ben_zhou_xun_dian_ji_hua";
 
+    // 用户选择查询日期
+    public String mXuanZheChaXunRiQi = "";
+
     // dialog,加载
     public Dialog mWeiboDialog;
 
@@ -151,6 +161,11 @@ public class BenZhouFragment extends Fragment{
      * 组件初始化
      */
     public void ZhuJianInit(){
+        // 选择查询日期
+        mText_cha_xun_ri_qi = (TextView)mView.findViewById(R.id.text_cha_xun_ri_qi);
+        // 选择查询日期值显示
+        mText_cha_xun_ri_qi_value = (TextView)mView.findViewById(R.id.text_cha_xun_ri_qi_value);
+
         mTextview_zhou_title = (TextView)mView.findViewById(R.id.textview_zhou_title);
         // 周一
         mLinear_zhou_yi = (LinearLayout)mView.findViewById(R.id.linear_zhou_yi);
@@ -223,6 +238,27 @@ public class BenZhouFragment extends Fragment{
 
         // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
+
+        // 选择查询日期
+        mText_cha_xun_ri_qi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                        mXuanZheChaXunRiQi = string;
+
+                        mText_cha_xun_ri_qi_value.setText(mXuanZheChaXunRiQi);
+
+                        // 请求数据
+                        qingQiuBenZhouJiHua();
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
     }
 
     /**
@@ -279,8 +315,10 @@ public class BenZhouFragment extends Fragment{
              *  msg.obj
              */
             if(msg.what==1){
+                // 初始化显示组件
+                initShowView();
                 if(msg.obj.toString().equals("暂无数据")){
-                    tiShi(getActivity(),"暂无数据");
+                    tiShi(getActivity(),"查询周无计划");
                 }else{
                     JiHuaQingQiuFanHui(msg.obj.toString());
                 }
@@ -295,6 +333,7 @@ public class BenZhouFragment extends Fragment{
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
         body.addFormDataPart("is","1");
+        body.addFormDataPart("ri_qi",mXuanZheChaXunRiQi);
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
                 .url(mBenZhouQingQiuURL)
@@ -354,8 +393,7 @@ public class BenZhouFragment extends Fragment{
      */
     public void setShowJH(){
         if(mXunDianJiHuas.size() > 0){
-            // 初始化显示组件
-            initShowView();
+
 
             List<XunDianJiHua> xunDianJiHuaList = new ArrayList<>();
             xunDianJiHuaList = mXunDianJiHuas;
@@ -606,18 +644,25 @@ public class BenZhouFragment extends Fragment{
         // 初始化显示父组件
         mLinear_zhou_yi.removeAllViews();
         mLinear_zhou_yi.setVisibility(View.GONE);
+        mLinear_zhou_yi_title.setVisibility(View.GONE);
         mLinear_zhou_er.removeAllViews();
         mLinear_zhou_er.setVisibility(View.GONE);
+        mLinear_zhou_er_title.setVisibility(View.GONE);
         mLinear_zhou_san.removeAllViews();
         mLinear_zhou_san.setVisibility(View.GONE);
+        mLinear_zhou_san_title.setVisibility(View.GONE);
         mLinear_zhou_si.removeAllViews();
         mLinear_zhou_si.setVisibility(View.GONE);
+        mLinear_zhou_si_title.setVisibility(View.GONE);
         mLinear_zhou_wu.removeAllViews();
         mLinear_zhou_wu.setVisibility(View.GONE);
+        mLinear_zhou_wu_title.setVisibility(View.GONE);
         mLinear_zhou_liu.removeAllViews();
         mLinear_zhou_liu.setVisibility(View.GONE);
+        mLinear_zhou_liu_title.setVisibility(View.GONE);
         mLinear_zhou_ri.removeAllViews();
         mLinear_zhou_ri.setVisibility(View.GONE);
+        mLinear_zhou_ri_title.setVisibility(View.GONE);
         // 初始化编号
         ZhouYi = 1;
         ZhouEr = 1;

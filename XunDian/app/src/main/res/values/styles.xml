@@ -8,12 +8,8 @@
         <!--<item name="colorAccent">@color/colorAccent</item>-->
     <!--</style>-->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:textColor">@color/huise</item>
+
+        <!--<item name="android:textColor">@color/huise</item>-->
         <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
     </style>
 

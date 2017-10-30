@@ -21,6 +21,24 @@
                 android:layout_marginTop="20dp"
                 android:paddingLeft="10dp">
 
+                    <!--选择查询日期-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+
+                        <TextView
+                            android:id="@+id/text_cha_xun_ri_qi"
+                            style="@style/TjJiHuaTextView"
+                            android:text="选择查询日期"/>
+
+                        <TextView
+                            android:id="@+id/text_cha_xun_ri_qi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+
+                    </LinearLayout>
+
                 <TextView
                     android:id="@+id/textview_zhou_title"
                     android:layout_width="match_parent"

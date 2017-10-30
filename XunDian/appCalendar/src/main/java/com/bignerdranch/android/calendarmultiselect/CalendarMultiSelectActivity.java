@@ -306,11 +306,13 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
         for(int i = 0;i<strings.length;i++){
             if(strings[i] != null){
                 LinearLayout neiBuZuJian = CreateLinearLayout(2);
-                TextView textView = CreateTextView(strings[i],0,0,0);
+//                TextView textView = CreateTextView(strings[i],0,0,0);
+                TextView textView = isCreateTextDanXuan(strings[i]);
                 // 查看是否创建背景色
                 String[] stringsc = ValueIs(mXuanYear+"-"+mXuanMonth+"-"+strings[i]);
                 if(stringsc[0].equals("true")){
                     DayColor dayColor = myiXuanZheData.get(Integer.valueOf(stringsc[1]));
+                    Log.i("巡店",strings[i]);
                     textView = CreateTextView(strings[i],1,dayColor.getFontColor(),dayColor.getColor());
                 }
 
@@ -327,6 +329,54 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    /**
+     * 查看天是创建正常还是提示
+     * @param day 那一天
+     * @return
+     */
+    public TextView isCreateTextDanXuan(String day){
+        String RiQi = mXuanYear+"-"+mXuanMonth+"-"+day;
+        Boolean isC = false;
+        for(int i = 0;i<CalendarConfig.mZhouJiBuKeXuan.length;i++){
+            isC = false;
+            if(CalendarConfig.mZhouJiBuKeXuan[i].equals(getCurrentWeekOfMonth(RiQi))){
+                isC = true;
+                break;
+            }
+        }
+        TextView textView = new TextView(mContext);
+        if(isC){
+            textView = CreateTextViewString(day,CalendarConfig.mZhouJiBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
+        }else{
+            textView = CreateTextView(day,0,0,0);
+        }
+        return textView;
+        // 查看当前日期周几
+    }
+
+    /**
+     * @author jerry.chen 2017-10-12
+     * @param dateStr
+     * @return 获取当前是星期几
+     */
+    public String getCurrentWeekOfMonth(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            String[] day_of_week = {"周日","周一","周二","周三","周四","周五","周六"};
+            c.setTime(format.parse(dateStr));
+            int dayForWeek = 0;
+
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+            return day_of_week[dayForWeek];
+
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public String[] ValueIs(String string){
@@ -452,8 +502,6 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
                         myiXuanZheData.remove(i);
 
                     }else{
-                        Log.i(TAG,day);
-
                         textView1.setTextColor(getResources().getColor(CalendarConfig.mMoRenZiTiSe));
                         textView1.setBackground(getResources().getDrawable(CalendarConfig.mMoRenBeiJingSe));
 
@@ -468,6 +516,38 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
             });
 
         }
+
+
+        return textView;
+    }
+
+    /**
+     * 创建textview
+     * @param string 显示内容
+     * @param TiShi 提示文字
+     * @param color 标题颜色
+     * @param backgr 背景资源
+     * @return
+     */
+    public TextView CreateTextViewString(String string,final String TiShi, int color,int backgr){
+        TextView textView = new TextView(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(68,68);
+
+        textView.setLayoutParams(layoutParam);
+        textView.setText(string);
+        textView.setGravity(Gravity.CENTER);
+        textView.setPadding(5,5,5,5);
+        textView.setTextColor(getResources().getColor(R.color.huise6Calendar));
+
+        textView.setTextColor(getResources().getColor(color));
+        textView.setBackground(getResources().getDrawable(backgr));
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext,TiShi, Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         return textView;
