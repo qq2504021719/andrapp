@@ -1,11 +1,10 @@
-package com.bignerdranch.android.xundian.kaoqing;
+package com.bignerdranch.android.xundian;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -34,14 +33,11 @@ import android.widget.TimePicker;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.MapView;
-import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.BaiFangGuanli;
 import com.bignerdranch.android.xundian.comm.Config;
-import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.PictureUtils;
-import com.bignerdranch.android.xundian.comm.XunDianCanShu;
+import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 import com.bignerdranch.android.xundian.kehutuozhan.KeHuActivity;
-import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -791,6 +787,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     public void ShowMenDian(String string,int is){
         mBf_search_men_dian.removeAllViews();
         try {
+            Log.i("巡店",string);
             JSONArray jsonArray = new JSONArray(string);
             if(jsonArray.length() > 0){
                 for(int i = 0;i<jsonArray.length();i++){
@@ -862,7 +859,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
 
         try {
             JSONObject jsonObject = new JSONObject(string);
-            textView.setText(jsonObject.getString("name"));
+            textView.setText(jsonObject.getString("name")+" "+jsonObject.getString("men_dian_hao")+" "+jsonObject.getString("men_dian_ping_pai"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

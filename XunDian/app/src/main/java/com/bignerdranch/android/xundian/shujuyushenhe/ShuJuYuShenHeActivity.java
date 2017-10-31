@@ -8,11 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
-import com.bignerdranch.android.xundian.kaoqing.BaiFangGuanLiActivity;
-import com.bignerdranch.android.xundian.kaoqing.KaoQingActivity;
-import com.bignerdranch.android.xundian.kaoqing.KaoQingJiLuActivity;
-import com.bignerdranch.android.xundian.kaoqing.QingJiaGuanLiActivity;
-import com.bignerdranch.android.xundian.kaoqing.RiChangKaoQingActivity;
 
 /**
  * Created by Administrator on 2017/10/19.

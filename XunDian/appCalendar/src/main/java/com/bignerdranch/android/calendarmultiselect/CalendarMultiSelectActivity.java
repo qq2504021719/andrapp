@@ -332,26 +332,61 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
     }
 
     /**
-     * 查看天是创建正常还是提示
+     * 查看天是创建正常还是提示,创建每天textview
      * @param day 那一天
      * @return
      */
     public TextView isCreateTextDanXuan(String day){
         String RiQi = mXuanYear+"-"+mXuanMonth+"-"+day;
         Boolean isC = false;
-        for(int i = 0;i<CalendarConfig.mZhouJiBuKeXuan.length;i++){
-            isC = false;
-            if(CalendarConfig.mZhouJiBuKeXuan[i].equals(getCurrentWeekOfMonth(RiQi))){
-                isC = true;
-                break;
+        if(CalendarConfig.mZhouJiBuKeXuan.length > 0){
+            for(int i = 0;i<CalendarConfig.mZhouJiBuKeXuan.length;i++){
+                isC = false;
+                if(CalendarConfig.mZhouJiBuKeXuan[i].equals("")){
+
+                }else{
+                    if(CalendarConfig.mZhouJiBuKeXuan[i].equals(getCurrentWeekOfMonth(RiQi))){
+                        isC = true;
+                        break;
+                    }
+                }
+
             }
         }
+
         TextView textView = new TextView(mContext);
+        // 周几是否可选
         if(isC){
-            textView = CreateTextViewString(day,CalendarConfig.mZhouJiBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
+            if(day.length() > 0) {
+                textView = CreateTextViewString(day, CalendarConfig.mZhouJiBuKeXuanTiShi, R.color.baiseCalendar, R.drawable.ri_qi_background_huise);
+            }
         }else{
-            textView = CreateTextView(day,0,0,0);
+            if(day.length() > 0) {
+                textView = CreateTextView(day,0,0,0);
+            }
+
         }
+
+        // 小于当前日期的是否可选
+        // 今日日期
+        int JinRiYear = Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date()));
+        int JinRiMonth = Integer.valueOf(new SimpleDateFormat("MM").format(new Date()));
+        int JinRiDay = Integer.valueOf(new SimpleDateFormat("d").format(new Date()));
+
+        if(CalendarConfig.mYiGuoBuKeXuan == 1){
+            if(Integer.valueOf(mXuanYear) <= JinRiYear && day.length() > 0){
+                if(Integer.valueOf(mXuanMonth) <= JinRiMonth){
+                    if(Integer.valueOf(day) < JinRiDay){
+                        textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
+                    }
+                }
+
+            }
+        }
+
+
+
+
         return textView;
         // 查看当前日期周几
     }
@@ -446,17 +481,20 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
 
     /**
      * 返回年 月
-     * @param is 1 返回年 2返回月
+     * @param is 1 返回年 2返回月 3返回日
      * @return
      */
     public String getYearMonth(int is){
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH,cal.getMinimum(Calendar.DATE));
         if(is == 1){
-            return new SimpleDateFormat( "yyyy").format(cal.getTime());
+            return new SimpleDateFormat("yyyy").format(cal.getTime());
         }else if(is == 2){
-            return new SimpleDateFormat( "MM").format(cal.getTime());
+            return new SimpleDateFormat("MM").format(cal.getTime());
+        }else if(is == 3){
+            return new SimpleDateFormat("d").format(new Date());
         }
+
         return null;
     }
 
@@ -555,7 +593,7 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
 
     /**
      * 创建布局
-     * @param leix 1外部行布局  2内部布局
+     * @param leix 1外部行布局  2内部布局 UIBackgroundModes
      * @return
      */
     public LinearLayout CreateLinearLayout(int leix){

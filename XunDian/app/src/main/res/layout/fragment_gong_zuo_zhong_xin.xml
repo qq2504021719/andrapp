@@ -26,7 +26,31 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ke_hu_yu_tuo_zhan_linearLayout"
             style="@style/GongZuoZhongXin.2LinearLayout">
+            <LinearLayout
+                android:id="@+id/button_ke_hu"
+                style="@style/GongZuoZhongXin.3LinearLayout">
+                <ImageView
+                    style="@style/GongZuoZhongXin.ImageView"
+                    android:src="@drawable/tuozhan"
+                    />
+                <TextView
+                    style="@style/GongZuoZhongXin.TextView"
+                    android:text="拜访管理"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/GongZuoZhongXin.1LinearLayout"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            style="@style/GongZuoZhongXin.2LinearLayout"
+            android:layout_marginRight="15dp">
             <LinearLayout
                 android:id="@+id/button_ji_hua"
                 style="@style/GongZuoZhongXin.3LinearLayout">
@@ -40,15 +64,10 @@
                     />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        style="@style/GongZuoZhongXin.1LinearLayout"
-        android:layout_marginTop="10dp">
         <LinearLayout
             android:id="@+id/kao_qing_linearLayout"
-            style="@style/GongZuoZhongXin.2LinearLayout"
-            android:layout_marginRight="15dp">
+            style="@style/GongZuoZhongXin.2LinearLayout">
             <LinearLayout
                 android:id="@+id/gong_kao_qing_linearLayout"
                 style="@style/GongZuoZhongXin.3LinearLayout">
@@ -63,10 +82,16 @@
             </LinearLayout>
         </LinearLayout>
 
+    </LinearLayout>
 
+    <LinearLayout
+        style="@style/GongZuoZhongXin.1LinearLayout"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="20dp">
         <LinearLayout
             android:id="@+id/shu_ju_yu_shen_he_linearLayout"
-            style="@style/GongZuoZhongXin.2LinearLayout">
+            style="@style/GongZuoZhongXin.2LinearLayout"
+            android:layout_marginRight="15dp">
             <LinearLayout
                 android:id="@+id/shu_ju_yu_shen_he_llinearLayout"
                 style="@style/GongZuoZhongXin.3LinearLayout">
@@ -77,29 +102,6 @@
                 <TextView
                     style="@style/GongZuoZhongXin.TextView"
                     android:text="@string/gong_zuo_zhong_xin_shu_ju_yu_shen_he"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/GongZuoZhongXin.1LinearLayout"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="20dp">
-        <LinearLayout
-            android:id="@+id/ke_hu_yu_tuo_zhan_linearLayout"
-            style="@style/GongZuoZhongXin.2LinearLayout"
-            android:layout_marginRight="15dp">
-            <LinearLayout
-                android:id="@+id/button_ke_hu"
-                style="@style/GongZuoZhongXin.3LinearLayout">
-                <ImageView
-                    style="@style/GongZuoZhongXin.ImageView"
-                    android:src="@drawable/tuozhan"
-                    />
-                <TextView
-                    style="@style/GongZuoZhongXin.TextView"
-                    android:text="@string/gong_zuo_zhong_xin_ke_hu_tuo_zhan"
                     />
             </LinearLayout>
         </LinearLayout>

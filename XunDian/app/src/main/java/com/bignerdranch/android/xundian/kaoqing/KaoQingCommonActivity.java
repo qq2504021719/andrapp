@@ -873,6 +873,7 @@ public class KaoQingCommonActivity extends CommActivity {
             RequestBody body = new FormBody.Builder()
                     .add("name",str)
                     .add("pin_pai",str1)
+                    .add("moshi","3")
                     .build();
             final Request request = new Request.Builder()
                     .addHeader("Authorization","Bearer "+mToken)

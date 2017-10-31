@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,6 +126,10 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
 
     // 图片提交url
     public String mTuPanTJURL = Config.URL+"/app/xun_dian_ti_jiao/tuPian";
+
+
+    // 1 审核页面继承
+    public int mIsShenHe = 0;
 
     /**
      * 实现回调接口
@@ -298,9 +303,14 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
             LinearLayout linearLayout5 = CreateLinear(5);
             LinearLayout linearLayout6 = CreateLinear(6);
 
-            // 评接名称,请假详细内容
+//            Log.i("巡店",jsonObject.toString());
+            // 评接名称,请假详细内容 +" "+jsonObject.getString("create")
             if(jsonObject_users_id_s.length() > 0){
+
                 TextView textView1 = CreateTextView(1,(i+1)+" "+jsonObject_users_id_s.getString("name"),0);
+                if(mIsShenHe == 1){
+                    textView1 = CreateTextView(1,(i+1)+" "+jsonObject_users_id_s.getString("name")+" "+jsonObject.getString("creates"),0);
+                }
 
                 String string_ri_qi = " ";
                 // 评接显示内容

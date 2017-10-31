@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gong_zuo_zhong_xin_button"
-            android:hint="请输入门店名称/门店店号"
+            android:hint="请输入门店名称/门店店号/品牌"
             android:iconifiedByDefault="false"
             android:layout_marginRight="10dp"
             android:paddingBottom="10dp"

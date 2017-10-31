@@ -32,14 +32,17 @@ import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import okhttp3.FormBody;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Request;
 
@@ -116,6 +119,10 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     // 请假数据请求地址
     public String mQingQiuDataUrl = Config.URL+"/app/qing_jia_cha_xun";
 
+    // 查询用户休息日
+    public String mQianDaoFanWeiURL = Config.URL+"/app/yong_hu_qian_dao_fan_wei";
+    // 用户休息日信息
+    public String mXiuXiRiData = "";
 
 
     public static Intent newIntent(Context packageContext, int intIsId){
@@ -208,7 +215,63 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         QingJiaDataXianShi();
         // 清空请假内容
         mLinear_qing_jia_data.removeAllViews();
+        // 用户休息日
+        getGongSiQianDaoFanWei();
 
+    }
+
+    /**
+     * 获取用户休息日
+     * @return
+     */
+    public String[] getXiuXiRi(){
+        String[] strings = new String[7];
+        if(mXiuXiRiData != ""){
+            try {
+                JSONObject jsonObject = new JSONObject(mXiuXiRiData);
+                if(jsonObject.getString("day_7").equals("1")){
+                    strings[0] = "周日";
+                }else{
+                    strings[0] = "";
+                }
+                if(jsonObject.getString("day_1").equals("1")){
+                    strings[1] = "周一";
+                }else{
+                    strings[1] = "";
+                }
+                if(jsonObject.getString("day_2").equals("1")){
+                    strings[2] = "周二";
+                }else{
+                    strings[2] = "";
+                }
+                if(jsonObject.getString("day_3").equals("1")){
+                    strings[3] = "周三";
+                }else{
+                    strings[3] = "";
+                }
+                if(jsonObject.getString("day_4").equals("1")){
+                    strings[4] = "周四";
+                }else{
+                    strings[4] = "";
+                }
+                if(jsonObject.getString("day_5").equals("1")){
+                    strings[5] = "周五";
+                }else{
+                    strings[5] = "";
+                }
+                if(jsonObject.getString("day_6").equals("1")){
+                    strings[6] = "周六";
+                }else{
+                    strings[6] = "";
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else{
+            strings = new String[0];
+        }
+        return strings;
     }
 
     /**
@@ -270,6 +333,14 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                     CalendarConfig.mMoShi = 1;
                     // 背景色
                     CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
+                    // 休息日不可选择
+                    String[] strings = getXiuXiRi();
+//                    Log.i("巡店",strings[0]+"|"+strings[1]+"|"+strings[2]+"|"+strings[3]+"|"+strings[4]+"|"+strings[5]+"|"+strings[6]);
+                    if(strings.length > 0){
+                        CalendarConfig.mZhouJiBuKeXuan = strings;
+                    }else{
+                        CalendarConfig.mZhouJiBuKeXuan = new String[0];
+                    }
                     // 启动
                     Intent intent = new Intent(QingJiaGuanLiActivity.this, CalendarMultiSelectActivity.class);
                     startActivityForResult(intent, REQUEST_PHOTO);
@@ -589,10 +660,46 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             }else if(msg.what==2){
                 mQingJiaData = msg.obj.toString();
                 QingJiaDataShow(mQingJiaData,mLinear_qing_jia_data);
+            }else if(msg.what == 3){
+                mXiuXiRiData = msg.obj.toString();
             }
 
         }
     };
+
+    /**
+     * 用户休息日
+     */
+    public void getGongSiQianDaoFanWei(){
+        if(mToken != null) {
+            final OkHttpClient client = new OkHttpClient();
+            //3, 发起新的请求,获取返回信息
+            RequestBody body = new FormBody.Builder()
+                    .build();
+
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization", "Bearer " + mToken)
+                    .url(mQianDaoFanWeiURL)
+                    .post(body)
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(3, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
 
     /***
      * 内容清空

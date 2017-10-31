@@ -83,7 +83,7 @@
         <!--考勤记录-->
         <activity android:name=".kaoqing.KaoQingJiLuActivity"></activity>
         <!--拜访记录-->
-        <activity android:name=".kaoqing.BaiFangGuanLiActivity"></activity>
+        <activity android:name=".BaiFangGuanLiActivity"></activity>
         <!--数据与审核-->
         <activity android:name=".shujuyushenhe.ShuJuYuShenHeActivity"></activity>
         <!--请假审核-->

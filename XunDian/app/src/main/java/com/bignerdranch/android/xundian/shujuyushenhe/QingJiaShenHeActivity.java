@@ -112,6 +112,8 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
         qingQiuWeiShenHeShuJu();
         // 请求已审核数据
         qingQiuYiShenHeShuJu();
+
+        mIsShenHe = 1;
     }
     /**
      * 组件操作, 操作

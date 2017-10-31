@@ -38,15 +38,15 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
                 <LinearLayout
-                    android:id="@+id/kao_qing_ji_lu"
+                    android:id="@+id/qing_jia_guan_li"
                     style="@style/GongZuoZhongXin.3LinearLayout">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/jihua"
+                        android:src="@drawable/xundian"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
-                        android:text="@string/kao_qing_ji_lu"
+                        android:text="@string/qing_jia_guan_li"
                         />
                 </LinearLayout>
             </LinearLayout>
@@ -62,21 +62,22 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:background="@drawable/bottom_border">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
                 <LinearLayout
-                    android:id="@+id/qing_jia_guan_li"
+                    android:id="@+id/kao_qing_ji_lu"
                     style="@style/GongZuoZhongXin.3LinearLayout"
                     android:background="@drawable/right_border">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/xundian"
+                        android:src="@drawable/jihua"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
-                        android:text="@string/qing_jia_guan_li"
+                        android:text="@string/kao_qing_ji_lu"
                         />
                 </LinearLayout>
             </LinearLayout>

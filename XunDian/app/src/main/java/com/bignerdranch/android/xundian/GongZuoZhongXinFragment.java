@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingActivity;
-import com.bignerdranch.android.xundian.kehutuozhan.KeHuActivity;
 import com.bignerdranch.android.xundian.shujuyushenhe.ShuJuYuShenHeActivity;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
 import com.bignerdranch.android.xundian.xundianjihua.JiHuaActivity;
@@ -115,7 +113,7 @@ public class GongZuoZhongXinFragment extends Fragment{
         mButton_ke_hu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = KeHuActivity.newIntent(getActivity(),1);
+                Intent i = BaiFangGuanLiActivity.newIntent(getActivity(),1);
                 startActivity(i);
             }
         });

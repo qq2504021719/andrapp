@@ -16,7 +16,7 @@
     <string name="gong_gao">公告</string>
 
     <string name="gong_zuo_zhong_xin_xun_dian_guan_li">巡店管理</string>
-    <string name="gong_zuo_zhong_xin_xun_dian_ji_hua">巡店计划</string>
+    <string name="gong_zuo_zhong_xin_xun_dian_ji_hua">计划管理</string>
     <string name="gong_zuo_zhong_xin_kao_qing">考勤</string>
     <string name="gong_zuo_zhong_xin_shu_ju_yu_shen_he">数据与审核</string>
     <string name="gong_zuo_zhong_xin_ke_hu_tuo_zhan">客户拓展</string>
@@ -60,7 +60,7 @@
     <string name="ri_chang_kao_qing">日常考勤</string>
     <string name="kao_qing_ji_lu">考勤记录</string>
     <string name="qing_jia_guan_li">请假管理</string>
-    <string name="pai_fang_guan_li">拜访管理</string>
+    <string name="pai_fang_guan_li">福利</string>
 
 
     <string name="qian_dao">签到签退</string>

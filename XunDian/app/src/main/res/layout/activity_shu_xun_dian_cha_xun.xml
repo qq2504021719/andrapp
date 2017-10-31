@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:background="@color/colorAccent">
+
+    <include layout="@layout/title_nei_ye"/>
+
+    <com.bignerdranch.android.xundian.ui.BounceScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+                <!--选择查询日期-->
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontal">
+
+                    <TextView
+                        android:id="@+id/text_cha_xun_ri_qi"
+                        style="@style/TjJiHuaTextView"
+                        android:text="日期"/>
+
+                    <TextView
+                        android:id="@+id/text_cha_xun_ri_qi_value"
+                        style="@style/TjJiHuaTextView1"/>
+
+                    <ImageView
+                        style="@style/TjJiHuaImageView"/>
+
+                </LinearLayout>
+
+        </LinearLayout>
+    </com.bignerdranch.android.xundian.ui.BounceScrollView>
+
+</LinearLayout>
