@@ -373,14 +373,16 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
         int JinRiMonth = Integer.valueOf(new SimpleDateFormat("MM").format(new Date()));
         int JinRiDay = Integer.valueOf(new SimpleDateFormat("d").format(new Date()));
 
-        if(CalendarConfig.mYiGuoBuKeXuan == 1){
-            if(Integer.valueOf(mXuanYear) <= JinRiYear && day.length() > 0){
-                if(Integer.valueOf(mXuanMonth) <= JinRiMonth){
-                    if(Integer.valueOf(day) < JinRiDay){
-                        textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
-                    }
-                }
-
+//        Log.i("巡店",mXuanYear+""+mXuanMonth+""+day+"|"+JinRiYear+""+JinRiMonth+""+JinRiDay);
+        if(CalendarConfig.mYiGuoBuKeXuan == 1  && day.length() > 0){
+            if(Integer.valueOf(mXuanYear) < JinRiYear){
+                textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
+            }
+            if(Integer.valueOf(mXuanMonth) < JinRiMonth){
+                textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
+            }
+            if(Integer.valueOf(day) < JinRiDay){
+                textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
             }
         }
 

@@ -96,11 +96,14 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     public CheckBox mShang_wu_qing_jia;
     public TextView mTextview_an_shi_jian_shang_wu;
     public TextView mTextview_an_shi_jian_shang_wu_value;
+    // 上午请假时间
+    public String[] mShangWuData = {"6:00","7:00","8:00","9:00","10:00","11:00","12:00"};
 
     // 下午请假时间
     public CheckBox mXia_wu_qing_jia;
     public TextView mTextview_an_shi_jian_xia_wu;
     public TextView mTextview_an_shi_jian_xia_wu_value;
+    public String[] mXiaWuData = {"13:00","14:00","15:00","16:00","17:00","18:00","20:00","21:00","22:00"};
 
     // 提交申请
     public Button mButton_ti_jiao_shen_qing;
@@ -195,7 +198,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mLeiXingBeiJingSe.put("事假",R.drawable.ri_qi_background_zi_se);
         mLeiXingBeiJingSe.put("病假",R.drawable.ri_qi_background_hong_se);
         mLeiXingBeiJingSe.put("年假",R.drawable.ri_qi_background_lv_se);
-        mLeiXingBeiJingSe.put("其他法定婚丧假",R.drawable.ri_qi_background_huang_se);
+        mLeiXingBeiJingSe.put("其他带薪假",R.drawable.ri_qi_background_huang_se);
 
         // Token赋值
         setToken(mContext);
@@ -275,6 +278,26 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     }
 
     /**
+     * 配置日期选择
+     */
+    public void setRiQiPeiZhi(){
+        // 清空默认选中
+        CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
+        // 编辑模式
+        CalendarConfig.mMoShi = 1;
+        // 背景色
+        CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
+        // 休息日不可选择
+        String[] strings = getXiuXiRi();
+//                    Log.i("巡店",strings[0]+"|"+strings[1]+"|"+strings[2]+"|"+strings[3]+"|"+strings[4]+"|"+strings[5]+"|"+strings[6]);
+        if(strings.length > 0){
+            CalendarConfig.mZhouJiBuKeXuan = strings;
+        }else{
+            CalendarConfig.mZhouJiBuKeXuan = new String[0];
+        }
+    }
+
+    /**
      * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
@@ -327,20 +350,10 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                     tiShi(mContext,"请选择请假类型");
                 }else{
                     mLinear_an_shi_jian_fu_fu.setVisibility(View.GONE);
-                    // 清空默认选中
-                    CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
-                   // 编辑模式
-                    CalendarConfig.mMoShi = 1;
-                    // 背景色
-                    CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
-                    // 休息日不可选择
-                    String[] strings = getXiuXiRi();
-//                    Log.i("巡店",strings[0]+"|"+strings[1]+"|"+strings[2]+"|"+strings[3]+"|"+strings[4]+"|"+strings[5]+"|"+strings[6]);
-                    if(strings.length > 0){
-                        CalendarConfig.mZhouJiBuKeXuan = strings;
-                    }else{
-                        CalendarConfig.mZhouJiBuKeXuan = new String[0];
-                    }
+                    // 配置日期选择
+                    setRiQiPeiZhi();
+                    // 按时间段请假日期选择
+                    CalendarConfig.mDanXuanMoShi = 0;
                     // 启动
                     Intent intent = new Intent(QingJiaGuanLiActivity.this, CalendarMultiSelectActivity.class);
                     startActivityForResult(intent, REQUEST_PHOTO);
@@ -375,12 +388,8 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                     tiShi(mContext,"请选择请假类型");
                 }else{
                     mAn_tian_qing_jia.setVisibility(View.GONE);
-                    // 清空默认选中
-                    CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
-                    // 编辑模式
-                    CalendarConfig.mMoShi = 1;
-                    // 背景色
-                    CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
+                    // 配置日期选择
+                    setRiQiPeiZhi();
                     // 按时间段请假日期选择
                     CalendarConfig.mDanXuanMoShi = 1;
                     // 启动
@@ -390,40 +399,37 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             }
         });
 
-        // 上午请假
+        // 上午请假 mShangWuData
         mTextview_an_shi_jian_shang_wu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ct = Calendar.getInstance();
-                new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                alertBuilder.setItems(mShangWuData, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        ct.set(Calendar.HOUR_OF_DAY,i);
-                        ct.set(Calendar.MINUTE,i1);
-                        String string = String.valueOf(DateFormat.format("HH:mm",ct));
-                        // 上午开始时间
-                        mQingJia.setShangWuKaiShi(string);
-
-                        // 上午第二次时间
-                        ct = Calendar.getInstance();
-                        new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                    public void onClick(DialogInterface arg0, int index) {
+                        mQingJia.setShangWuKaiShi(mShangWuData[index]);
+                        alertDialog1.dismiss();
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                        alertBuilder.setItems(mShangWuData, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                ct.set(Calendar.HOUR_OF_DAY,i);
-                                ct.set(Calendar.MINUTE,i1);
-                                String string = String.valueOf(DateFormat.format("HH:mm",ct));
+                            public void onClick(DialogInterface arg0, int index) {
+                                alertDialog1.dismiss();
                                 // 上午结束时间
-                                mQingJia.setShangWuJieShu(string);
-                                mTextview_an_shi_jian_shang_wu_value.setText(mQingJia.getShangWuKaiShi()+" - "+string);
+                                mQingJia.setShangWuJieShu(mShangWuData[index]);
+                                mTextview_an_shi_jian_shang_wu_value.setText(mQingJia.getShangWuKaiShi()+" - "+mShangWuData[index]);
 
                                 // 选中
                                 mShang_wu_qing_jia.setChecked(true);
                             }
-
-                        },ct.get(Calendar.HOUR_OF_DAY),ct.get(Calendar.MINUTE),true).show();
+                        });
+                        alertDialog1 = alertBuilder.create();
+                        alertDialog1.setTitle("上午请假结束时间");
+                        alertDialog1.show();
                     }
-
-                },ct.get(Calendar.HOUR_OF_DAY),ct.get(Calendar.MINUTE),true).show();
+                });
+                alertDialog1 = alertBuilder.create();
+                alertDialog1.setTitle("上午请假开始时间");
+                alertDialog1.show();
             }
         });
         // 上午取消请假
@@ -441,34 +447,34 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mTextview_an_shi_jian_xia_wu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ct = Calendar.getInstance();
-                new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        ct.set(Calendar.HOUR_OF_DAY,i);
-                        ct.set(Calendar.MINUTE,i1);
-                        String string = String.valueOf(DateFormat.format("HH:mm",ct));
-                        mQingJia.setXiaWuKaiShi(string);
 
-                        ct = Calendar.getInstance();
-                        new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                alertBuilder.setItems(mXiaWuData, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int index) {
+                        mQingJia.setXiaWuKaiShi(mXiaWuData[index]);
+                        alertDialog1.dismiss();
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                        alertBuilder.setItems(mXiaWuData, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                ct.set(Calendar.HOUR_OF_DAY,i);
-                                ct.set(Calendar.MINUTE,i1);
-                                String string = String.valueOf(DateFormat.format("HH:mm",ct));
-                                mQingJia.setXiaWuJieShu(string);
-                                mTextview_an_shi_jian_xia_wu_value.setText(mQingJia.getXiaWuKaiShi()+" - "+string);
+                            public void onClick(DialogInterface arg0, int index) {
+                                alertDialog1.dismiss();
+                                // 上午结束时间
+                                mQingJia.setXiaWuJieShu(mXiaWuData[index]);
+                                mTextview_an_shi_jian_xia_wu_value.setText(mQingJia.getXiaWuKaiShi()+" - "+mXiaWuData[index]);
 
                                 // 选中
                                 mXia_wu_qing_jia.setChecked(true);
                             }
-
-                        },ct.get(Calendar.HOUR_OF_DAY),ct.get(Calendar.MINUTE),true).show();
-
+                        });
+                        alertDialog1 = alertBuilder.create();
+                        alertDialog1.setTitle("下午请假结束时间");
+                        alertDialog1.show();
                     }
-
-                },ct.get(Calendar.HOUR_OF_DAY),ct.get(Calendar.MINUTE),true).show();
+                });
+                alertDialog1 = alertBuilder.create();
+                alertDialog1.setTitle("下午请假开始时间");
+                alertDialog1.show();
             }
         });
         // 下午取消请假
@@ -614,7 +620,8 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                     an_shi_jian_duan_xia_wu_jie_shu = mQingJia.getXiaWuJieShu();
                 }
                 body.addFormDataPart("an_shi_jian_duan_xia_wu_jie_shu",an_shi_jian_duan_xia_wu_jie_shu);
-//                Log.i("巡店",an_shi_jian_dun+"|"+an_shi_jian_duan_shang_wu_kai_shi+"|"+an_shi_jian_duan_shang_wu_jie_shu);
+//                Log.i("巡店","上午|"+an_shi_jian_duan_shang_wu_kai_shi+"|"+an_shi_jian_duan_shang_wu_jie_shu);
+//                Log.i("巡店","下午|"+an_shi_jian_duan_xia_wu_kai_shi+"|"+an_shi_jian_duan_xia_wu_jie_shu);
             }
 
             final Request request = new Request.Builder()
@@ -654,6 +661,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
              */
             if(msg.what==1){
                 tiShi(mContext,msg.obj.toString());
+                values();// 恢复默认值
                 // 请求请假数据
                 QingJiaDataQingQiu();
                 NeiRongQingKong();
