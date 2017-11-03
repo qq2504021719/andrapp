@@ -90,6 +90,9 @@
         <activity android:name=".shujuyushenhe.QingJiaShenHeActivity"></activity>
         <!--计划审核-->
         <activity android:name=".shujuyushenhe.JiHuaShenHeActivity"></activity>
+        <!--巡店查询-->
+        <activity android:name=".shujuyushenhe.XunDianChaXunActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
         <!--Android N 相机调用问题-->
         <provider
             android:authorities="com.bignerdranch.android.xundian.provider"

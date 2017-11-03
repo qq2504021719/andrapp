@@ -466,6 +466,7 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
             }else if(msg.what==2){
                 try {
                     // 解析json数据
+//                    Log.i("巡店",msg.obj.toString());
                     JSONObject jsonObject = new JSONObject(msg.obj.toString());
                     int i = 0;
                     Iterator inter =  jsonObject.keys();
@@ -477,9 +478,11 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
                     }
                     if(i == 1){
                         // 修改
+                        Log.i("巡店","修改");
                         mLogin.setToken(jsonObject.getString("access_token"));
                         mLoginModel.updateLogin(mLogin);
                     }else{
+                        Log.i("巡店","跳转");
                         Intent intent = new Intent(MainPageActivity.this,LoginActivity.class);
                         startActivity(intent);
                         // 销毁当前Activity

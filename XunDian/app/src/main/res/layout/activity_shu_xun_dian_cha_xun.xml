@@ -19,23 +19,444 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-                <!--选择查询日期-->
+            <!--选择查询日期-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+
+                <TextView
+                    android:id="@+id/xun_dian_text_cha_xun_ri_qi"
+                    style="@style/TjJiHuaTextView"
+                    android:text="日期"/>
+
+                <TextView
+                    android:id="@+id/xun_dian_text_cha_xun_ri_qi_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+
+            </LinearLayout>
+
+            <!--门店搜索-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    android:id="@+id/text_bf_gong_si_ming_cheng"
+                    style="@style/TjJiHuaTextView"
+                    android:text="公司名称"/>
+
+                <TextView
+                    android:id="@+id/text_bf_gong_si_ming_cheng_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+            </LinearLayout>
+
+            <!--公司品牌-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    style="@style/TjJiHuaTextView"
+                    android:text="公司品牌"/>
+
+                <TextView
+                    android:id="@+id/text_bf_gong_si_pin_pai_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+            </LinearLayout>
+
+            <!--公司编号-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    style="@style/TjJiHuaTextView"
+                    android:text="公司编号"/>
+
+                <TextView
+                    android:id="@+id/text_bf_gong_si_bian_hao_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+            </LinearLayout>
+
+            <!--门店类型-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    android:id="@+id/cha_xun_men_dian_lei_xing"
+                    style="@style/TjJiHuaTextView"
+                    android:text="门店类型"/>
+
+                <TextView
+                    android:id="@+id/cha_xun_men_dian_lei_xing_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+            </LinearLayout>
+
+            <!--巡店项目名称-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    style="@style/TjJiHuaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:text="巡店项目名称"/>
+
+                <EditText
+                    android:id="@+id/xun_dian_xiang_mu_ming_chen_search"
+                    style="@style/keHuTuoZhanEditText"
+                    android:hint="巡店项目名称"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+
+            </LinearLayout>
+            <!--照片显示 参数显示-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/bottom_border"
+                android:orientation="horizontal">
+                <!--照片显示-->
                 <LinearLayout
-                    style="@style/LinearLayoutHorizontal">
-
-                    <TextView
-                        android:id="@+id/text_cha_xun_ri_qi"
-                        style="@style/TjJiHuaTextView"
-                        android:text="日期"/>
-
-                    <TextView
-                        android:id="@+id/text_cha_xun_ri_qi_value"
-                        style="@style/TjJiHuaTextView1"/>
-
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="1">
                     <ImageView
-                        style="@style/TjJiHuaImageView"/>
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ka_qing_ku_lian"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/heise"
+                        android:gravity="center"
+                        android:text="照片显示"/>
+                </LinearLayout>
+                <!--参数显示-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ka_qing_ku_lian"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/heise"
+                        android:gravity="center"
+                        android:text="参数显示"/>
+                </LinearLayout>
+        </LinearLayout>
+            <!--提交人-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    style="@style/TjJiHuaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:text="提交人"/>
+
+                <EditText
+                    android:id="@+id/ti_jiao_ren_value"
+                    style="@style/keHuTuoZhanEditText"
+                    android:hint="提交人"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+
+            </LinearLayout>
+
+            <!--点击查询-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <Button
+                    android:id="@+id/cha_xun_dian_ji_cha_xun"
+                    android:text="点击查询"
+                    style="@style/XunDianButton"
+                    android:layout_width="match_parent"
+                    />
+
+            </LinearLayout>
+
+            <!--查询结果-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="查询结果"
+                    android:textColor="@color/heise"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"/>
+
+
+                <!--查询结果表头-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+
+                    <!--时间/提交人-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/huisefc">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="时间/提交人"/>
+
+                    </LinearLayout>
+                    <!--门店信息-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/huisefc">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="门店信息"/>
+
+                    </LinearLayout>
+                    <!--照片显示-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/huisefc">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="照片显示"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
+                <!--查询结果内容-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp">
+                    <!--查询结果内容行-->
+                    <!--1-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <!--时间/提交人-->
+                        <!--2-->
+                        <LinearLayout
+                            android:paddingTop="30dp"
+                            android:paddingBottom="30dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border_left_buttom_right_huise"
+                            android:orientation="vertical">
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+
+                        </LinearLayout>
+                        <!--门店信息-->
+                        <!--3-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_bottom_right_huise"
+                            android:gravity="left|center"
+                            android:paddingLeft="10dp"
+                            android:orientation="vertical">
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+
+                        </LinearLayout>
+                        <!--照片显示-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_bottom_right_huise"
+                            android:gravity="left|center"
+                            android:paddingLeft="10dp"
+                            android:orientation="vertical">
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--2-->
+                            <TextView
+                                android:layout_width="40dp"
+                                android:gravity="center"
+                                android:background="@drawable/button"
+                                android:textColor="@color/colorAccent"
+                                android:layout_height="20dp"
+                                android:text="审核"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <!--查询结果内容行-->
+                    <!--1-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <!--时间/提交人-->
+                        <!--2-->
+                        <LinearLayout
+                            android:paddingTop="30dp"
+                            android:paddingBottom="30dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border_left_buttom_right_huise"
+                            android:orientation="vertical">
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+
+                        </LinearLayout>
+                        <!--门店信息-->
+                        <!--3-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_bottom_right_huise"
+                            android:gravity="left|center"
+                            android:paddingLeft="10dp"
+                            android:orientation="vertical">
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+
+                        </LinearLayout>
+                        <!--照片显示-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_bottom_right_huise"
+                            android:gravity="left|center"
+                            android:paddingLeft="10dp"
+                            android:orientation="vertical">
+                            <!--1-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="时间/提交人"/>
+                            <!--1-->
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:src="@drawable/test"/>
+                            <!--2-->
+                            <TextView
+                                android:layout_width="40dp"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:background="@drawable/button"
+                                android:textColor="@color/colorAccent"
+                                android:layout_height="20dp"
+                                android:text="审核"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </com.bignerdranch.android.xundian.ui.BounceScrollView>

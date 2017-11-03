@@ -446,6 +446,7 @@ public class BenZhouFragment extends Fragment{
         }
     }
 
+
     /**
      * 根据str截取字符串string返回字符串
      * @param str
@@ -486,14 +487,16 @@ public class BenZhouFragment extends Fragment{
 
         String stringRiQi = RiQi[1]+"-"+RiQi[2];
         // 记录显示父节点
-        LinearLayout ll = null;
+        LinearLayout ll = new LinearLayout(mContext);
+        ll.removeAllViews();
         // 编号
         int bianhao = 0;
 
         // 周几字符串
         String strs = xunDianJiHua.getZhouStr();
         //周几title
-        LinearLayout ll_title = null;
+        LinearLayout ll_title = new LinearLayout(mContext);
+        ll_title.removeAllViews();
         TextView tv_text = null;
         TextView tv_text1 = null;
         // 每天的完成率
@@ -641,6 +644,8 @@ public class BenZhouFragment extends Fragment{
      * 初始化显示组件
      */
     public void initShowView(){
+        mXunDianJiHuas = new ArrayList<>();
+        mJiLuNum = new int[7];
         // 初始化显示父组件
         mLinear_zhou_yi.removeAllViews();
         mLinear_zhou_yi.setVisibility(View.GONE);

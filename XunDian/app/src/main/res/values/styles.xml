@@ -266,6 +266,12 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:src">@drawable/right_hui_se</item>
     </style>
+    <!--imageViewChaXun-->
+    <style name="TjJiHuaImageViewChaXun">
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/bottom_hui_se</item>
+    </style>
 
     <!--添加计划textview-->
     <style name="TjJiHuaLinearLayout">

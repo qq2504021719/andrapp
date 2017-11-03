@@ -129,6 +129,7 @@ public class WodeXinXiFragment extends Fragment {
         // Token查询,赋值
         mLogin = mLoginModel.getLogin(1);
         mToken = mLogin.getToken();
+//        Log.i("巡店",mToken);
     }
         /**
          * Handler

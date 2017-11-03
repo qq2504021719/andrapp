@@ -945,4 +945,6 @@ public class KaoQingCommonActivity extends CommActivity {
         }
         return f.getPath();
     }
+
+
 }
