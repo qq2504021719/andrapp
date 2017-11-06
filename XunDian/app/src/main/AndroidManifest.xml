@@ -93,6 +93,9 @@
         <!--巡店查询-->
         <activity android:name=".shujuyushenhe.XunDianChaXunActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+        <!--巡店查询-->
+        <activity android:name=".shujuyushenhe.BaiFangChaXunActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
         <!--Android N 相机调用问题-->
         <provider
             android:authorities="com.bignerdranch.android.xundian.provider"

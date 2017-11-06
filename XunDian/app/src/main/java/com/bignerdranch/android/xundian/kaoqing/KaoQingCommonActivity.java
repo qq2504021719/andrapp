@@ -125,6 +125,9 @@ public class KaoQingCommonActivity extends CommActivity {
     // 图片提交url
     public String mTuPanTJURL = Config.URL+"/app/xun_dian_ti_jiao/tuPian";
 
+    // 门店搜索模式
+    public String moshi = "3";
+
     /**
      * 实现回调接口
      */
@@ -873,7 +876,7 @@ public class KaoQingCommonActivity extends CommActivity {
             RequestBody body = new FormBody.Builder()
                     .add("name",str)
                     .add("pin_pai",str1)
-                    .add("moshi","3")
+                    .add("moshi",moshi)
                     .build();
             final Request request = new Request.Builder()
                     .addHeader("Authorization","Bearer "+mToken)

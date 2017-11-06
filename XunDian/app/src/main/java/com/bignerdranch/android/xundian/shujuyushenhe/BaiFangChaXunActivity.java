@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
-import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,12 +26,12 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 /**
- * Created by Administrator on 2017/10/31.
+ * Created by Administrator on 2017/11/6.
  */
 
-public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQingCommonActivity.Callbacks{
+public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements KaoQingCommonActivity.Callbacks{
 
-    private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianChaXunController";
+    private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.BaiFangChaXunActivity";
 
     // 日期
     TextView mXun_dian_text_cha_xun_ri_qi;
@@ -65,7 +63,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     String XiangMuMingCheng;
 
     public static Intent newIntent(Context packageContext, int intIsId){
-        Intent i = new Intent(packageContext,XunDianChaXunActivity.class);
+        Intent i = new Intent(packageContext,BaiFangChaXunActivity.class);
         i.putExtra(EXTRA,intIsId);
         return i;
     }
@@ -73,7 +71,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shu_xun_dian_cha_xun);
+        setContentView(R.layout.activity_shu_bai_fang_cha_xun);
         mContext = this;
         // 组件初始化
         ZhuJianInit();
@@ -114,7 +112,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         setToken(mContext);
 
         // 门店搜索模式
-        moshi = "1";
+        moshi = "2";
 
         // 公司弹出View
         // 获取布局文件
@@ -138,7 +136,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
-                new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
+                new DatePickerDialog(BaiFangChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         // TODO Auto-generated method stub
@@ -146,7 +144,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                         // 开始时间
                         kstime = string;
                         Calendar c = Calendar.getInstance();
-                        new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        new DatePickerDialog(BaiFangChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 // TODO Auto-generated method stub

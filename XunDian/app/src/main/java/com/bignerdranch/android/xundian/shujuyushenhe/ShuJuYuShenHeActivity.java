@@ -95,7 +95,8 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mBai_fang_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = BaiFangChaXunActivity.newIntent(mContext,1);
+                startActivity(i);
             }
         });
 
