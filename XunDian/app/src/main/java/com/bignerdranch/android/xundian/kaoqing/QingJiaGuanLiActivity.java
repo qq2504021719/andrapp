@@ -66,7 +66,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     // 请假类型
     public TextView mTextview_lei_xing;
     public TextView mTextview_lei_xing_value;
-    public String[] mLeiXingData = new String[]{"事假","病假","年假","其他带薪假"};
+    public String[] mLeiXingData = new String[]{"事假","病假","年假","带薪假","其他假期"};
     public HashMap<String,Integer> mLeiXingBeiJingSe = new HashMap<>();
 
 
@@ -152,8 +152,8 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     public void ZhuJianInit(){
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
         // 部门
-        mTextview_bu_meng = (TextView)findViewById(R.id.textview_bu_meng);
-        mTextview_bu_meng_value = (TextView)findViewById(R.id.textview_bu_meng_value);
+//        mTextview_bu_meng = (TextView)findViewById(R.id.textview_bu_meng);
+//        mTextview_bu_meng_value = (TextView)findViewById(R.id.textview_bu_meng_value);
         // 请假类型
         mTextview_lei_xing = (TextView)findViewById(R.id.textview_lei_xing);
         mTextview_lei_xing_value = (TextView)findViewById(R.id.textview_lei_xing_value);
@@ -198,8 +198,8 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mLeiXingBeiJingSe.put("事假",R.drawable.ri_qi_background_zi_se);
         mLeiXingBeiJingSe.put("病假",R.drawable.ri_qi_background_hong_se);
         mLeiXingBeiJingSe.put("年假",R.drawable.ri_qi_background_lv_se);
-        mLeiXingBeiJingSe.put("其他带薪假",R.drawable.ri_qi_background_huang_se);
-
+        mLeiXingBeiJingSe.put("带薪假",R.drawable.ri_qi_background_huang_se);
+        mLeiXingBeiJingSe.put("其他假期",R.drawable.ri_qi_background_lan_se);
         // Token赋值
         setToken(mContext);
 
@@ -303,24 +303,24 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     public void ZhuJianCaoZhuo(){
         mTitle_nei_ye.setText(R.string.qing_jia_guan_li);
 
-        // 部门
-        mTextview_bu_meng.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                alertBuilder.setItems(mBuMengData, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int index) {
-                        // 显示选择部门
-                        mTextview_bu_meng_value.setText(mBuMengData[index]);
-                        mQingJia.setBuMeng(mBuMengData[index]);
-                        alertDialog1.dismiss();
-                    }
-                });
-                alertDialog1 = alertBuilder.create();
-                alertDialog1.show();
-            }
-        });
+        // 部门 2017-11-08废弃
+//        mTextview_bu_meng.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+//                alertBuilder.setItems(mBuMengData, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface arg0, int index) {
+//                        // 显示选择部门
+//                        mTextview_bu_meng_value.setText(mBuMengData[index]);
+//                        mQingJia.setBuMeng(mBuMengData[index]);
+//                        alertDialog1.dismiss();
+//                    }
+//                });
+//                alertDialog1 = alertBuilder.create();
+//                alertDialog1.show();
+//            }
+//        });
 
         // 类型
         mTextview_lei_xing.setOnClickListener(new View.OnClickListener() {
@@ -494,10 +494,10 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             public void onClick(View view) {
                 // 请假原因
                 mQingJia.setYuanYing(mEditText_yuan_ying.getText().toString());
-
-                if(mQingJia.getBuMeng().equals("")){
-                    tiShi(mContext,"部门不能为空");
-                }else{
+//
+//                if(mQingJia.getBuMeng().equals("")){
+//                    tiShi(mContext,"部门不能为空");
+//                }else{
                     if(mQingJia.getLeiXing().equals("")){
                         tiShi(mContext,"请假类型不能为空");
                     }else{
@@ -525,7 +525,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                             }
                         }
                     }
-                }
+//                }
             }
         });
     }

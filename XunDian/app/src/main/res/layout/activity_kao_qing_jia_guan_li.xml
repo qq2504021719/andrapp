@@ -26,21 +26,21 @@
                 style="@style/IndexBuJuLinearLayout"
                 android:paddingLeft="10dp">
                 <!--选择部门-->
-                <LinearLayout
-                    style="@style/LinearLayoutHorizontal">
+                <!--<LinearLayout-->
+                    <!--style="@style/LinearLayoutHorizontal">-->
 
-                    <TextView
-                        android:id="@+id/textview_bu_meng"
-                        style="@style/TjJiHuaTextView"
-                        android:text="选择部门"/>
+                    <!--<TextView-->
+                        <!--android:id="@+id/textview_bu_meng"-->
+                        <!--style="@style/TjJiHuaTextView"-->
+                        <!--android:text="选择部门"/>-->
 
-                    <TextView
-                        android:id="@+id/textview_bu_meng_value"
-                        style="@style/TjJiHuaTextView1"/>
+                    <!--<TextView-->
+                        <!--android:id="@+id/textview_bu_meng_value"-->
+                        <!--style="@style/TjJiHuaTextView1"/>-->
 
-                    <ImageView
-                        style="@style/TjJiHuaImageView"/>
-                </LinearLayout>
+                    <!--<ImageView-->
+                        <!--style="@style/TjJiHuaImageView"/>-->
+                <!--</LinearLayout>-->
 
                 <!--请假类型-->
                 <LinearLayout
