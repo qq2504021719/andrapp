@@ -111,6 +111,13 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
     // is签到
     public int mIsQian = 0;
 
+    // 签到是否满半小时提交
+    public String mQianDaoTiShi = "";
+    // 是否还可以签到 0 可以 1 不可以
+    public int mIsQianDao = 0;
+    // 是否超出签到范围
+    public String mZhuangTai ="";
+
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,RiChangKaoQingActivity.class);
         i.putExtra(EXTRA,intIsId);
@@ -187,6 +194,14 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
         mButton_shang_ban_qian_dao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // 签到是否满半小时提交
+                mQianDaoTiShi = "";
+                // 是否还可以签到 0 可以 1 不可以
+                mIsQianDao = 0;
+                // 是否超出签到范围
+                mZhuangTai ="";
+
                 // 获取用户签到范围
                 getGongSiQianDaoFanWei();
 
@@ -209,8 +224,8 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                 qianDaoTiJiao();
             }else{
                 java.text.DecimalFormat df=new java.text.DecimalFormat("#");
-                String str = "签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米";
-
+                String str = "签到超出签到范围"+df.format(juLi-mWuChaFanWei)+"米,是否签到?";
+                mZhuangTai = "超出范围";
                 new AlertDialog.Builder(RiChangKaoQingActivity.this).setTitle("系统提示")//设置对话框标题
                         .setMessage(str)//设置显示的内容
                         .setPositiveButton("确定",new DialogInterface.OnClickListener() {//添加确定按钮
@@ -228,6 +243,37 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
         }
         mIsQian = 0;
     }
+
+    /**
+     * 半小时提交
+     */
+    public void BanXiaoTiShi(){
+        if(mIsQianDao == 0){
+            if(!mQianDaoTiShi.equals("")){
+                new AlertDialog.Builder(RiChangKaoQingActivity.this).setTitle("系统提示")//设置对话框标题
+                        .setMessage(mQianDaoTiShi)//设置显示的内容
+                        .setPositiveButton("确定",new DialogInterface.OnClickListener() {//添加确定按钮
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                                // 签到
+                                qianDao();
+                            }
+                        }).setNegativeButton("返回",new DialogInterface.OnClickListener() {//添加返回按钮
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {//响应事件
+                    }
+                }).show();//在按键响应事件中显示此对话框
+            }else{
+                // 签到
+                qianDao();
+            }
+        }else{
+            tiShi(mContext,"今日已完成所有签到签退");
+        }
+
+    }
+
+
 
     /**
      * 百度地图定位调用
@@ -405,6 +451,8 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
 
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
+                        mQianDaoTiShi = jsonObject.getString("qianDaoTiShi");
+                        mIsQianDao = Integer.valueOf(jsonObject.getString("IsQianDao"));
                         if(jsonObject.getString("qian_dao_lat").equals("null") ||
                            jsonObject.getString("qian_dao_lat").equals("null") ||
                            jsonObject.getString("qian_dao_lat").equals("null")){
@@ -423,7 +471,7 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                         e.printStackTrace();
                     }
                     if(mIsQian == 1){
-                        qianDao();
+                        BanXiaoTiShi();
                     }
                     // 显示用户签到信息
                     ShowQianDao();
@@ -534,10 +582,18 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                     }else if(i%2 == 1 && Integer.valueOf(qianDaoTime.replace(":","")) < Integer.valueOf(time.replace(":",""))){
                         ColorInt = R.color.hongse;
                     }
+                    String QianDaoQianTui = "已签到";
+                    if(i%2 == 1){
+                        QianDaoQianTui = "已签退";
+                    }
 
-                    titleTextView = CreateTextView(name+"(已打卡 "+time+")",1,ColorInt);
+                    titleTextView = CreateTextView(name+"("+QianDaoQianTui+" "+time+")",1,ColorInt);
                 }else{
-                    titleTextView = CreateTextView(name+"(未打卡 "+time+")",1,R.color.heise);
+                    String QianDaoQianTui = "未签到";
+                    if(i%2 == 1){
+                        QianDaoQianTui = "未签退";
+                    }
+                    titleTextView = CreateTextView(name+"("+QianDaoQianTui+" "+time+")",1,R.color.heise);
                 }
 
                 TextView timeTextView = CreateTextView(qianDaoTime,2,R.color.heise);
@@ -656,6 +712,7 @@ public class RiChangKaoQingActivity extends KaoQingCommonActivity {
                 jsonObject.put("gps_lat",String.valueOf(mLocationBaiDu.getLatitude()));
                 jsonObject.put("gps_lng",String.valueOf(mLocationBaiDu.getLontitude()));
                 jsonObject.put("gps_addr",mLocationBaiDu.getAddr());
+                jsonObject.put("zhuang_tai",mZhuangTai);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

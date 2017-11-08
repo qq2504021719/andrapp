@@ -714,7 +714,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
      */
     public void NeiRongQingKong(){
         // 清空部门
-        mTextview_bu_meng_value.setText("");
+//        mTextview_bu_meng_value.setText("");
         // 清空类型
         mTextview_lei_xing_value.setText("");
         // 清空原因
