@@ -69,6 +69,8 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
     public String[] mRiQiData;
     // 日期数据-周
     public String[] mRiQiDataZhou;
+    // 日期数据 日期为key-周几为值
+    public String[] mRiQiKeyZhouJi;
 
     // 选择时间
     private TextView mTextview_shi_jian;
@@ -565,7 +567,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
                 }
             }
         }
-//        Log.i(" ",jsonObjects.toString());
+
         final OkHttpClient client = new OkHttpClient();
         //3, 发起新的请求,获取返回信息
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonObjects.toString());
@@ -617,6 +619,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
     public void setRiqi(String stringc){
         mRiQiData = new String[7];
         mRiQiDataZhou = new String[7];
+        mRiQiKeyZhouJi = new String[7];
         try {
             if(!mXunDianRiQiData.equals("")){
                 JSONArray jsonArray = new JSONArray(mXunDianRiQiData);
@@ -774,7 +777,10 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
      */
     public void CreateViewRiQi(XunDianJiHua xunDianJiHua,int i){
         String[] RiQi = strSplitArray("-",xunDianJiHua.getRiQi());
+        // 日期
         String stringRiQi = RiQi[1]+"-"+RiQi[2];
+        // 日期-周几
+        String strs = stringRiQi+" "+getCurrentWeekOfMonth(xunDianJiHua.getRiQi());
         // 详细
         String GongZhuo = xunDianJiHua.getShiJian()+"-"+xunDianJiHua.getJSShiJian()+" "
                 +xunDianJiHua.getPingPaiStr()+" "+xunDianJiHua.getMenDianHao()+" "+xunDianJiHua.getMenDianStr();
@@ -782,7 +788,7 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
 //        Log.i("巡店",mRiQiData.length+"|"+xunDianJiHua.getRiQi());
         if(mRiQiData[0].equals(xunDianJiHua.getRiQi())){
             // 周一
-            String strs = stringRiQi+" 周一";
+
             if(ZhouYi == 1){
                 mLinear_zhou_yi.setVisibility(View.VISIBLE);
                 mLinear_zhou_yi.addView(CreateTextView(strs,1000));
@@ -792,7 +798,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
 
         }else if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
            // 周二
-            String strs = stringRiQi+" 周二";
             if(ZhouEr == 1){
                 mLinear_zhou_er.setVisibility(View.VISIBLE);
                 mLinear_zhou_er.addView(CreateTextView(strs,1000));
@@ -801,7 +806,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             ZhouEr++;
         }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
             // 周三
-            String strs = stringRiQi+" 周三";
             if(ZhouSan == 1){
                 mLinear_zhou_san.setVisibility(View.VISIBLE);
                 mLinear_zhou_san.addView(CreateTextView(strs,1000));
@@ -810,7 +814,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             ZhouSan++;
         }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
             // 周四
-            String strs = stringRiQi+" 周四";
             if(ZhouSi == 1){
                 mLinear_zhou_si.setVisibility(View.VISIBLE);
                 mLinear_zhou_si.addView(CreateTextView(strs,1000));
@@ -819,7 +822,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             ZhouSi++;
         }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
             // 周五
-            String strs = stringRiQi+" 周五";
             if(ZhouWu == 1){
                 mLinear_zhou_wu.setVisibility(View.VISIBLE);
                 mLinear_zhou_wu.addView(CreateTextView(strs,1000));
@@ -828,7 +830,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             ZhouWu++;
         }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
             // 周六
-            String strs = stringRiQi+" 周六";
             if(ZhouLiu == 1){
                 mLinear_zhou_liu.setVisibility(View.VISIBLE);
                 mLinear_zhou_liu.addView(CreateTextView(strs,1000));
@@ -837,7 +838,6 @@ public class TJJiHuaActivity extends NeiYeCommActivity implements NeiYeCommActiv
             ZhouLiu++;
         }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
             // 周日
-            String strs = stringRiQi+" 周日";
             if(ZhouQi == 1){
                 mLinear_zhou_ri.setVisibility(View.VISIBLE);
                 mLinear_zhou_ri.addView(CreateTextView(strs,1000));
