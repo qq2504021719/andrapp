@@ -570,22 +570,26 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     public void getJiQiMa(){
-        String m_szDevIDShort = "35" +
-        Build.BOARD.length()%10 +
-        Build.BRAND.length()%10 +
-        Build.CPU_ABI.length()%10 +
-        Build.DEVICE.length()%10 +
-        Build.DISPLAY.length()%10 +
-        Build.HOST.length()%10 +
-        Build.ID.length()%10 +
-        Build.MANUFACTURER.length()%10 +
-        Build.MODEL.length()%10 +
-        Build.PRODUCT.length()%10 +
-        Build.TAGS.length()%10 +
-        Build.TYPE.length()%10 +
-        Build.USER.length()%10 ;
-        mJiQiMa = m_szDevIDShort;
+//        String m_szDevIDShort = "35" +
+//        Build.BOARD.length()%10 +
+//        Build.BRAND.length()%10 +
+//        Build.CPU_ABI.length()%10 +
+//        Build.DEVICE.length()%10 +
+//        Build.DISPLAY.length()%10 +
+//        Build.HOST.length()%10 +
+//        Build.ID.length()%10 +
+//        Build.MANUFACTURER.length()%10 +
+//        Build.MODEL.length()%10 +
+//        Build.PRODUCT.length()%10 +
+//        Build.TAGS.length()%10 +
+//        Build.TYPE.length()%10 +
+//        Build.USER.length()%10 ;
+//        mJiQiMa = m_szDevIDShort;
+        TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
+        String imei = telephonyManager.getDeviceId();
+        mJiQiMa = imei;
     }
+
 
     /**
      * 检查网络是否完全连接 true 连接  false 没有连接
