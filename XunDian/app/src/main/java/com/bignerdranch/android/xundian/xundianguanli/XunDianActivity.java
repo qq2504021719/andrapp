@@ -172,7 +172,7 @@ public class XunDianActivity extends NeiYeCommActivity {
     public String mDianJiBaoCun = "您已点击保存,无法修改,请再次点击保存";
 
     // 超出范围多少米
-    String ChaoFanWei = "0";
+    String ChaoFanWei = "0.1";
 
     /**
      * 设置最大下标

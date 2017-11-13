@@ -342,6 +342,7 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
         if(CalendarConfig.mZhouJiBuKeXuan.length > 0){
             for(int i = 0;i<CalendarConfig.mZhouJiBuKeXuan.length;i++){
                 isC = false;
+                Log.i("巡店",CalendarConfig.mZhouJiBuKeXuan[i]);
                 if(CalendarConfig.mZhouJiBuKeXuan[i].equals("")){
 
                 }else{

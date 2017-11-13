@@ -289,7 +289,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
         // 休息日不可选择
         String[] strings = getXiuXiRi();
-//                    Log.i("巡店",strings[0]+"|"+strings[1]+"|"+strings[2]+"|"+strings[3]+"|"+strings[4]+"|"+strings[5]+"|"+strings[6]);
+                    Log.i("巡店",strings[0]+"|"+strings[1]+"|"+strings[2]+"|"+strings[3]+"|"+strings[4]+"|"+strings[5]+"|"+strings[6]);
         if(strings.length > 0){
             CalendarConfig.mZhouJiBuKeXuan = strings;
         }else{
