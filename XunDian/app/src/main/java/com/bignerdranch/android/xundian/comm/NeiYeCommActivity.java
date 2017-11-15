@@ -128,7 +128,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
      * @return 当前时间y-m-d h-i-s
      */
     public String getDangQianTime(){
-        SimpleDateFormat simpleDateFormats =new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.CHINA);
+        SimpleDateFormat simpleDateFormats =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         Calendar calendar=Calendar.getInstance(Locale.CHINA);
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         //当前时间，貌似多余，其实是为了所有可能的系统一致
@@ -143,7 +143,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
      * @return
      */
     public String dataTime(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss",
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
                 Locale.CHINA);
         Date date;
         String times = null;

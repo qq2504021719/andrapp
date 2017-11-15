@@ -3,11 +3,22 @@ package com.bignerdranch.android.xundian.shujuyushenhe;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.Config;
+
+import java.io.IOException;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/10/19.
@@ -26,6 +37,9 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
     private LinearLayout mJi_hua_shen_he;
     // 请假审核
     private LinearLayout mQing_jia_shen_he;
+
+
+
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,ShuJuYuShenHeActivity.class);
@@ -75,6 +89,8 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
 
 
     }
+
+
 
     /**
      * 组件操作, 操作
