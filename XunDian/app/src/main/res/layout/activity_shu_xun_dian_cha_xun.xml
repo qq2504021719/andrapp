@@ -130,9 +130,10 @@
                     android:gravity="center"
                     android:layout_weight="1">
                     <ImageView
+                        android:id="@+id/cha_xun_zhao_pian_xian_shi"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ka_qing_ku_lian"/>
+                        android:background="@drawable/ka_qing_ku_lian"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -147,9 +148,10 @@
                     android:gravity="center"
                     android:layout_weight="1">
                     <ImageView
+                        android:id="@+id/cha_xun_can_shu_xian_shi"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ka_qing_ku_lian"/>
+                        android:background="@drawable/ka_qing_ku_lian"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -198,7 +200,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/xun_dian_cha_xun_cha_xun"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="查询结果"

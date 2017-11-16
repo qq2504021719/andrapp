@@ -22,12 +22,15 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -65,10 +68,31 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     // 门店编号
     private TextView mText_bf_gong_si_bian_hao_value;
 
-    // 巡店项目名称
-    EditText mXun_dian_xiang_mu_ming_chen_search;
+    // 门店类型
+    private TextView mCha_xun_men_dian_lei_xing;
+    private TextView mCha_xun_men_dian_lei_xing_value;
+    private String mMenDianLeiXingUrl = Config.URL+"/app/ChaXunMenDianLeiXing";
+    private String mMenDianLeiXingJsonData = "";
+    private String mleiXingSearchName = "";
+    // 门店类型alert view
+    private View mMenDianView;
+    // 门店类型alert
+    private LinearLayout mBf_search_men_dian_lei_xing;
+    // 门店类型 dialog
+    public Dialog dialogMenDianLeiXing = null;
 
-    // 巡店查询
+    // 巡店项目名称
+    private EditText mXun_dian_xiang_mu_ming_chen_search;
+    // 照片显示
+    private ImageView mCha_xun_zhao_pian_xian_shi;
+    // 参数显示
+    private ImageView mCha_xun_can_shu_xian_shi;
+    private int mIsChanXianShi = 1;
+
+    // 提交人
+    private EditText mTi_jiao_ren_value;
+
+    // 点击查询
     TextView mXun_dian_cha_xun_cha_xun;
 
     // 巡店查询数据显示
@@ -134,10 +158,22 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         // 公司编号
         mText_bf_gong_si_bian_hao_value = (TextView)findViewById(R.id.text_bf_gong_si_bian_hao_value);
 
-        // 巡店项目名称
+        // 门店类型
+        mCha_xun_men_dian_lei_xing = (TextView)findViewById(R.id.cha_xun_men_dian_lei_xing);
+        mCha_xun_men_dian_lei_xing_value = (TextView)findViewById(R.id.cha_xun_men_dian_lei_xing_value);
 
-        // 巡店查询
-        mXun_dian_cha_xun_cha_xun = (TextView)findViewById(R.id.xun_dian_cha_xun_cha_xun);
+        // 巡店项目名称
+        mXun_dian_xiang_mu_ming_chen_search = (EditText)findViewById(R.id.xun_dian_xiang_mu_ming_chen_search);
+        //照片显示
+        mCha_xun_zhao_pian_xian_shi = (ImageView)findViewById(R.id.cha_xun_zhao_pian_xian_shi);
+        // 参数显示
+        mCha_xun_can_shu_xian_shi = (ImageView)findViewById(R.id.cha_xun_can_shu_xian_shi);
+
+        // 提交人
+        mTi_jiao_ren_value = (EditText)findViewById(R.id.ti_jiao_ren_value);
+
+        // 点击查询
+        mXun_dian_cha_xun_cha_xun = (TextView)findViewById(R.id.cha_xun_dian_ji_cha_xun);
 
 
         // 巡店查询数据显示
@@ -166,6 +202,34 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
         // 请求巡店数据
 //        XunDianShuJuChaXun();
+        // 内容清空
+        mXun_dian_cha_xun_nei_rong.removeAllViews();
+
+        // 查询门店类型
+        ChaXunMenDianLeiXing();
+        LayoutInflater inflaterLeiXing = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // 门店类型alert view
+        mMenDianView = inflaterLeiXing.inflate(R.layout.alert_kao_bai_fang_guan_li_search, null);
+        // 公司 alert 弹出
+        mBf_search_men_dian_lei_xing = mMenDianView.findViewById(R.id.bf_search_men_dian);
+
+        // 默认选中参数
+        ZhaoCanXianShi();
+
+    }
+
+    /**
+     * 照片显示,参数显示
+     */
+    public void ZhaoCanXianShi(){
+        if(mIsChanXianShi == 1){
+            mCha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+            mCha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
+        }else if (mIsChanXianShi == 2){
+            mCha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
+            mCha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+        }
     }
 
     // 开启线程
@@ -181,14 +245,20 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
              */
             if(msg.what==1){
                 mXunDianChaXunData = msg.obj.toString();
+                if(mXunDianChaXunData == ""){
+                    tiShi(mContext,"没有数据");
+                }
                 showXianShi();
+            }else if(msg.what == 2){
+                mMenDianLeiXingJsonData = msg.obj.toString();
+                // 显示门店类型数据
+                ShowMenDian(mMenDianLeiXingJsonData,3);
             }
         }
     };
 
     // 巡店数据查询
     public void XunDianShuJuChaXun(){
-        Log.i("巡店","查询");
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
         body.addFormDataPart("likebt",likebt);
@@ -198,6 +268,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         body.addFormDataPart("pinPai",pinPai);
         body.addFormDataPart("canShuLeiXing",canShuLeiXing);
         body.addFormDataPart("XiangMuMingCheng",XiangMuMingCheng);
+
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
                 .url(mXunDianShuJuChaXunURL)
@@ -221,10 +292,43 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mThread.start();
     }
 
+    // 查询门店类型
+    public void ChaXunMenDianLeiXing(){
+//        Log.i("巡店","门店类型查询");
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mleiXingSearchName);
+
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(mMenDianLeiXingUrl)
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
     /**
      * 显示视图 CreateLinear
      */
     public void showXianShi(){
+        // 关闭loading
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
+        // 清空内容
         mXun_dian_cha_xun_nei_rong.removeAllViews();
 
         try {
@@ -255,10 +359,31 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     // 第三个表格
                     LinearLayout linearLayout33 = CreateLinear(3);
                     TextView textView331 = CreateTextViewXun(1,jsonObject.getString("canshu_name"),"");
-                    TextView textView332 = CreateTextViewXun(1,jsonObject.getString("value"),"");
+
+                    TextView textView332 = new TextView(mContext);
+                    ImageView imageView332 = new ImageView(mContext);
+                    // 参数显示
+                    if(mIsChanXianShi == 1){
+                        textView332 = CreateTextViewXun(1,jsonObject.getString("value"),"");
+                    }else if(mIsChanXianShi == 2){
+                        // 照片显示
+                        if(!jsonObject.getString("path").equals("")){
+                            imageView332 = CreateImageViewXunDian(1);
+                            Picasso.with(mContext).load(Config.URL+"/"+jsonObject.getString("path")).into(imageView332);
+                        }
+
+                    }
+
                     TextView textView333 = CreateTextViewXun(2,"审核",jsonArray.get(i).toString());
                     linearLayout33.addView(textView331);
-                    linearLayout33.addView(textView332);
+                    if(mIsChanXianShi == 1){
+                        linearLayout33.addView(textView332);
+                    }else if(mIsChanXianShi == 2){
+                        if(!jsonObject.getString("path").equals("")){
+                            linearLayout33.addView(imageView332);
+                        }
+                    }
+
                     linearLayout33.addView(textView333);
                     linearLayout1.addView(linearLayout33);
 
@@ -278,6 +403,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     public void ZhuJianCaoZhuo(){
         mTitle_nei_ye.setText(R.string.xun_dian_cha_xun);
 
+        // 日期默认显示今天日期
+        String riQiString  = getDangQianTime(1);
+        mXun_dian_text_cha_xun_ri_qi_value.setText(riQiString+"~"+riQiString);
+
         // 日期弹出选择
         mXun_dian_text_cha_xun_ri_qi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,7 +416,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         // TODO Auto-generated method stub
-                        String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
+                        String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
                         // 开始时间
                         kstime = string;
                         Calendar c = Calendar.getInstance();
@@ -295,7 +424,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 // TODO Auto-generated method stub
-                                String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
+                                String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
                                 // 开始时间
                                 jstime = string;
                                 mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
@@ -318,9 +447,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     // 初始化组件
                     // 搜索
                     EditText bf_men_dian_ming_cheng = mViewD.findViewById(R.id.bf_men_dian_ming_cheng);
+                    bf_men_dian_ming_cheng.setHint("请输入门店名称/门店店号/品牌");
 
-                    // 搜索门店处理
-                    MenDianSearchChuli(bf_men_dian_ming_cheng);
+                    // 搜索处理
+                    MenDianSearchChuli(bf_men_dian_ming_cheng,1);
 
                     // 设置View
                     alertBuilder.setView(mViewD);
@@ -335,12 +465,98 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             }
         });
 
+        // 门店类型搜索选择
+        mCha_xun_men_dian_lei_xing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialogMenDianLeiXing == null){
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 初始化组件
+                    // 搜索
+                    EditText bf_men_dian_ming_cheng = mMenDianView.findViewById(R.id.bf_men_dian_ming_cheng);
+                    bf_men_dian_ming_cheng.setHint("请输入门店类型名称");
+
+                    // 搜索处理
+                    MenDianSearchChuli(bf_men_dian_ming_cheng,2);
+
+                    // 设置View
+                    alertBuilder.setView(mMenDianView);
+
+                    // 显示
+                    alertBuilder.create();
+
+                    dialogMenDianLeiXing = alertBuilder.show();
+                }else{
+                    dialogMenDianLeiXing.show();
+                }
+            }
+        });
+
+        // 巡店项目名称
+        mXun_dian_xiang_mu_ming_chen_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                XiangMuMingCheng = String.valueOf(editable).trim();
+            }
+        });
+
+        // 参数显示
+        mCha_xun_can_shu_xian_shi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mIsChanXianShi = 1;
+                ZhaoCanXianShi();
+                // 显示数据刷新
+                showXianShi();
+            }
+        });
+        // 照片显示
+        mCha_xun_zhao_pian_xian_shi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mIsChanXianShi = 2;
+                ZhaoCanXianShi();
+                // 显示数据刷新
+                showXianShi();
+            }
+        });
+
+        // 提交人
+        mTi_jiao_ren_value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                tiJiaoRen = String.valueOf(editable).trim();
+            }
+        });
+
         // 巡店查询
         mXun_dian_cha_xun_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 请求巡店数据
                 XunDianShuJuChaXun();
+                LoadingStringEdit("加载中");
             }
         });
     }
@@ -348,8 +564,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     /**
      * 搜索门店
      * @param editText
+     * @param is 1 门店搜索 2 门店类型搜索
      */
-    public void MenDianSearchChuli(EditText editText){
+    public void MenDianSearchChuli(EditText editText,final int is){
         // 搜索内容存储
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -364,9 +581,16 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
             @Override
             public void afterTextChanged(Editable editable) {
-                mSearchString = String.valueOf(editable).trim();
-                // 搜索门店
-                menDianSearch();
+                if(is == 1){
+                    mSearchString = String.valueOf(editable).trim();
+                    // 搜索门店
+                    menDianSearch();
+                }else if(is == 2){
+                    mleiXingSearchName = String.valueOf(editable).trim();
+                    // 搜索门店类型
+                    ChaXunMenDianLeiXing();
+                }
+
             }
         });
     }
@@ -384,7 +608,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         }else if(is == 2){
             mMengDianJsonData = string;
             setData(string,2);
-            ShowMenDian(string,2);
+            ShowMenDian(mMengDianJsonData,2);
         }
 
     }
@@ -394,26 +618,45 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
     }
 
+
+
     /**
-     * 显示查询出来的门店
+     * 显示查询出来的数据
      * @param string
-     * @param is 1 品牌 2门店
+     * @param is 1 品牌 2门店 3门店类型
      */
     public void ShowMenDian(String string,int is){
-        mBf_search_men_dian.removeAllViews();
         try {
-            JSONArray jsonArray = new JSONArray(string);
-            if(jsonArray.length() > 0){
-                for(int i = 0;i<jsonArray.length();i++){
-                    JSONObject jsonObject = new JSONObject();
-                    TextView textView = new TextView(mContext);
-                    if(is == 2){
+            if(is == 2){
+                // 门店搜索view清空
+                mBf_search_men_dian.removeAllViews();
+                JSONArray jsonArray = new JSONArray(string);
+                if(jsonArray.length() > 0){
+                    for(int i = 0;i<jsonArray.length();i++){
+                        JSONObject jsonObject = new JSONObject();
+                        TextView textView = new TextView(mContext);
+                        // 显示门店数据
+
                         String stringJson = jsonArray.get(i).toString();
                         JSONObject jsonObject1 = new JSONObject(stringJson);
                         textView = CreateTextvBf(1,stringJson,jsonObject1.getString("name")+" "+jsonObject1.getString("men_dian_hao")+" "+jsonObject1.getString("men_dian_ping_pai"));
                         mBf_search_men_dian.addView(textView);
-                    }else if(is == 2){
 
+                    }
+                }
+            }else if(is == 3){
+                // 门店类型搜索view清空
+                mBf_search_men_dian_lei_xing.removeAllViews();
+                // 显示门店类型数据
+                JSONArray jsonArray1 = new JSONArray(string);
+                if(jsonArray1.length() > 0){
+                    JSONArray jsonArray2 = new JSONArray(jsonArray1.get(0).toString());
+                    if(jsonArray2.length() > 0){
+                        for (int i3 = 0;i3<jsonArray2.length();i3++){
+                            TextView textView1 = new TextView(mContext);
+                            textView1 = CreateTextvBf(3,jsonArray2.get(i3)+"",jsonArray2.get(i3)+"");
+                            mBf_search_men_dian_lei_xing.addView(textView1);
+                        }
                     }
                 }
             }
@@ -447,8 +690,17 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 隐藏弹出
-                dialog.hide();
+                // 门店选择
+                if(is == 1){
+                    // 隐藏弹出
+                    dialog.hide();
+                }
+                // 门店类型选择
+                if(is == 3){
+                    // 隐藏弹出
+                    dialogMenDianLeiXing.hide();
+                }
+
                 // 回调选择项
                 XuanZheLie(Jstring,is);
 
@@ -466,19 +718,28 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      */
     public void XuanZheLie(String string,int is){
         try {
-            JSONObject jsonObject = new JSONObject(string);
-            String idText = jsonObject.getString("id");
-            String nameText = jsonObject.getString("name");
-            String men_dian_ping_paiText = jsonObject.getString("men_dian_ping_pai");
-            String men_dian_haoText = jsonObject.getString("men_dian_hao");
-            likebt = nameText;
-            pinPai = men_dian_ping_paiText;
-            // 显示
-            mText_bf_gong_si_ming_cheng_value.setText(nameText);
-            // 编号
-            mText_bf_gong_si_bian_hao_value.setText(men_dian_haoText);
-            // 品牌
-            mText_bf_gong_si_pin_pai_value.setText(men_dian_ping_paiText);
+            // 门店
+            if(is == 1){
+                JSONObject jsonObject = new JSONObject(string);
+                String idText = jsonObject.getString("id");
+                String nameText = jsonObject.getString("name");
+                String men_dian_ping_paiText = jsonObject.getString("men_dian_ping_pai");
+                String men_dian_haoText = jsonObject.getString("men_dian_hao");
+                likebt = nameText;
+                pinPai = men_dian_ping_paiText;
+                // 显示
+                mText_bf_gong_si_ming_cheng_value.setText(nameText);
+                // 编号
+                mText_bf_gong_si_bian_hao_value.setText(men_dian_haoText);
+                // 品牌
+                mText_bf_gong_si_pin_pai_value.setText(men_dian_ping_paiText);
+            }else if(is == 3){
+                // 门店类型
+                canShuLeiXing = string;
+//                mCha_xun_men_dian_lei_xing_value
+                mCha_xun_men_dian_lei_xing_value.setText(string);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -513,7 +774,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             linearLayout.setBackground(getResources().getDrawable(R.drawable.border_bottom_right_huise));
             linearLayout.setGravity(Gravity.LEFT);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
-            linearLayout.setPadding(10,0,0,0);
+            linearLayout.setPadding(10,10,10,10);
         }
 
         return linearLayout;
@@ -543,7 +804,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("巡店",stringJson);
+//                    Log.i("巡店",stringJson);
+                    Intent i = XunDianChaXunShenHeActivity.newIntent(XunDianChaXunActivity.this,stringJson);
+                    startActivity(i);
                 }
             });
         }
@@ -554,18 +817,16 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     /**
      * 创建ImageView
      * @param is 创建类型
-     * @param drawableSrc 图片资源
      * @return
      */
-    public ImageView CreateImageView(int is, int drawableSrc){
+    public ImageView CreateImageViewXunDian(int is){
         ImageView imageView = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         if(is == 1){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,100);
         }
         imageView.setLayoutParams(layoutParam);
-
-        imageView.setImageDrawable(getResources().getDrawable(drawableSrc));
+        imageView.setPadding(0,10,0,10);
 
         return imageView;
     }
@@ -583,6 +844,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         // 弹窗销毁
         if(dialog != null){
             dialog.dismiss();
+
+        }
+        if(dialogMenDianLeiXing != null){
+            dialogMenDianLeiXing.dismiss();
 
         }
     }

@@ -166,7 +166,7 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
 
     /**
      * 获取当前时间
-     * @return 当前时间y-m-d h-i-s
+     * @return 当前时间y-m-d h:i:s
      */
     public String getDangQianTime(int is){
         SimpleDateFormat simpleDateFormats = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);

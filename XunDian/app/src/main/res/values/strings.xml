@@ -72,6 +72,7 @@
     <string name="ti_jiao">提交</string>
 
     <string name="xun_dian_cha_xun">巡店查询</string>
+    <string name="xun_dian_shen_he">审核编辑</string>
     <string name="bai_fang_cha_xun">拜访查询</string>
     <string name="ji_hua_shen_he">计划审核</string>
     <string name="qing_jia_shen_he">请假审核</string>
