@@ -138,6 +138,14 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         values();
     }
 
+    @Override
+    public void onResume(){
+        // 请求巡店数据
+        XunDianShuJuChaXun();
+//        Log.i("巡店","finish");
+        super.onResume();
+    }
+
     /**
      * 组件初始化
      */
@@ -200,8 +208,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         // 搜索门店
         menDianSearch();
 
-        // 请求巡店数据
-//        XunDianShuJuChaXun();
+
         // 内容清空
         mXun_dian_cha_xun_nei_rong.removeAllViews();
 
@@ -259,6 +266,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
     // 巡店数据查询
     public void XunDianShuJuChaXun(){
+        LoadingStringEdit("加载中");
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
         body.addFormDataPart("likebt",likebt);
@@ -326,11 +334,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      * 显示视图 CreateLinear
      */
     public void showXianShi(){
-        // 关闭loading
-        WeiboDialogUtils.closeDialog(mWeiboDialog);
         // 清空内容
         mXun_dian_cha_xun_nei_rong.removeAllViews();
-
         try {
             JSONArray jsonArray = new JSONArray(mXunDianChaXunData);
             if(jsonArray.length() > 0){
@@ -371,10 +376,11 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                             imageView332 = CreateImageViewXunDian(1);
                             Picasso.with(mContext).load(Config.URL+"/"+jsonObject.getString("path")).into(imageView332);
                         }
-
                     }
 
+                    LinearLayout linearLayout4 = CreateLinear(4);
                     TextView textView333 = CreateTextViewXun(2,"审核",jsonArray.get(i).toString());
+                    linearLayout4.addView(textView333);
                     linearLayout33.addView(textView331);
                     if(mIsChanXianShi == 1){
                         linearLayout33.addView(textView332);
@@ -384,7 +390,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                         }
                     }
 
-                    linearLayout33.addView(textView333);
+                    linearLayout33.addView(linearLayout4);
                     linearLayout1.addView(linearLayout33);
 
                     mXun_dian_cha_xun_nei_rong.addView(linearLayout1);
@@ -395,6 +401,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        // 关闭loading
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
 
     /**
@@ -556,7 +564,6 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             public void onClick(View view) {
                 // 请求巡店数据
                 XunDianShuJuChaXun();
-                LoadingStringEdit("加载中");
             }
         });
     }
@@ -758,6 +765,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT,1);
         }else if(is == 3){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT,1);
+        }else if(is == 4){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }
 
         linearLayout.setLayoutParams(layoutParam);
@@ -775,6 +784,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             linearLayout.setGravity(Gravity.LEFT);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
             linearLayout.setPadding(10,10,10,10);
+        }else if(is == 4){
+            linearLayout.setGravity(Gravity.RIGHT);
         }
 
         return linearLayout;
@@ -851,7 +862,4 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
         }
     }
-
-
-
 }

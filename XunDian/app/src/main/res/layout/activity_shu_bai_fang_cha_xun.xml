@@ -19,24 +19,6 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <!--选择查询日期-->
-            <LinearLayout
-                style="@style/LinearLayoutHorizontal">
-
-                <TextView
-                    android:id="@+id/xun_dian_text_cha_xun_ri_qi"
-                    style="@style/TjJiHuaTextView"
-                    android:text="日期"/>
-
-                <TextView
-                    android:id="@+id/xun_dian_text_cha_xun_ri_qi_value"
-                    style="@style/TjJiHuaTextView1"/>
-
-                <ImageView
-                    style="@style/TjJiHuaImageViewChaXun"/>
-
-            </LinearLayout>
-
             <!--门店搜索-->
             <LinearLayout
                 style="@style/LinearLayoutHorizontal">
@@ -83,6 +65,24 @@
                     style="@style/TjJiHuaImageViewChaXun"/>
             </LinearLayout>
 
+            <!--选择查询日期-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+
+                <TextView
+                    android:id="@+id/xun_dian_text_cha_xun_ri_qi"
+                    style="@style/TjJiHuaTextView"
+                    android:text="日期"/>
+
+                <TextView
+                    android:id="@+id/xun_dian_text_cha_xun_ri_qi_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+
+            </LinearLayout>
+
             <!--提交人-->
             <LinearLayout
                 style="@style/LinearLayoutHorizontal">
@@ -101,22 +101,6 @@
                     style="@style/TjJiHuaImageViewChaXun"/>
 
             </LinearLayout>
-
-            <!--审核状态-->
-            <LinearLayout
-                style="@style/LinearLayoutHorizontal">
-                <TextView
-                    style="@style/TjJiHuaTextView"
-                    android:text="审核状态"/>
-
-                <TextView
-                    android:id="@+id/text_bai_fang_shen_he_zhang_tai"
-                    style="@style/TjJiHuaTextView1"/>
-
-                <ImageView
-                    style="@style/TjJiHuaImageViewChaXun"/>
-            </LinearLayout>
-
 
             <!--点击查询-->
             <LinearLayout
@@ -164,21 +148,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="时间/提交人"/>
-
-                    </LinearLayout>
-                    <!--门店信息-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@color/huisefc">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="门店信息"/>
+                            android:text="时间/提交人/客户名称"/>
 
                     </LinearLayout>
                     <!--照片显示-->
@@ -192,7 +162,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="照片显示"/>
+                            android:text="现场照片"/>
 
                     </LinearLayout>
 
@@ -200,6 +170,7 @@
 
                 <!--查询结果内容-->
                 <LinearLayout
+                    android:id="@+id/xun_dian_cha_xun_nei_rong"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -210,7 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                        <!--时间/提交人-->
+                        <!--时间/提交人/客户名称-->
                         <!--2-->
                         <LinearLayout
                             android:paddingTop="30dp"
@@ -222,36 +193,6 @@
                             android:paddingLeft="10dp"
                             android:background="@drawable/border_left_buttom_right_huise"
                             android:orientation="vertical">
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
-
-                        </LinearLayout>
-                        <!--门店信息-->
-                        <!--3-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/border_bottom_right_huise"
-                            android:gravity="left|center"
-                            android:paddingLeft="10dp"
-                            android:orientation="vertical">
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
                             <!--1-->
                             <TextView
                                 android:layout_width="wrap_content"
@@ -299,13 +240,33 @@
                         </LinearLayout>
 
                     </LinearLayout>
-                    <!--查询结果内容行-->
+                    <!--4-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <!--5-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/huisefc">
+                            <!--3-->
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:paddingLeft="10dp"
+                                android:layout_height="match_parent"
+                                android:gravity="left"
+                                android:text="内容"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
                     <!--1-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                        <!--时间/提交人-->
+                        <!--时间/提交人/客户名称-->
                         <!--2-->
                         <LinearLayout
                             android:paddingTop="30dp"
@@ -322,76 +283,23 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
-                                android:text="时间/提交人"/>
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
+                                android:text="内容"/>
 
-                        </LinearLayout>
-                        <!--门店信息-->
-                        <!--3-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/border_bottom_right_huise"
-                            android:gravity="left|center"
-                            android:paddingLeft="10dp"
-                            android:orientation="vertical">
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
-
-                        </LinearLayout>
-                        <!--照片显示-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/border_bottom_right_huise"
-                            android:gravity="left|center"
-                            android:paddingLeft="10dp"
-                            android:orientation="vertical">
-                            <!--1-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="时间/提交人"/>
-                            <!--1-->
-                            <ImageView
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:src="@drawable/test"/>
-                            <!--2-->
-                            <TextView
-                                android:layout_width="40dp"
-                                android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/button"
-                                android:textColor="@color/colorAccent"
-                                android:layout_height="20dp"
-                                android:text="审核"/>
-
+                                android:layout_height="match_parent"
+                                android:gravity="right">
+                            <!--4-->
+                                <TextView
+                                    android:layout_width="40dp"
+                                    android:gravity="center"
+                                    android:background="@drawable/button"
+                                    android:textColor="@color/colorAccent"
+                                    android:layout_height="20dp"
+                                    android:text="审核"/>
+                                </LinearLayout>
                         </LinearLayout>
+
 
                     </LinearLayout>
 
