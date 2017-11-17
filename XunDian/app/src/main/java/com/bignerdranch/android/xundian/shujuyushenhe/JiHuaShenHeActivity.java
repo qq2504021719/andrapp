@@ -408,7 +408,6 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                     LinearLayout linearLayout1 = LinearCreate(1);
 
-
                     // 用户下周信息
                     JSONArray jsonArray1 = new JSONArray(jsonObject.getString("jihua").toString());
                     JSONObject jsonObject1 = new JSONObject(jsonArray1.get(0).toString());
@@ -680,7 +679,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
             layoutParam.setMargins(0,0,20,0);
         }else if(is == 2){
             layoutParam.setMargins(0,0,10,0);
-            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,120);
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,90);
         }else if(is == 4){
             layoutParam.setMargins(0,0,0,5);
         }else if(is == 5){
@@ -728,6 +727,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
             public void onClick(View view) {
                 if (linearLayout1.getVisibility() == View.GONE) {
                     float mDensity = getResources().getDisplayMetrics().density;
+
                     int he = (int) (mDensity*height);
                     animateOpen(linearLayout1,he);
                     animationIvOpen();
@@ -739,6 +739,8 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
             }
         });
     }
+
+
 
     /**
      * 创建TextView
