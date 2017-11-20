@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -95,6 +96,25 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     // 审核状态
     private String ShenHeZhuang = "";
 
+    // 内容审核
+    // 拜访id
+    public String bfid = "";
+    // 拜访反馈
+    public String BFFankui = "";
+    // 用户审核反馈
+    public String Fankui = "";
+    // alert View
+    private View mbfViewD;
+    // title
+    public TextView mTitle_TextView;
+    // editText
+    private EditText mEdittext_Fan_Kui_Shu_Ru;
+    // Button
+    public Button mButton_TextView;
+
+    public Dialog bfdialog = null;
+
+
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,BaiFangChaXunActivity.class);
         i.putExtra(EXTRA,intIsId);
@@ -108,17 +128,17 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         mContext = this;
         // 组件初始化
         ZhuJianInit();
-        // 组件操作
-        ZhuJianCaoZhuo();
         // 数据/值设置
         values();
+        // 组件操作
+        ZhuJianCaoZhuo();
+
     }
 
     @Override
     public void onResume(){
         // 请求拜访数据
         XunDianShuJuChaXun();
-//        Log.i("巡店","finish");
         super.onResume();
     }
 
@@ -178,6 +198,18 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         // 内容清空
         mXun_dian_cha_xun_nei_rong.removeAllViews();
 
+        // 内容审核
+        // 获取布局文件
+        mbfViewD = inflater.inflate(R.layout.alert_shu_ji_hu_shen_he_bu_tong_yi, null);
+        // 内容审核布局文件
+        mTitle_TextView = mbfViewD.findViewById(R.id.bu_hui_title);
+        mTitle_TextView.setText("驳回原因");
+        // 内容审核输入框
+        mEdittext_Fan_Kui_Shu_Ru = mbfViewD.findViewById(R.id.edittext_qing_jia_bu_tong_yi_ti_jiao);
+        mEdittext_Fan_Kui_Shu_Ru.setHint("请输入驳回原因");
+        // Button
+        mButton_TextView = mbfViewD.findViewById(R.id.button_qing_jia_bu_tong_yi_ti_jiao);
+        mButton_TextView.setText("驳回提交");
 
     }
 
@@ -199,6 +231,13 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     tiShi(mContext,"没有数据");
                 }
                 showXianShi();
+            }else if(msg.what == 2){
+                if(msg.obj.toString().equals("审核成功")){
+                    // 请求拜访数据0
+                    XunDianShuJuChaXun();
+                }
+                tiShi(mContext,msg.obj.toString());
+                bfdialog.hide();
             }
         }
     };
@@ -411,6 +450,33 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                 // 请求巡店数据
                 XunDianShuJuChaXun();
 
+            }
+        });
+
+        // 审核内容获取
+        mEdittext_Fan_Kui_Shu_Ru.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Fankui = String.valueOf(editable);
+            }
+        });
+        // 审核内容提交
+        mButton_TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 审核提交
+                BaiFangTupianShenHe();
+//                bfdialog.hide();
             }
         });
     }
@@ -650,9 +716,9 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("巡店","审核图片:"+stringJson);
-//                    Intent i = XunDianChaXunShenHeActivity.newIntent(BaiFangChaXunActivity.this,stringJson);
-//                    startActivity(i);
+//                    Log.i("巡店","审核图片:"+stringJson);
+                    Intent i = BaiFangChaXunTuPianActivity.newIntent(BaiFangChaXunActivity.this,stringJson);
+                    startActivity(i);
                 }
             });
         }else if(is == 3){
@@ -666,8 +732,33 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                 @Override
                 public void onClick(View view) {
                     Log.i("巡店","审核内容:"+stringJson);
-//                    Intent i = XunDianChaXunShenHeActivity.newIntent(BaiFangChaXunActivity.this,stringJson);
-//                    startActivity(i);
+                    try {
+                        JSONObject jsonObject = new JSONObject(stringJson);
+                        // id
+                        bfid = jsonObject.getString("id");
+                        // 驳回内容
+                        BFFankui = jsonObject.getString("nei_rong_fan_kui");
+                        BFFankui = BFFankui=="null"?"":BFFankui;
+                        // 设置默认显示
+                        if(!BFFankui.equals("")){
+                            mEdittext_Fan_Kui_Shu_Ru.setText(BFFankui);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(bfdialog == null){
+                        // 弹窗
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                        // 设置View
+                        alertBuilder.setView(mbfViewD);
+                        // 显示
+                        alertBuilder.create();
+
+                        bfdialog = alertBuilder.show();
+                    }else{
+                        bfdialog.show();
+                    }
                 }
             });
         }
@@ -692,6 +783,42 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         return imageView;
     }
 
+    // 内容审核提交
+    public void BaiFangTupianShenHe(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("isT","1");
+        body.addFormDataPart("isHeGE","");
+        body.addFormDataPart("FanKui",Fankui);
+        body.addFormDataPart("id",bfid);
+        body.addFormDataPart("isShanChu","");
+        body.addFormDataPart("ZhaoZhuoMS","内容审核");
+
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/BaiFangShuJuChaXunTuPian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+
+
     @Override
     public void onAttachedToWindow(){
         mCallbacksc = (KaoQingCommonActivity.Callbacks)mContext;
@@ -705,6 +832,11 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         // 弹窗销毁
         if(dialog != null){
             dialog.dismiss();
+
+        }
+        // 弹窗销毁
+        if(bfdialog != null){
+            bfdialog.dismiss();
 
         }
     }

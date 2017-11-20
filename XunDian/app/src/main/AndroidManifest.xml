@@ -98,7 +98,9 @@
         <!--拜访查询-->
         <activity android:name=".shujuyushenhe.BaiFangChaXunActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
-
+        <!--拜访查询图片审核-->
+        <activity android:name=".shujuyushenhe.BaiFangChaXunTuPianActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
 
         <!--Android N 相机调用问题-->
         <provider
