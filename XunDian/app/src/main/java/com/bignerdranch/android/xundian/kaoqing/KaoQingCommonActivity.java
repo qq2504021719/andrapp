@@ -70,6 +70,7 @@ public class KaoQingCommonActivity extends CommActivity {
     // 门店品牌数据
     public String mMengDianPingpaiJsonData = "";
     public String[] mMengDianPingPaiData;
+    public String mPinPaiSearch = "";
 
 
     // 门店数据
@@ -850,10 +851,11 @@ public class KaoQingCommonActivity extends CommActivity {
              * 请求回调
              */
             if(msg.what==1){
-                // 品牌参数请求回调
+                // 门店参数请求回调
                 String string = msg.obj.toString();
                 mCallbacksc.shuJuHuiDiao(string,2);
-            }else if(msg.what==2){
+            }else if(msg.what == 2){
+                // 品牌参数请求回调
                 String string = msg.obj.toString();
                 mCallbacksc.shuJuHuiDiao(string,1);
             }
@@ -893,6 +895,44 @@ public class KaoQingCommonActivity extends CommActivity {
                         response = client.newCall(request).execute();
                         //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
                         mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mThread.start();
+        }
+    }
+
+    /**
+     * 品牌搜索
+     */
+    public void pingPaiSouShuo(){
+        if(mToken != null){
+            final OkHttpClient client = new OkHttpClient();
+
+            String str = "";
+            if(!mPinPaiSearch.isEmpty()) str = mPinPaiSearch;
+
+            //3, 发起新的请求,获取返回信息
+            RequestBody body = new FormBody.Builder()
+                    .add("name",str)
+                    .build();
+            final Request request = new Request.Builder()
+                    .addHeader("Authorization","Bearer "+mToken)
+                    .url(mPinPaiSearchURL)
+                    .post(body)
+                    .build();
+            //新建一个线程，用于得到服务器响应的参数
+            mThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Response response = null;
+                    try {
+                        //回调
+                        response = client.newCall(request).execute();
+                        //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                        mHandler.obtainMessage(2, response.body().string()).sendToTarget();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -38,6 +38,9 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
 
     private String mMenDianDataJson = "";
 
+    // 返回传参
+    public String like = "";
+
     // 参数值
     // 参数id
     private String id = "";
@@ -230,7 +233,6 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
                 shenHeDataTiJiao();
             }
         });
-
     }
 
     /**
@@ -243,6 +245,9 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
              *  msg.obj
              */
             if(msg.what==1){
+//                finish();
+                Intent i = XunDianChaXunActivity.newIntent(XunDianChaXunShenHeActivity.this,like);
+                startActivity(i);
                 finish();
                 tiShi(mContext,msg.obj.toString());
             }
@@ -299,6 +304,7 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
     public void canShuJieXi(){
         try {
             JSONObject jsonObject = new JSONObject(mMenDianDataJson);
+            like = jsonObject.getString("mendian_name");
             id = jsonObject.getString("id");
             shen_cha = jsonObject.getString("shen_cha");
             if(shen_cha.equals("null")){

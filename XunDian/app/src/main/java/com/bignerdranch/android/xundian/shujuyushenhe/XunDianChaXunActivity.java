@@ -63,9 +63,16 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     public Dialog dialog = null;
 
     // 门店品牌
+    private TextView mText_bf_gong_si_pin_pai;
     private TextView mText_bf_gong_si_pin_pai_value;
+    // 公司alert View
+    private View mViewPPD;
+    // 公司alert
+    private LinearLayout mBf_search_men_dian_pp;
+    public Dialog dialogpp = null;
 
     // 门店编号
+    private TextView mText_bf_gong_si_bian_hao;
     private TextView mText_bf_gong_si_bian_hao_value;
 
     // 门店类型
@@ -119,9 +126,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     // 项目名称
     private String XiangMuMingCheng = "";
 
-    public static Intent newIntent(Context packageContext, int intIsId){
+    public static Intent newIntent(Context packageContext, String like){
         Intent i = new Intent(packageContext,XunDianChaXunActivity.class);
-        i.putExtra(EXTRA,intIsId);
+        i.putExtra(EXTRA,like);
         return i;
     }
 
@@ -140,9 +147,12 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
     @Override
     public void onResume(){
+        likebt = getIntent().getStringExtra(EXTRA);
+        if(!likebt.equals("") && !likebt.equals("0")){
+            XunDianShuJuChaXun();
+        }
         // 请求巡店数据
-        XunDianShuJuChaXun();
-//        Log.i("巡店","finish");
+//        XunDianShuJuChaXun();
         super.onResume();
     }
 
@@ -161,9 +171,11 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mText_bf_gong_si_ming_cheng_value = (TextView)findViewById(R.id.text_bf_gong_si_ming_cheng_value);
 
         // 公司品牌
+        mText_bf_gong_si_pin_pai = (TextView)findViewById(R.id.text_bf_gong_si_pin_pai);
         mText_bf_gong_si_pin_pai_value = (TextView)findViewById(R.id.text_bf_gong_si_pin_pai_value);
 
         // 公司编号
+        mText_bf_gong_si_bian_hao = (TextView)findViewById(R.id.text_bf_gong_si_bian_hao);
         mText_bf_gong_si_bian_hao_value = (TextView)findViewById(R.id.text_bf_gong_si_bian_hao_value);
 
         // 门店类型
@@ -208,9 +220,17 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         // 搜索门店
         menDianSearch();
 
+        LayoutInflater inflaters = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mViewPPD = inflaters.inflate(R.layout.alert_kao_bai_fang_guan_li_search, null);
+        // 公司 alert 弹出
+        mBf_search_men_dian_pp = mViewPPD.findViewById(R.id.bf_search_men_dian);
+        // 品牌搜索
+        pingPaiSouShuo();
+
 
         // 内容清空
-        mXun_dian_cha_xun_nei_rong.removeAllViews();
+//        mXun_dian_cha_xun_nei_rong.removeAllViews();
 
         // 查询门店类型
         ChaXunMenDianLeiXing();
@@ -445,8 +465,64 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             }
         });
 
+        // 门店品牌选择
+        mText_bf_gong_si_pin_pai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialogpp == null){
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 初始化组件
+                    // 搜索
+                    EditText bf_men_dian_ming_cheng = mViewPPD.findViewById(R.id.bf_men_dian_ming_cheng);
+                    bf_men_dian_ming_cheng.setHint("请输入品牌名称");
+
+                    // 搜索处理
+                    MenDianSearchChuli(bf_men_dian_ming_cheng,3);
+
+                    // 设置View
+                    alertBuilder.setView(mViewPPD);
+
+                    // 显示
+                    alertBuilder.create();
+
+                    dialogpp = alertBuilder.show();
+                }else{
+                    dialogpp.show();
+                }
+            }
+        });
+
         // 门店选择
         mText_bf_gong_si_ming_cheng.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog == null){
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 初始化组件
+                    // 搜索
+                    EditText bf_men_dian_ming_cheng = mViewD.findViewById(R.id.bf_men_dian_ming_cheng);
+                    bf_men_dian_ming_cheng.setHint("请输入门店名称/门店店号/品牌");
+
+                    // 搜索处理
+                    MenDianSearchChuli(bf_men_dian_ming_cheng,1);
+
+                    // 设置View
+                    alertBuilder.setView(mViewD);
+
+                    // 显示
+                    alertBuilder.create();
+
+                    dialog = alertBuilder.show();
+                }else{
+                    dialog.show();
+                }
+            }
+        });
+
+        // 门店号选择
+        mText_bf_gong_si_bian_hao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(dialog == null){
@@ -562,8 +638,13 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mXun_dian_cha_xun_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 请求巡店数据
-                XunDianShuJuChaXun();
+                if(!likebt.equals("")){
+                    // 请求巡店数据
+                    XunDianShuJuChaXun();
+                }else{
+                    tiShi(mContext,"请选择门店");
+                }
+
             }
         });
     }
@@ -571,7 +652,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     /**
      * 搜索门店
      * @param editText
-     * @param is 1 门店搜索 2 门店类型搜索
+     * @param is 1 门店搜索 2 门店类型搜索 3品牌
      */
     public void MenDianSearchChuli(EditText editText,final int is){
         // 搜索内容存储
@@ -592,6 +673,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     mSearchString = String.valueOf(editable).trim();
                     // 搜索门店
                     menDianSearch();
+                }else if(is == 3){
+                    mPinPaiSearch = String.valueOf(editable).trim();
+                    // 搜索品牌
+                    pingPaiSouShuo();
                 }else if(is == 2){
                     mleiXingSearchName = String.valueOf(editable).trim();
                     // 搜索门店类型
@@ -611,6 +696,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         if(is == 1){
             mMengDianPingpaiJsonData = string;
             setData(string,1);
+            ShowMenDian(string,1);
 
         }else if(is == 2){
             mMengDianJsonData = string;
@@ -634,6 +720,23 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      */
     public void ShowMenDian(String string,int is){
         try {
+            if(is == 1){
+                // 品牌搜索显示view清空
+                mBf_search_men_dian_pp.removeAllViews();
+                JSONArray jsonArray = new JSONArray(string);
+                if(jsonArray.length() > 0){
+                    for(int i = 0;i<jsonArray.length();i++){
+                        JSONObject jsonObject = new JSONObject();
+                        TextView textView = new TextView(mContext);
+                        // 显示门店数据
+                        String stringJson = jsonArray.get(i).toString();
+                        JSONObject jsonObject1 = new JSONObject(stringJson);
+                        textView = CreateTextvBf(2,stringJson,jsonObject1.getString("name"));
+                        mBf_search_men_dian_pp.addView(textView);
+
+                    }
+                }
+            }
             if(is == 2){
                 // 门店搜索view清空
                 mBf_search_men_dian.removeAllViews();
@@ -702,6 +805,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     // 隐藏弹出
                     dialog.hide();
                 }
+                // 品牌
+                if(is == 2){
+                    dialogpp.hide();
+                }
                 // 门店类型选择
                 if(is == 3){
                     // 隐藏弹出
@@ -725,6 +832,18 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      */
     public void XuanZheLie(String string,int is){
         try {
+            // 品牌
+            if(is == 2){
+                JSONObject jsonObject = new JSONObject(string);
+                String nameText = jsonObject.getString("name");
+                // 品牌
+                mText_bf_gong_si_pin_pai_value.setText(nameText);
+                // 门店搜索品牌
+                mMen_Dian_ping_pai = nameText;
+                // 门店搜索
+                menDianSearch();
+
+            }
             // 门店
             if(is == 1){
                 JSONObject jsonObject = new JSONObject(string);
@@ -815,9 +934,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Log.i("巡店",stringJson);
                     Intent i = XunDianChaXunShenHeActivity.newIntent(XunDianChaXunActivity.this,stringJson);
                     startActivity(i);
+                    finish();
                 }
             });
         }

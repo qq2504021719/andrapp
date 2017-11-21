@@ -102,7 +102,7 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mXun_dian_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = XunDianChaXunActivity.newIntent(mContext,1);
+                Intent i = XunDianChaXunActivity.newIntent(mContext,"0");
                 startActivity(i);
             }
         });

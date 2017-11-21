@@ -339,8 +339,8 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
         mTitle_nei_ye.setText(R.string.xun_dian_shen_he);
 
         // 图片1
-        // 图片展示 mPhone1_shenhe_linear_bj
-        if(mPhone1_image.equals("")){
+        // 图片展示
+        if(mPhone1.equals("")){
             mPhone1_shenhe_linear_bj.setVisibility(View.GONE);
         }else{
             Picasso.with(mContext).load(Config.URL+"/"+mPhone1).into(mPhone1_image);
@@ -436,7 +436,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
 
 
         // 图片2展示
-        if(mPhone2_image.equals("")){
+        if(mPhone2.equals("")){
             mPhone2_shenhe_linear_bj.setVisibility(View.GONE);
         }else {
             Picasso.with(mContext).load(Config.URL + "/" + mPhone2).into(mPhone2_image);
@@ -528,7 +528,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             });
         }
         // 图片3展示
-        if(mPhone3_image.equals("")){
+        if(mPhone3.equals("")){
             mPhone3_shenhe_linear_bj.setVisibility(View.GONE);
         }else {
             Picasso.with(mContext).load(Config.URL + "/" + mPhone3).into(mPhone3_image);
@@ -620,8 +620,8 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             });
         }
         // 图片4展示
-        if(mPhone4_image.equals("")){
-            mPhone3_shenhe_linear_bj.setVisibility(View.GONE);
+        if(mPhone4.equals("")){
+            mPhone4_shenhe_linear_bj.setVisibility(View.GONE);
         }else {
             Picasso.with(mContext).load(Config.URL + "/" + mPhone4).into(mPhone4_image);
             // 抽查

@@ -14,7 +14,17 @@
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorAccent"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mo_shi_title"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:text="审核"
+                android:textColor="@color/heise"
+                android:textSize="18dp"/>
 
             <!--phone1-->
             <LinearLayout
@@ -22,17 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_border"
+                android:orientation="vertical"
                 android:padding="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/mo_shi_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:text="审核"
-                    android:textColor="@color/heise"
-                    android:gravity="center_vertical"
-                    android:textSize="18dp"/>
+                >
 
                 <ImageView
                     android:id="@+id/phone1_image"
@@ -40,97 +42,101 @@
                     android:layout_height="wrap_content"/>
 
                 <EditText
-                    android:visibility="gone"
                     android:id="@+id/phone1_bian_ji_can_shu_xiu_gai"
                     style="@style/keHuTuoZhanEditText"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="left|center"
                     android:hint="反馈内容"
-                    android:textColor="@color/huise6"/>
+                    android:textColor="@color/huise6"
+                    android:visibility="gone"/>
 
                 <!--审核-->
                 <LinearLayout
                     android:id="@+id/phone1_xian_shi_mo_shi_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
                     android:gravity="right"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
 
                     <TextView
                         android:id="@+id/phone1_shen_he_chou_cha"
                         android:layout_width="40dp"
-                        android:gravity="center"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
                         android:layout_height="20dp"
-                        android:text="抽查"/>
+                        android:background="@drawable/button"
+                        android:gravity="center"
+                        android:text="抽查"
+                        android:textColor="@color/colorAccent"/>
 
                     <TextView
                         android:id="@+id/phone1_shen_he_bian_ji"
                         android:layout_width="40dp"
-                        android:gravity="center"
+                        android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
                         android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="反馈"/>
+                        android:gravity="center"
+                        android:text="反馈"
+                        android:textColor="@color/colorAccent"/>
 
                     <TextView
                         android:id="@+id/phone1_shen_he_shan_chu"
                         android:layout_width="40dp"
-                        android:gravity="center"
+                        android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
                         android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="删除"/>
+                        android:gravity="center"
+                        android:text="删除"
+                        android:textColor="@color/colorAccent"/>
 
                 </LinearLayout>
 
                 <!--合格 不合格-->
                 <LinearLayout
-                    android:visibility="gone"
                     android:id="@+id/phone1_xian_shi_mo_shi_2"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                     <!--合格-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:gravity="center">
+
                         <ImageView
                             android:id="@+id/phone1_cha_xun_zhao_pian_xian_shi"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:background="@drawable/ka_qing_ku_lian"/>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:textColor="@color/heise"
                             android:gravity="center"
-                            android:text="合格"/>
+                            android:text="合格"
+                            android:textColor="@color/heise"/>
                     </LinearLayout>
                     <!--不合格-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:gravity="center">
+
                         <ImageView
                             android:id="@+id/phone1_cha_xun_can_shu_xian_shi"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:background="@drawable/ka_qing_ku_lian"/>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:textColor="@color/heise"
                             android:gravity="center"
-                            android:text="不合格"/>
+                            android:text="不合格"
+                            android:textColor="@color/heise"/>
                     </LinearLayout>
                     <!--保存-->
                     <LinearLayout
@@ -138,37 +144,38 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical">
+
                         <TextView
                             android:id="@+id/phone1_chou_cha_bao_cun"
                             android:layout_width="40dp"
-                            android:gravity="center"
+                            android:layout_height="20dp"
                             android:layout_marginLeft="10dp"
                             android:background="@drawable/button"
-                            android:textColor="@color/colorAccent"
-                            android:layout_height="20dp"
-                            android:text="保存"/>
+                            android:gravity="center"
+                            android:text="保存"
+                            android:textColor="@color/colorAccent"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <!--编辑提交-->
                 <LinearLayout
-                    android:visibility="gone"
                     android:id="@+id/phone1_xian_shi_mo_shi_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
                     android:gravity="right"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/phone1_shen_he_ti_jiao"
                         android:layout_width="40dp"
-                        android:gravity="center"
+                        android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
                         android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="保存"/>
+                        android:gravity="center"
+                        android:text="保存"
+                        android:textColor="@color/colorAccent"/>
 
                 </LinearLayout>
 

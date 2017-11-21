@@ -62,9 +62,16 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     public Dialog dialog = null;
 
     // 门店品牌
+    private TextView mText_bf_gong_si_pin_pai;
     private TextView mText_bf_gong_si_pin_pai_value;
+    // 公司alert View
+    private View mViewPPD;
+    // 公司alert
+    private LinearLayout mBf_search_men_dian_pp;
+    public Dialog dialogpp = null;
 
     // 门店编号
+    private TextView mText_bf_gong_si_bian_hao;
     private TextView mText_bf_gong_si_bian_hao_value;
 
 
@@ -157,9 +164,11 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         mText_bf_gong_si_ming_cheng_value = (TextView)findViewById(R.id.text_bf_gong_si_ming_cheng_value);
 
         // 公司品牌
+        mText_bf_gong_si_pin_pai = (TextView)findViewById(R.id.text_bf_gong_si_pin_pai);
         mText_bf_gong_si_pin_pai_value = (TextView)findViewById(R.id.text_bf_gong_si_pin_pai_value);
 
         // 公司编号
+        mText_bf_gong_si_bian_hao = (TextView)findViewById(R.id.text_bf_gong_si_bian_hao);
         mText_bf_gong_si_bian_hao_value = (TextView)findViewById(R.id.text_bf_gong_si_bian_hao_value);
 
 
@@ -193,6 +202,14 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
 
         // 搜索门店
         menDianSearch();
+
+        LayoutInflater inflaters = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mViewPPD = inflaters.inflate(R.layout.alert_kao_bai_fang_guan_li_search, null);
+        // 公司 alert 弹出
+        mBf_search_men_dian_pp = mViewPPD.findViewById(R.id.bf_search_men_dian);
+        // 品牌搜索
+        pingPaiSouShuo();
 
 
         // 内容清空
@@ -315,7 +332,12 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     LinearLayout linearLayout33 = CreateLinear(3);
                     LinearLayout linearLayout7 = CreateLinear(7);
                     ImageView imageView332 = CreateImageViewXunDian(1);
-                    Picasso.with(mContext).load(Config.URL+"/"+jsonObject.getString("phone1")).into(imageView332);
+                    // 获取没有删除的图片
+                    String Phone1 = getBuWeiKongDeTuPian(jsonObject);
+                    if(!Phone1.equals("")){
+                        Picasso.with(mContext).load(Config.URL+"/"+Phone1).into(imageView332);
+                    }
+
                     TextView textView333 = CreateTextViewXun(2,"审核",jsonArray.get(i).toString());
                     linearLayout7.addView(textView333);
                     linearLayout33.addView(imageView332);
@@ -352,6 +374,30 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         }
         // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
+    }
+
+    /**
+     * 获取json对象中不为空的图片
+     * @param jsonObject
+     */
+    public String getBuWeiKongDeTuPian(JSONObject jsonObject){
+        try {
+            if(!jsonObject.getString("phone1").equals("") && !jsonObject.getString("phone1").equals("null")){
+                return jsonObject.getString("phone1");
+            }
+            if(!jsonObject.getString("phone2").equals("") && !jsonObject.getString("phone2").equals("null")){
+                return jsonObject.getString("phone2");
+            }
+            if(!jsonObject.getString("phone3").equals("") && !jsonObject.getString("phone3").equals("null")){
+                return jsonObject.getString("phone3");
+            }
+            if(!jsonObject.getString("phone4").equals("") && !jsonObject.getString("phone4").equals("null")){
+                return jsonObject.getString("phone4");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**
@@ -394,6 +440,34 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             }
         });
 
+        // 门店品牌选择
+        mText_bf_gong_si_pin_pai.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialogpp == null){
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 初始化组件
+                    // 搜索
+                    EditText bf_men_dian_ming_cheng = mViewPPD.findViewById(R.id.bf_men_dian_ming_cheng);
+                    bf_men_dian_ming_cheng.setHint("请输入品牌名称");
+
+                    // 搜索处理
+                    MenDianSearchChuli(bf_men_dian_ming_cheng,2);
+
+                    // 设置View
+                    alertBuilder.setView(mViewPPD);
+
+                    // 显示
+                    alertBuilder.create();
+
+                    dialogpp = alertBuilder.show();
+                }else{
+                    dialogpp.show();
+                }
+            }
+        });
+
         // 门店选择
         mText_bf_gong_si_ming_cheng.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -422,7 +496,33 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             }
         });
 
+        // 门店号选择
+        mText_bf_gong_si_bian_hao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog == null){
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 初始化组件
+                    // 搜索
+                    EditText bf_men_dian_ming_cheng = mViewD.findViewById(R.id.bf_men_dian_ming_cheng);
+                    bf_men_dian_ming_cheng.setHint("请输入门店名称/门店店号/品牌");
 
+                    // 搜索处理
+                    MenDianSearchChuli(bf_men_dian_ming_cheng,1);
+
+                    // 设置View
+                    alertBuilder.setView(mViewD);
+
+                    // 显示
+                    alertBuilder.create();
+
+                    dialog = alertBuilder.show();
+                }else{
+                    dialog.show();
+                }
+            }
+        });
 
 
         // 提交人
@@ -484,7 +584,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     /**
      * 搜索门店
      * @param editText
-     * @param is 1 门店搜索 2 门店类型搜索
+     * @param is 1 门店搜索 2 品牌
      */
     public void MenDianSearchChuli(EditText editText,final int is){
         // 搜索内容存储
@@ -506,7 +606,9 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     // 搜索门店
                     menDianSearch();
                 }else if(is == 2){
-
+                    mPinPaiSearch = String.valueOf(editable).trim();
+                    // 搜索品牌
+                    pingPaiSouShuo();
                 }
 
             }
@@ -522,6 +624,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         if(is == 1){
             mMengDianPingpaiJsonData = string;
             setData(string,1);
+            ShowMenDian(string,1);
 
         }else if(is == 2){
             mMengDianJsonData = string;
@@ -545,6 +648,24 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
      */
     public void ShowMenDian(String string,int is){
         try {
+            if(is == 1){
+                // 品牌搜索显示view清空
+                mBf_search_men_dian_pp.removeAllViews();
+                JSONArray jsonArray = new JSONArray(string);
+                if(jsonArray.length() > 0){
+                    for(int i = 0;i<jsonArray.length();i++){
+                        JSONObject jsonObject = new JSONObject();
+                        TextView textView = new TextView(mContext);
+                        // 显示门店数据
+                        String stringJson = jsonArray.get(i).toString();
+                        JSONObject jsonObject1 = new JSONObject(stringJson);
+                        textView = CreateTextvBf(2,stringJson,jsonObject1.getString("name"));
+                        mBf_search_men_dian_pp.addView(textView);
+
+                    }
+                }
+            }
+
             if(is == 2){
                 // 门店搜索view清空
                 mBf_search_men_dian.removeAllViews();
@@ -598,6 +719,10 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     // 隐藏弹出
                     dialog.hide();
                 }
+                // 品牌
+                if(is == 2){
+                    dialogpp.hide();
+                }
 
                 // 回调选择项
                 XuanZheLie(Jstring,is);
@@ -616,6 +741,18 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
      */
     public void XuanZheLie(String string,int is){
         try {
+            // 品牌
+            if(is == 2){
+                JSONObject jsonObject = new JSONObject(string);
+                String nameText = jsonObject.getString("name");
+                // 品牌
+                mText_bf_gong_si_pin_pai_value.setText(nameText);
+                // 门店搜索品牌
+                mMen_Dian_ping_pai = nameText;
+                // 门店搜索
+                menDianSearch();
+
+            }
             // 门店
             if(is == 1){
                 JSONObject jsonObject = new JSONObject(string);

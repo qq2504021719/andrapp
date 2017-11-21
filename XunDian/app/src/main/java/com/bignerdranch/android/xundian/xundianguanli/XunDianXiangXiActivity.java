@@ -3,6 +3,8 @@ package com.bignerdranch.android.xundian.xundianguanli;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
+import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.NeiYeCommActivity;
 import com.bignerdranch.android.xundian.comm.TongZhi;
 
@@ -21,8 +24,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/9/18.
@@ -70,7 +79,6 @@ public class XunDianXiangXiActivity extends NeiYeCommActivity {
         mContext = this;
         // 组件初始化
         ZhuJianInit();
-
         // 组件操作
         ZhuJianCaoZhuo();
         // 数据/值设置
@@ -131,8 +139,10 @@ public class XunDianXiangXiActivity extends NeiYeCommActivity {
         // Token赋值
         setToken(mContext);
         // 属性UI数据
-        updateUI();
+//        updateUI();
 
+        // 查询巡店进度-查看详细
+        XunDianJingDuChaKanXiangXi();
     }
 
     /**
@@ -166,6 +176,56 @@ public class XunDianXiangXiActivity extends NeiYeCommActivity {
 
         mTongZhiRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
+    }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             * 请求巡店进度,查看详细
+             */
+            if(msg.what==1){
+                if(msg.obj.toString().equals("查询失败")){
+
+                }else{
+                    mShowString = msg.obj.toString();
+                    updateUI();
+                }
+            }
+        }
+    };
+
+    /**
+     * 请求巡店进度信息-查看详细
+     */
+    public void XunDianJingDuChaKanXiangXi(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("xx","Android");
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/XunDianJingDuXiangXiXinXi")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     private class XiangXiHolder extends RecyclerView.ViewHolder{

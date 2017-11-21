@@ -37,28 +37,13 @@
 
             </LinearLayout>
 
-            <!--门店搜索-->
-            <LinearLayout
-                style="@style/LinearLayoutHorizontal">
-                <TextView
-                    android:id="@+id/text_bf_gong_si_ming_cheng"
-                    style="@style/TjJiHuaTextView"
-                    android:text="公司名称"/>
-
-                <TextView
-                    android:id="@+id/text_bf_gong_si_ming_cheng_value"
-                    style="@style/TjJiHuaTextView1"/>
-
-                <ImageView
-                    style="@style/TjJiHuaImageViewChaXun"/>
-            </LinearLayout>
-
             <!--公司品牌-->
             <LinearLayout
                 style="@style/LinearLayoutHorizontal">
                 <TextView
+                    android:id="@+id/text_bf_gong_si_pin_pai"
                     style="@style/TjJiHuaTextView"
-                    android:text="公司品牌"/>
+                    android:text="门店品牌"/>
 
                 <TextView
                     android:id="@+id/text_bf_gong_si_pin_pai_value"
@@ -72,11 +57,28 @@
             <LinearLayout
                 style="@style/LinearLayoutHorizontal">
                 <TextView
+                    android:id="@+id/text_bf_gong_si_bian_hao"
                     style="@style/TjJiHuaTextView"
-                    android:text="公司编号"/>
+                    android:text="门店编号"/>
 
                 <TextView
                     android:id="@+id/text_bf_gong_si_bian_hao_value"
+                    style="@style/TjJiHuaTextView1"/>
+
+                <ImageView
+                    style="@style/TjJiHuaImageViewChaXun"/>
+            </LinearLayout>
+
+            <!--门店搜索-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+                <TextView
+                    android:id="@+id/text_bf_gong_si_ming_cheng"
+                    style="@style/TjJiHuaTextView"
+                    android:text="门店名称"/>
+
+                <TextView
+                    android:id="@+id/text_bf_gong_si_ming_cheng_value"
                     style="@style/TjJiHuaTextView1"/>
 
                 <ImageView
@@ -160,6 +162,7 @@
                         android:text="参数显示"/>
                 </LinearLayout>
         </LinearLayout>
+
             <!--提交人-->
             <LinearLayout
                 style="@style/LinearLayoutHorizontal">
@@ -349,6 +352,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
                                 android:text="时间/提交人"/>
+
                             <!--2-->
                             <TextView
                                 android:layout_width="40dp"

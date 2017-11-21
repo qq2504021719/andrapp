@@ -26,7 +26,16 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
@@ -53,6 +62,13 @@ public class XunDianJingDuFragment extends Fragment {
 
     // 查看详细
     private Button mButton_xiang_xi;
+
+    // 巡店进度比例
+    public String mBiliJson = "";
+    // 总计划数
+    public int mZhonJiHuaShu = 0;
+    // 已完成数
+    public int mYiWanChengShu = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,6 +107,9 @@ public class XunDianJingDuFragment extends Fragment {
         // Token查询,赋值
         mLogin = mLoginModel.getLogin(1);
         mToken = mLogin.getToken();
+
+        // 请求巡店进度信息
+        XunDianJingDuQingQiu();
     }
     /**
      * Handler
@@ -103,9 +122,68 @@ public class XunDianJingDuFragment extends Fragment {
              */
             if(msg.what==1){
                 // 个人信息回调
+            }else if(msg.what == 2){
+                if(msg.obj.toString().equals("查询失败")){
+                    // 设置饼状图
+                    showChart(mChart,0,0);
+                }else{
+                    mBiliJson = msg.obj.toString();
+                    // 设置饼状图信息
+                    setTuBingXinXi();
+                }
+
             }
         }
     };
+
+    /**
+     * 设置饼状图信息
+     */
+    public void setTuBingXinXi(){
+        try {
+            JSONObject jsonObject = new JSONObject(mBiliJson);
+
+            mZhonJiHuaShu = Integer.valueOf(jsonObject.getString("ZhongShu"));
+
+            mYiWanChengShu = Integer.valueOf(jsonObject.getString("YiWanCheng"));
+
+            // 设置饼状图
+            showChart(mChart,mZhonJiHuaShu,mYiWanChengShu);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 请求巡店进度信息
+     */
+    public void XunDianJingDuQingQiu(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("xx","Android");
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/XunDianJingDuBaiFenBi")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
 
     /**
      * 组件初始化
@@ -121,8 +199,7 @@ public class XunDianJingDuFragment extends Fragment {
      * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
-        // 设置饼状图
-        showChart(mChart,200,20);
+
         // 查看详细
         mButton_xiang_xi.setOnClickListener(new View.OnClickListener() {
             @Override
