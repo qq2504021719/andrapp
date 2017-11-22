@@ -6,19 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.FileSizeUtil;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
@@ -30,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -66,6 +71,12 @@ public class WodeXinXiFragment extends Fragment {
     private TextView mWo_qing_jia;
     private TextView mWo_guan_yu;
 
+    // 清除缓存
+    private TextView mQing_chu_huan_cun;
+    // 查看imei码
+    public TextView mCha_kan_imei;
+    public int imei = 0;
+
 
     // LoginModel 登录模型
     private static LoginModel mLoginModel;
@@ -82,6 +93,7 @@ public class WodeXinXiFragment extends Fragment {
 
     // dialog,加载
     public static Dialog mWeiboDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -196,6 +208,11 @@ public class WodeXinXiFragment extends Fragment {
         mWo_qing_jia = (TextView)mView.findViewById(R.id.wo_qing_jia);
         mWo_guan_yu = (TextView)mView.findViewById(R.id.wo_guan_yu);
 
+        // 清除缓存
+        mQing_chu_huan_cun = (TextView)mView.findViewById(R.id.qing_chu_huan_cun);
+        // 查看imei
+        mCha_kan_imei = (TextView)mView.findViewById(R.id.cha_kan_imei);
+
     }
 
     /**
@@ -271,11 +288,64 @@ public class WodeXinXiFragment extends Fragment {
     }
 
     /**
+     * 设置清除缓存栏目名
+     */
+    public void setQingChuHuanCun(){
+        String path = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
+
+        double size = FileSizeUtil.getFileOrFilesSize(path,3);
+
+        mQing_chu_huan_cun.setText("点击清除缓存:"+String.valueOf(size)+"MB");
+    }
+
+    /**
+     * 清除 getExternalFilesDir 下的文件
+     *
+     *
+     */
+    public void deleteFilesByDirectory() {
+        File externalFilesDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        for (File item : externalFilesDir.listFiles()) {
+            item.delete();
+        }
+    }
+
+
+    /**
      * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
         yinYingSheZhi(mSl);
         yinYingSheZhi(mSl_button);
+
+        // 设置清除缓存栏目名
+        setQingChuHuanCun();
+
+        // 清除缓存
+        mQing_chu_huan_cun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteFilesByDirectory();
+                Toast.makeText(getActivity(),"清除成功", Toast.LENGTH_SHORT).show();
+                // 设置清除缓存栏目名
+                setQingChuHuanCun();
+            }
+        });
+        // 查看imei
+        mCha_kan_imei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(imei == 1){
+                    mCha_kan_imei.setText("点击查看IMEI码");
+                    imei = 0;
+                }else if (imei == 0){
+                    TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
+                    String imeiS = telephonyManager.getDeviceId();
+                    mCha_kan_imei.setText("IMEI码:"+imeiS);
+                    imei = 1;
+                }
+            }
+        });
 
         // 退出登录
         mTui_chu_button.setOnClickListener(new View.OnClickListener() {

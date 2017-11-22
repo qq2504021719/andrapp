@@ -4,16 +4,23 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +33,7 @@ import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +55,8 @@ import okhttp3.Response;
 public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQingCommonActivity.Callbacks{
 
     private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianChaXunController";
+
+    private AlertDialog alertDialog1;
 
     // 日期
     TextView mXun_dian_text_cha_xun_ri_qi;
@@ -125,6 +135,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     private String canShuLeiXing = "";
     // 项目名称
     private String XiangMuMingCheng = "";
+
+    // image弹窗显示
+    public Dialog mImagedialog;
 
     public static Intent newIntent(Context packageContext, String like){
         Intent i = new Intent(packageContext,XunDianChaXunActivity.class);
@@ -393,7 +406,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     }else if(mIsChanXianShi == 2){
                         // 照片显示
                         if(!jsonObject.getString("path").equals("")){
-                            imageView332 = CreateImageViewXunDian(1,0);
+                            imageView332 = CreateImageViewXunDian(1,0,Config.URL+"/"+jsonObject.getString("path"));
                             Picasso.with(mContext).load(Config.URL+"/"+jsonObject.getString("path")).into(imageView332);
                         }
                     }
@@ -411,12 +424,12 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     // 图片审核
                     ImageView tuImageView = new ImageView(mContext);
                     if(jsonObject.getString("tu_xiugai_hon").equals("1")){
-                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan);
+                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan,"");
                     }
                     // 内容审核
                     ImageView neiImageView = new ImageView(mContext);
                     if(jsonObject.getString("nei_xiugai_huang").equals("1")){
-                        neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan);
+                        neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan,"");
                     }
 
 
@@ -994,7 +1007,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      * @param is 创建类型
      * @return
      */
-    public ImageView CreateImageViewXunDian(int is,int drawable){
+    public ImageView CreateImageViewXunDian(int is,int drawable,final String file){
         ImageView imageView = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         if(is == 1){
@@ -1006,14 +1019,42 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
         if(is == 1){
             imageView.setPadding(0,10,0,10);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 获取布局文件
+                    LayoutInflater inflater = (LayoutInflater) mContext
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View viewD = inflater.inflate(R.layout.alert_image, null);
+
+                    // 初始化组件
+                    ImageView image = viewD.findViewById(R.id.alert_iamge);
+
+                    WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+
+                    int height = wm.getDefaultDisplay().getHeight();
+
+                    int width = (int)Config.TuPianBiLi*height;
+
+                    Picasso.with(mContext).load(file).resize(width,height).into(image);
+                    // 设置View
+                    alertBuilder.setView(viewD);
+
+                    // 显示
+                    alertBuilder.create();
+                    mImagedialog = alertBuilder.show();
+
+                }
+            });
         }else if(is == 2){
             imageView.setPadding(5,5,5,5);
             imageView.setBackground(getResources().getDrawable(drawable));
         }
-
-
         return imageView;
     }
+
 
     @Override
     public void onAttachedToWindow(){
@@ -1029,6 +1070,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         if(dialog != null){
             dialog.dismiss();
 
+        }
+        // imageDialog销毁
+        if(mImagedialog != null){
+            mImagedialog.dismiss();
         }
         if(dialogMenDianLeiXing != null){
             dialogMenDianLeiXing.dismiss();

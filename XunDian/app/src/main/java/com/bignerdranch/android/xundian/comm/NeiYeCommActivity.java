@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.database.Observable;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.os.Handler;
@@ -270,6 +271,8 @@ public class NeiYeCommActivity extends AppCompatActivity{
      */
     public File getPhotoFile(String string){
         File externalFilesDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File externalFilesDir = this.getExternalCacheDir(Environment.DIRECTORY_PICTURES);
+
 //        File externalFilesDir = this.getExternalFilesDir("android.support.v4.content.FileProvider");
         // 确认外部存储是否可用,如果不可用,返回null,
         if(externalFilesDir == null){
@@ -303,7 +306,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
                 f.delete();
             }
             FileOutputStream out = new FileOutputStream(f);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            bitmap.compress(Bitmap.CompressFormat.WEBP, 100, out);
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -311,6 +314,8 @@ public class NeiYeCommActivity extends AppCompatActivity{
         }
         return f.getPath();
     }
+
+
 
 
     /**

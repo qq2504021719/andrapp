@@ -12,6 +12,8 @@ public class Config {
     public static int XunCanImgWidth = 300;
     // 巡店参数图片压缩高
     public static int XunCanImgHeight = 480;
+    // 图片比例
+    public static double TuPianBiLi = 300/480;
     // 用户id
     public static String ChaoJiYongHu = "0";
 

@@ -1239,7 +1239,7 @@ public class XunDianActivity extends NeiYeCommActivity {
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 获取文件存储地址
         final File mPhotoFile = getPhotoFile(getPhotoFilename());
-
+//        Log.i("巡店",mPhotoFile);
         // 文件存储地址不能为空,相机类应用不能为空
         final boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
         imageViewShow.setEnabled(canTakePhoto);

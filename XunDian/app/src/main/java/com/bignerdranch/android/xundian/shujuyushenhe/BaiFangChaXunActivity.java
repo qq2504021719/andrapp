@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -120,6 +121,9 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     public Button mButton_TextView;
 
     public Dialog bfdialog = null;
+
+    // image弹窗显示
+    public Dialog mImagedialog;
 
 
     public static Intent newIntent(Context packageContext, int intIsId){
@@ -332,9 +336,10 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     // 第二个表格
                     LinearLayout linearLayout33 = CreateLinear(3);
                     LinearLayout linearLayout7 = CreateLinear(7);
-                    ImageView imageView332 = CreateImageViewXunDian(1,0);
                     // 获取没有删除的图片
                     String Phone1 = getBuWeiKongDeTuPian(jsonObject);
+                    ImageView imageView332 = CreateImageViewXunDian(1,0,Config.URL+"/"+Phone1);
+
                     if(!Phone1.equals("")){
                         Picasso.with(mContext).load(Config.URL+"/"+Phone1).into(imageView332);
                     }
@@ -342,7 +347,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     // 图片审核
                     ImageView tuImageView = new ImageView(mContext);
                     if(jsonObject.getString("tu_xiugai_hon").equals("1")){
-                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan);
+                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan,"");
                         linearLayout8t.addView(tuImageView);
                     }
 
@@ -375,7 +380,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     ImageView neiImageView = new ImageView(mContext);
 
                     if(jsonObject.getString("nei_xiugai_huang").equals("1")){
-                        neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan);
+                        neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan,"");
                         linearLayout8n.addView(neiImageView);
                     }
 
@@ -939,7 +944,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
      * @param is 创建类型
      * @return
      */
-    public ImageView CreateImageViewXunDian(int is,int drawable){
+    public ImageView CreateImageViewXunDian(int is,int drawable,final String file){
         ImageView imageView = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         if(is == 1){
@@ -950,6 +955,35 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         imageView.setLayoutParams(layoutParam);
         if(is == 1){
             imageView.setPadding(0,10,0,10);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // 弹窗
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    // 获取布局文件
+                    LayoutInflater inflater = (LayoutInflater) mContext
+                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View viewD = inflater.inflate(R.layout.alert_image, null);
+
+                    // 初始化组件
+                    ImageView image = viewD.findViewById(R.id.alert_iamge);
+
+                    WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+
+                    int height = wm.getDefaultDisplay().getHeight();
+
+                    int width = (int)Config.TuPianBiLi*height;
+
+                    Picasso.with(mContext).load(file).resize(width,height).into(image);
+                    // 设置View
+                    alertBuilder.setView(viewD);
+
+                    // 显示
+                    alertBuilder.create();
+                    mImagedialog = alertBuilder.show();
+
+                }
+            });
         }else if(is == 2){
             imageView.setPadding(5,5,5,5);
             imageView.setBackground(getResources().getDrawable(drawable));
@@ -1006,12 +1040,14 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         // 弹窗销毁
         if(dialog != null){
             dialog.dismiss();
-
         }
         // 弹窗销毁
         if(bfdialog != null){
             bfdialog.dismiss();
-
+        }
+        // imageDialog销毁
+        if(mImagedialog != null){
+            mImagedialog.dismiss();
         }
     }
 }

@@ -94,6 +94,18 @@
             android:background="@drawable/buttonstyle"/>
 
         <TextView
+            android:id="@+id/qing_chu_huan_cun"
+            style="@style/WoDeXinXiTextView"
+            android:text="清除缓存"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
+            android:id="@+id/cha_kan_imei"
+            style="@style/WoDeXinXiTextView"
+            android:text="点击查看IMEI码"
+            android:background="@drawable/buttonstyle"/>
+
+        <TextView
             style="@style/WoDeXinXiTextView"
             android:background="@drawable/buttonstyle"/>
 
