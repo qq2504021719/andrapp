@@ -24,7 +24,7 @@
                     android:background="@drawable/right_border">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/xundian"
+                        android:src="@drawable/ri_kaoqin"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
@@ -42,7 +42,7 @@
                     style="@style/GongZuoZhongXin.3LinearLayout">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/xundian"
+                        android:src="@drawable/jia_manage"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
@@ -73,7 +73,7 @@
                     android:background="@drawable/right_border">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/jihua"
+                        android:src="@drawable/kaoqin_jilu"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
@@ -91,7 +91,7 @@
                     style="@style/GongZuoZhongXin.3LinearLayout">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/jihua"
+                        android:src="@drawable/fuli"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"

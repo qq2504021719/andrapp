@@ -39,7 +39,10 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
     private LinearLayout mQing_jia_shen_he;
 
 
-
+    // 权限名称
+    public String mQuanXianName = "";
+    // 跳转页面
+    public Intent mI;
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,ShuJuYuShenHeActivity.class);
@@ -63,6 +66,53 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
 
         // 数据/值设置
         values();
+    }
+
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             *  msg.obj
+             */
+            if(msg.what==1){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    startActivity(mI);
+                }
+
+            }
+        }
+    };
+
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -102,8 +152,10 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mXun_dian_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = XunDianChaXunActivity.newIntent(mContext,"0");
-                startActivity(i);
+                mI = XunDianChaXunActivity.newIntent(mContext,"0");
+                mQuanXianName = "进入巡店查询页面";
+                // 权限验证
+                QunXianYanZheng();
             }
         });
 
@@ -111,8 +163,10 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mBai_fang_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = BaiFangChaXunActivity.newIntent(mContext,1);
-                startActivity(i);
+                mI = BaiFangChaXunActivity.newIntent(mContext,1);
+                mQuanXianName = "进入拜访查询页面";
+                // 权限验证
+                QunXianYanZheng();
             }
         });
 
@@ -120,16 +174,20 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mJi_hua_shen_he.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = JiHuaShenHeActivity.newIntent(mContext,1);
-                startActivity(i);
+                mI = JiHuaShenHeActivity.newIntent(mContext,1);
+                mQuanXianName = "进入Android计划审核页面";
+                // 权限验证
+                QunXianYanZheng();
             }
         });
         // 请假审核
         mQing_jia_shen_he.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = QingJiaShenHeActivity.newIntent(mContext,1);
-                startActivity(i);
+                mI = QingJiaShenHeActivity.newIntent(mContext,1);
+                mQuanXianName = "进入Android请假审核页面";
+                // 权限验证
+                QunXianYanZheng();
             }
         });
     }

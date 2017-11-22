@@ -2,16 +2,31 @@ package com.bignerdranch.android.xundian;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingActivity;
+import com.bignerdranch.android.xundian.model.LoginModel;
 import com.bignerdranch.android.xundian.shujuyushenhe.ShuJuYuShenHeActivity;
 import com.bignerdranch.android.xundian.xundianguanli.XunDianGuanLiActivity;
 import com.bignerdranch.android.xundian.xundianjihua.JiHuaActivity;
+
+import java.io.IOException;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import static com.bignerdranch.android.xundian.LoginActivity.mHandler;
 
 /**
  * Created by Administrator on 2017/9/7.
@@ -38,6 +53,19 @@ public class GongZuoZhongXinFragment extends Fragment{
 
     private View mView;
 
+    // 权限名称
+    public String mQuanXianName = "";
+    // 跳转页面
+    public Intent mI;
+
+    // Token
+    public String mToken = null;
+
+    // LoginModel 登录模型
+    public static LoginModel mLoginModel = null;
+    // 登录对象
+    public static Login mLogin = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_gong_zuo_zhong_xin, container, false);
@@ -47,7 +75,64 @@ public class GongZuoZhongXinFragment extends Fragment{
         // 组件操作, 操作
         ZhuJianCaoZhuo();
 
+        // 登录数据库连接
+        mLoginModel = LoginModel.get(getActivity());
+        // Token查询,赋值
+        mLogin = mLoginModel.getLogin(1);
+        mToken = mLogin.getToken();
+
+
+
         return mView;
+    }
+
+    // 开启线程
+    public static Thread mThread = null;
+    /**
+     * Handler
+     */
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            /**
+             *  msg.obj
+             */
+            if(msg.what==1){
+                if(msg.obj.toString().equals("无")){
+                    Toast.makeText(getActivity(),"无权限", Toast.LENGTH_SHORT).show();
+                }else{
+                    startActivity(mI);
+                }
+
+            }
+        }
+    };
+
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(1, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
     }
 
     /**
@@ -104,8 +189,10 @@ public class GongZuoZhongXinFragment extends Fragment{
         mShu_ju_yu_shen_he_linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = ShuJuYuShenHeActivity.newIntent(getActivity(),1);
-                startActivity(i);
+                mI = ShuJuYuShenHeActivity.newIntent(getActivity(),1);
+                mQuanXianName = "进入数据与审核页面";
+                // 权限验证
+                QunXianYanZheng();
             }
         });
 

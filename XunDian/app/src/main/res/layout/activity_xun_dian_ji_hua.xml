@@ -24,7 +24,7 @@
                     android:background="@drawable/right_border">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/xundian"
+                        android:src="@drawable/plan"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
@@ -42,7 +42,7 @@
                     style="@style/GongZuoZhongXin.3LinearLayout">
                     <ImageView
                         style="@style/GongZuoZhongXin.ImageView"
-                        android:src="@drawable/jihua"
+                        android:src="@drawable/richeng"
                         />
                     <TextView
                         style="@style/GongZuoZhongXin.TextView"
