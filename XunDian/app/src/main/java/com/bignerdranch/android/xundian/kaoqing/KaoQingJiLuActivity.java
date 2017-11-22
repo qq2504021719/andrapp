@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -127,17 +128,19 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
         mText_ji_lu_ri_qi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    // 清空默认选中
-                    CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
-                    // 编辑模式
-                    CalendarConfig.mMoShi = 1;
-                    // 背景色
-//                    CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
-                    // 按时间段请假日期选择
-                    CalendarConfig.mDanXuanMoShi = 1;
-                    // 启动
-                    Intent intent = new Intent(KaoQingJiLuActivity.this, CalendarMultiSelectActivity.class);
-                    startActivityForResult(intent,REQUEST_PHOTO);
+                // 清空默认选中
+                CalendarConfig.mYiXuanZheData = new ArrayList<DayColor>();
+                // 已过日期可选
+                CalendarConfig.mYiGuoBuKeXuan = 0;
+                // 编辑模式
+                CalendarConfig.mMoShi = 1;
+                // 背景色
+                // CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
+                // 按时间段请假日期选择
+                CalendarConfig.mDanXuanMoShi = 1;
+                // 启动
+                Intent intent = new Intent(KaoQingJiLuActivity.this, CalendarMultiSelectActivity.class);
+                startActivityForResult(intent,REQUEST_PHOTO);
             }
         });
 
@@ -179,6 +182,7 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
                 str = date;
             }
             mQingJiaRiQi = JieXi(str,1);
+            Log.i("巡店",mQingJiaRiQi);
             mText_ji_lu_ri_qi_value.setText(JieXi(str,1));
             // 请求数据
             XuanZheRiQiQingQiu();
@@ -206,6 +210,10 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
             if(msg.what==2){
                 mQingJiaData = msg.obj.toString();
                 QingJiaDataShow(mQingJiaData,mLinear_qing_jia_data);
+                // 应工作小时
+                mText_ben_yue_ying_shang_xiao_shi_value.setText(mText_ben_yue_ying_shang_xiao_shi_value_str);
+                // 实际工作小时
+                mText_shi_ji_gong_zhuo_xiao_shi_value.setText(mText_shi_ji_gong_zhuo_xiao_shi_value_str);
             }
 
         }

@@ -129,6 +129,12 @@ public class KaoQingCommonActivity extends CommActivity {
     // 门店搜索模式
     public String moshi = "3";
 
+    // 本月应工作小时
+    public String mText_ben_yue_ying_shang_xiao_shi_value_str = "0";
+
+    // 本月时间工作小时
+    public String mText_shi_ji_gong_zhuo_xiao_shi_value_str = "0";
+
     /**
      * 实现回调接口
      */
@@ -248,7 +254,16 @@ public class KaoQingCommonActivity extends CommActivity {
         // 请假数据不为空
         if(!dataStr.equals("")){
             try {
-                JSONArray jsonArray = new JSONArray(dataStr);
+                JSONObject jsonObjectJi = new JSONObject(dataStr);
+
+                // 应工作小时
+                mText_ben_yue_ying_shang_xiao_shi_value_str = jsonObjectJi.getString("YinShangH");
+
+                // 时间工作小时
+                mText_shi_ji_gong_zhuo_xiao_shi_value_str = jsonObjectJi.getString("ShiJiH");
+
+                // 请假记录
+                JSONArray jsonArray = new JSONArray(jsonObjectJi.getString("qingJia"));
                 if(jsonArray.length() > 0){
                     if(mActivityLeiXing == 1){
                         int biaoShi = 0;

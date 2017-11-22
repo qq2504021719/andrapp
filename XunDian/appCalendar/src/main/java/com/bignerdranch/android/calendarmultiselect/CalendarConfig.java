@@ -28,7 +28,7 @@ public class CalendarConfig {
     public static int mDanXuanMoShi = 0;
 
     // 周几不可选
-    public static String[] mZhouJiBuKeXuan = {"周五","周六"};
+    public static String[] mZhouJiBuKeXuan = {};
     // 周几不可选提示
     public static String mZhouJiBuKeXuanTiShi = "休息日,不可选";
 
