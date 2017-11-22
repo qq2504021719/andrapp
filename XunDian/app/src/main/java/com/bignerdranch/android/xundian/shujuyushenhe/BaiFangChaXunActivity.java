@@ -178,7 +178,6 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         // 点击查询
         mXun_dian_cha_xun_cha_xun = (TextView)findViewById(R.id.cha_xun_dian_ji_cha_xun);
 
-
         // 巡店查询数据显示
         mXun_dian_cha_xun_nei_rong = (LinearLayout)findViewById(R.id.xun_dian_cha_xun_nei_rong);
     }
@@ -328,17 +327,27 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     linearLayout3.addView(textView33);
                     linearLayout1.addView(linearLayout3);
 
+                    // 图标linear
+                    LinearLayout linearLayout8t = CreateLinear(8);
                     // 第二个表格
                     LinearLayout linearLayout33 = CreateLinear(3);
                     LinearLayout linearLayout7 = CreateLinear(7);
-                    ImageView imageView332 = CreateImageViewXunDian(1);
+                    ImageView imageView332 = CreateImageViewXunDian(1,0);
                     // 获取没有删除的图片
                     String Phone1 = getBuWeiKongDeTuPian(jsonObject);
                     if(!Phone1.equals("")){
                         Picasso.with(mContext).load(Config.URL+"/"+Phone1).into(imageView332);
                     }
 
+                    // 图片审核
+                    ImageView tuImageView = new ImageView(mContext);
+                    if(jsonObject.getString("tu_xiugai_hon").equals("1")){
+                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan);
+                        linearLayout8t.addView(tuImageView);
+                    }
+
                     TextView textView333 = CreateTextViewXun(2,"审核",jsonArray.get(i).toString());
+                    linearLayout7.addView(linearLayout8t);
                     linearLayout7.addView(textView333);
                     linearLayout33.addView(imageView332);
                     linearLayout33.addView(linearLayout7);
@@ -354,13 +363,27 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     NlinearLayout1.addView(NlinearLayout5);
                     mXun_dian_cha_xun_nei_rong.addView(NlinearLayout1);
 
+
+                    // 图标linear
+                    LinearLayout linearLayout8n = CreateLinear(8);
                     // 内容表格
                     LinearLayout NGlinearLayout1 = CreateLinear(1);
                     LinearLayout NGlinearLayout2 = CreateLinear(2);
                     LinearLayout NGlinearLayout6 = CreateLinear(6);
                     TextView NGtextView31 = CreateTextViewXun(1,jsonObject.getString("bai_fang_nei_rong"),"");
+                    // 内容审核
+                    ImageView neiImageView = new ImageView(mContext);
+
+                    if(jsonObject.getString("nei_xiugai_huang").equals("1")){
+                        neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan);
+                        linearLayout8n.addView(neiImageView);
+                    }
+
                     TextView NGtextView333 = CreateTextViewXun(4,"审核",jsonArray.get(i).toString());
+
+                    NGlinearLayout6.addView(linearLayout8n);
                     NGlinearLayout6.addView(NGtextView333);
+
                     NGlinearLayout2.addView(NGtextView31);
                     NGlinearLayout2.addView(NGlinearLayout6);
                     NGlinearLayout1.addView(NGlinearLayout2);
@@ -794,6 +817,8 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }else if(is == 7){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }else if(is == 8){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }
 
         linearLayout.setLayoutParams(layoutParam);
@@ -816,10 +841,16 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         }else if(is == 5){
             linearLayout.setBackground(getResources().getDrawable(R.drawable.border_bottom_left_right_huise));
         }else if(is == 6){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setPadding(0,0,10,0);
             linearLayout.setGravity(Gravity.RIGHT);
         }else if(is == 7){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setPadding(0,0,10,0);
             linearLayout.setGravity(Gravity.RIGHT);
+        }else if(is == 8){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         }
 
         return linearLayout;
@@ -908,15 +939,21 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
      * @param is 创建类型
      * @return
      */
-    public ImageView CreateImageViewXunDian(int is){
+    public ImageView CreateImageViewXunDian(int is,int drawable){
         ImageView imageView = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         if(is == 1){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,200);
+        }else if(is == 2){
+            layoutParam = new LinearLayout.LayoutParams(40,40);
         }
         imageView.setLayoutParams(layoutParam);
-        imageView.setPadding(0,10,0,10);
-
+        if(is == 1){
+            imageView.setPadding(0,10,0,10);
+        }else if(is == 2){
+            imageView.setPadding(5,5,5,5);
+            imageView.setBackground(getResources().getDrawable(drawable));
+        }
         return imageView;
     }
 

@@ -230,7 +230,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
 
         // 内容清空
-//        mXun_dian_cha_xun_nei_rong.removeAllViews();
+        mXun_dian_cha_xun_nei_rong.removeAllViews();
 
         // 查询门店类型
         ChaXunMenDianLeiXing();
@@ -393,15 +393,49 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     }else if(mIsChanXianShi == 2){
                         // 照片显示
                         if(!jsonObject.getString("path").equals("")){
-                            imageView332 = CreateImageViewXunDian(1);
+                            imageView332 = CreateImageViewXunDian(1,0);
                             Picasso.with(mContext).load(Config.URL+"/"+jsonObject.getString("path")).into(imageView332);
                         }
                     }
 
+
+                    // 审核 图标外层
+                    LinearLayout linearLayout6 = CreateLinear(6);
+
+                    // 审核
                     LinearLayout linearLayout4 = CreateLinear(4);
+
+                    // 图标linear
+                    LinearLayout linearLayout5 = CreateLinear(5);
+
+                    // 图片审核
+                    ImageView tuImageView = new ImageView(mContext);
+                    if(jsonObject.getString("tu_xiugai_hon").equals("1")){
+                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan);
+                    }
+                    // 内容审核
+                    ImageView neiImageView = new ImageView(mContext);
+                    if(jsonObject.getString("nei_xiugai_huang").equals("1")){
+                        neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan);
+                    }
+
+
                     TextView textView333 = CreateTextViewXun(2,"审核",jsonArray.get(i).toString());
+                    // 图片审核
+                    if(jsonObject.getString("tu_xiugai_hon").equals("1")){
+                        linearLayout5.addView(tuImageView);
+                    }
+                    // 内容审核
+                    if(jsonObject.getString("nei_xiugai_huang").equals("1")){
+                        linearLayout5.addView(neiImageView);
+
+                    }
+                    linearLayout4.addView(linearLayout5);
                     linearLayout4.addView(textView333);
+                    linearLayout6.addView(linearLayout4);
+
                     linearLayout33.addView(textView331);
+
                     if(mIsChanXianShi == 1){
                         linearLayout33.addView(textView332);
                     }else if(mIsChanXianShi == 2){
@@ -410,7 +444,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                         }
                     }
 
-                    linearLayout33.addView(linearLayout4);
+                    linearLayout33.addView(linearLayout6);
                     linearLayout1.addView(linearLayout33);
 
                     mXun_dian_cha_xun_nei_rong.addView(linearLayout1);
@@ -885,6 +919,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         }else if(is == 3){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT,1);
         }else if(is == 4){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        }else if(is == 5){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }else if(is == 6){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }
 
@@ -904,7 +942,14 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
             linearLayout.setPadding(10,10,10,10);
         }else if(is == 4){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setGravity(Gravity.RIGHT);
+        }else if(is == 5){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        }else if(is == 6){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         }
 
         return linearLayout;
@@ -949,14 +994,23 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      * @param is 创建类型
      * @return
      */
-    public ImageView CreateImageViewXunDian(int is){
+    public ImageView CreateImageViewXunDian(int is,int drawable){
         ImageView imageView = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         if(is == 1){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,100);
+        }else if(is == 2){
+            layoutParam = new LinearLayout.LayoutParams(40,40);
         }
         imageView.setLayoutParams(layoutParam);
-        imageView.setPadding(0,10,0,10);
+
+        if(is == 1){
+            imageView.setPadding(0,10,0,10);
+        }else if(is == 2){
+            imageView.setPadding(5,5,5,5);
+            imageView.setBackground(getResources().getDrawable(drawable));
+        }
+
 
         return imageView;
     }
