@@ -66,7 +66,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
     // 请假类型
     public TextView mTextview_lei_xing;
     public TextView mTextview_lei_xing_value;
-    public String[] mLeiXingData = new String[]{"事假","病假","年假","非带薪假","其他假期"};
+    public String[] mLeiXingData = new String[]{"事假","病假","年假","带薪假","其他假期"};
     public HashMap<String,Integer> mLeiXingBeiJingSe = new HashMap<>();
 
 
@@ -198,7 +198,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mLeiXingBeiJingSe.put("事假",R.drawable.ri_qi_background_zi_se);
         mLeiXingBeiJingSe.put("病假",R.drawable.ri_qi_background_hong_se);
         mLeiXingBeiJingSe.put("年假",R.drawable.ri_qi_background_lv_se);
-        mLeiXingBeiJingSe.put("非带薪假",R.drawable.ri_qi_background_huang_se);
+        mLeiXingBeiJingSe.put("带薪假",R.drawable.ri_qi_background_huang_se);
         mLeiXingBeiJingSe.put("其他假期",R.drawable.ri_qi_background_lan_se);
         // Token赋值
         setToken(mContext);
@@ -620,8 +620,6 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
                     an_shi_jian_duan_xia_wu_jie_shu = mQingJia.getXiaWuJieShu();
                 }
                 body.addFormDataPart("an_shi_jian_duan_xia_wu_jie_shu",an_shi_jian_duan_xia_wu_jie_shu);
-//                Log.i("巡店","上午|"+an_shi_jian_duan_shang_wu_kai_shi+"|"+an_shi_jian_duan_shang_wu_jie_shu);
-//                Log.i("巡店","下午|"+an_shi_jian_duan_xia_wu_kai_shi+"|"+an_shi_jian_duan_xia_wu_jie_shu);
             }
 
             final Request request = new Request.Builder()

@@ -704,12 +704,24 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
         ImageView imageView = new ImageView(mContext);
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 
+        int wuShiBa = 58;
+        int LiuShiBa = 68;
+
+        float mDensity = getResources().getDisplayMetrics().density;
+        if(mDensity == 2.0){
+            wuShiBa = 32;
+            LiuShiBa = 42;
+        }
+
         if(is == 1){
-            layoutParam = new LinearLayout.LayoutParams(58,58);
+
+            layoutParam = new LinearLayout.LayoutParams(wuShiBa,wuShiBa);
         }else if(is == 2){
-            layoutParam = new LinearLayout.LayoutParams(68,68);
+
+            layoutParam = new LinearLayout.LayoutParams(LiuShiBa,LiuShiBa);
         }else if(is == 3){
-            layoutParam = new LinearLayout.LayoutParams(58,58);
+
+            layoutParam = new LinearLayout.LayoutParams(wuShiBa,wuShiBa);
         }
 
         imageView.setLayoutParams(layoutParam);
@@ -727,6 +739,10 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
                     alertBuilder.show();
                 }
             });
+        }else if(is == 2){
+
+        }else if(is == 3){
+
         }
 
         return imageView;

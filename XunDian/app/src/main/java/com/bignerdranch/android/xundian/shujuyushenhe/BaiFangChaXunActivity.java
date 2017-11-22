@@ -866,11 +866,11 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 
         if(is == 2){
-            layoutParam = new LinearLayout.LayoutParams(180,60);
+            layoutParam = new LinearLayout.LayoutParams(100,60);
         }else if(is == 3){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }else if(is == 4){
-            layoutParam = new LinearLayout.LayoutParams(180,60);
+            layoutParam = new LinearLayout.LayoutParams(100,60);
         }
 
         textView.setLayoutParams(layoutParam);

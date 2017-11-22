@@ -965,7 +965,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 
         if(is == 2){
-            layoutParam = new LinearLayout.LayoutParams(180,60);
+            layoutParam = new LinearLayout.LayoutParams(100,60);
         }
 
         textView.setLayoutParams(layoutParam);

@@ -727,7 +727,10 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
             public void onClick(View view) {
                 if (linearLayout1.getVisibility() == View.GONE) {
                     float mDensity = getResources().getDisplayMetrics().density;
-
+                    float bei = 1;
+                    if(mDensity == 2.0){
+                        mDensity = mDensity+mDensity/2;
+                    }
                     int he = (int) (mDensity*height);
                     animateOpen(linearLayout1,he);
                     animationIvOpen();
