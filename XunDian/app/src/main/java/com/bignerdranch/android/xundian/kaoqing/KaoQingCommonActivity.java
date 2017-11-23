@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,6 +67,10 @@ import okhttp3.Response;
  */
 
 public class KaoQingCommonActivity extends CommActivity {
+
+    // 0 请假管理 1考勤记录
+    public int isYEmian = 0;
+
     public TextView mTitle_nei_ye = null; // 设置显示标题
     public Context mContext = null;
 
@@ -195,7 +200,17 @@ public class KaoQingCommonActivity extends CommActivity {
      * @param context
      */
     public static void tiShi(Context context, String string) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
+        Toast mToast = null;
+        if (mToast == null) {
+            mToast = Toast.makeText(context, "",
+                    Toast.LENGTH_LONG);
+            LinearLayout layout = (LinearLayout) mToast.getView();
+            TextView tv = (TextView) layout.getChildAt(0);
+            tv.setTextSize(20);
+        }
+        mToast.setGravity(Gravity.BOTTOM, 0, 10);
+        mToast.setText(string);
+        mToast.show();
     }
 
     /**
@@ -260,17 +275,25 @@ public class KaoQingCommonActivity extends CommActivity {
         linearLayout.removeAllViews();
         // 请假数据不为空
         if(!dataStr.equals("")){
+
             try {
-                JSONObject jsonObjectJi = new JSONObject(dataStr);
-
-                // 应工作小时
-                mText_ben_yue_ying_shang_xiao_shi_value_str = jsonObjectJi.getString("YinShangH");
-
-                // 时间工作小时
-                mText_shi_ji_gong_zhuo_xiao_shi_value_str = jsonObjectJi.getString("ShiJiH");
-
                 // 请假记录
-                JSONArray jsonArray = new JSONArray(jsonObjectJi.getString("qingJia"));
+                JSONArray jsonArray = new JSONArray();
+                if(mActivityLeiXing == 1){
+                    JSONObject jsonObjectJi = new JSONObject(dataStr);
+                    // 应工作小时
+                    mText_ben_yue_ying_shang_xiao_shi_value_str = jsonObjectJi.getString("YinShangH");
+
+                    // 时间工作小时
+                    mText_shi_ji_gong_zhuo_xiao_shi_value_str = jsonObjectJi.getString("ShiJiH");
+
+                    // 请假记录
+                    jsonArray = new JSONArray(jsonObjectJi.getString("qingJia"));
+                }else{
+                    // 请假记录
+                    jsonArray = new JSONArray(dataStr);
+                }
+
                 if(jsonArray.length() > 0){
                     if(mActivityLeiXing == 1){
                         int biaoShi = 0;

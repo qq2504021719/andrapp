@@ -223,6 +223,7 @@ public class WodeXinXiFragment extends Fragment {
         String name = "姓名 : 小郑";
         String gongHao = "工号 : DD1001";
         String zhiWu = "职务 : 业务员";
+        String phone = "手机: 18017217207";
         if(string == null){
             // 头像
             mWo_img.setImageResource(R.drawable.timg);
@@ -273,6 +274,12 @@ public class WodeXinXiFragment extends Fragment {
                     zhiWu = "工号 : "+jsonObject.getString("gong_hao");
                 }
 
+                // 手机号码
+                if(jsonObject.getString("mobile_phone") != null){
+                    phone = "手机 : "+jsonObject.getString("mobile_phone");
+                }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -283,6 +290,8 @@ public class WodeXinXiFragment extends Fragment {
         mWo_gong_hao.setText(gongHao);
         // 职务
         mWo_zhi_wu.setText(zhiWu);
+        //手机
+        mWo_shou_ji.setText(phone);
         // 关闭loading
         WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
@@ -311,6 +320,7 @@ public class WodeXinXiFragment extends Fragment {
     }
 
 
+
     /**
      * 组件操作, 操作
      */
@@ -326,7 +336,7 @@ public class WodeXinXiFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 deleteFilesByDirectory();
-                Toast.makeText(getActivity(),"清除成功", Toast.LENGTH_SHORT).show();
+                LoginActivity.tiShi(getActivity(),"清除成功");
                 // 设置清除缓存栏目名
                 setQingChuHuanCun();
             }

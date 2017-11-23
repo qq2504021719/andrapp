@@ -214,10 +214,12 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         mQingJia.setXiaWuJieShu("");
         mQingJia.setYuanYing("");
 
-        // 本月请假数据显示
-        QingJiaDataXianShi();
         // 清空请假内容
         mLinear_qing_jia_data.removeAllViews();
+
+        // 本月请假数据显示
+        QingJiaDataXianShi();
+
         // 用户休息日
         getGongSiQianDaoFanWei();
 
@@ -289,7 +291,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
         // 休息日不可选择
         String[] strings = getXiuXiRi();
-//        Log.i("巡店",strings[0]+"|"+strings[1]+"|"+strings[2]+"|"+strings[3]+"|"+strings[4]+"|"+strings[5]+"|"+strings[6]);
+
         if(strings.length > 0){
             CalendarConfig.mZhouJiBuKeXuan = strings;
         }else{
@@ -576,7 +578,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             body.addFormDataPart("bu_meng",mQingJia.getBuMeng());
             body.addFormDataPart("qing_jia_lei_xing",mQingJia.getLeiXing());
             body.addFormDataPart("qing_jia_yuan_yin",mQingJia.getYuanYing());
-//            Log.i("巡店",mQingJia.getBuMeng()+"|"+mQingJia.getLeiXing()+"|"+mQingJia.getYuanYing());
+
             if(!mQingJia.getDay().equals("")){
                 body.addFormDataPart("an_tian_qing_jia",mQingJia.getDay());
                 body.addFormDataPart("an_shi_jian_dun","");
@@ -660,11 +662,14 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
             if(msg.what==1){
                 tiShi(mContext,msg.obj.toString());
                 values();// 恢复默认值
+                NeiRongQingKong();
+                // 显示组件
+                YeMianHuiFu();
                 // 请求请假数据
                 QingJiaDataQingQiu();
-                NeiRongQingKong();
             }else if(msg.what==2){
                 mQingJiaData = msg.obj.toString();
+                mActivityLeiXing = 0;
                 QingJiaDataShow(mQingJiaData,mLinear_qing_jia_data);
             }else if(msg.what == 3){
                 mXiuXiRiData = msg.obj.toString();
@@ -672,6 +677,14 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
 
         }
     };
+
+    /**
+     * 显示组件,请假管理
+     */
+    public void YeMianHuiFu(){
+        mLinear_an_shi_jian_fu_fu.setVisibility(View.VISIBLE);
+        mAn_tian_qing_jia.setVisibility(View.VISIBLE);
+    }
 
     /**
      * 用户休息日

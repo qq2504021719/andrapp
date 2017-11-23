@@ -209,6 +209,7 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
              */
             if(msg.what==2){
                 mQingJiaData = msg.obj.toString();
+                isYEmian = 1;
                 QingJiaDataShow(mQingJiaData,mLinear_qing_jia_data);
                 // 应工作小时
                 mText_ben_yue_ying_shang_xiao_shi_value.setText(mText_ben_yue_ying_shang_xiao_shi_value_str);

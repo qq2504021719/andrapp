@@ -99,7 +99,8 @@ public class GongZuoZhongXinFragment extends Fragment{
              */
             if(msg.what==1){
                 if(msg.obj.toString().equals("无")){
-                    Toast.makeText(getActivity(),"无权限", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity(),"无权限", Toast.LENGTH_SHORT).show();
+                    LoginActivity.tiShi(getActivity(),"无权限");
                 }else{
                     startActivity(mI);
                 }
@@ -190,7 +191,7 @@ public class GongZuoZhongXinFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 mI = ShuJuYuShenHeActivity.newIntent(getActivity(),1);
-                mQuanXianName = "进入数据与审核页面";
+                mQuanXianName = "数据与审核页面";
                 // 权限验证
                 QunXianYanZheng();
             }

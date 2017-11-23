@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -724,7 +725,17 @@ public class BenZhouFragment extends Fragment{
      * @param context
      */
     public static void tiShi(Context context, String string) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
+        Toast mToast = null;
+        if (mToast == null) {
+            mToast = Toast.makeText(context, "",
+                    Toast.LENGTH_LONG);
+            LinearLayout layout = (LinearLayout) mToast.getView();
+            TextView tv = (TextView) layout.getChildAt(0);
+            tv.setTextSize(20);
+        }
+        mToast.setGravity(Gravity.BOTTOM, 0, 10);
+        mToast.setText(string);
+        mToast.show();
     }
 
     /**

@@ -2,15 +2,21 @@ package com.bignerdranch.android.xundian;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -23,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
@@ -54,6 +61,8 @@ import okhttp3.Response;
 public class MainPageActivity extends AppCompatActivity implements TongZhiZhongXinFragment.Callbacks{
 
     private static final String EXTRA_VIEW_ID = "com.bignerdranch.android.MainPageActivity.xundian.view_id";
+
+    private int GPS_REQUEST_CODE = 10;
 
     private ViewPager mViewPager;
     private List<Viewd> mViewds;
@@ -139,6 +148,57 @@ public class MainPageActivity extends AppCompatActivity implements TongZhiZhongX
         getTongZhiGongGao();
         // 重新请求登录信息
         qingQiuDengLuXingXi();
+
+        openGPSSettings();
+    }
+
+    /**
+     * 检测GPS是否打开
+     *
+     * @return
+     */
+    private boolean checkGPSIsOpen() {
+        boolean isOpen;
+        LocationManager locationManager = (LocationManager) this
+                .getSystemService(Context.LOCATION_SERVICE);
+        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        return isOpen;
+    }
+
+    /**
+     * 跳转GPS设置
+     */
+    private void openGPSSettings() {
+        if (checkGPSIsOpen()) {
+//            initLocation(); //自己写的定位方法
+        } else {
+            //没有打开则弹出对话框
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.notifyTitle)
+                    .setMessage(R.string.gpsNotifyMsg)
+                    // 拒绝, 退出应用
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+
+                    .setPositiveButton(R.string.setting,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //跳转GPS设置界面
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivityForResult(intent, GPS_REQUEST_CODE);
+                                }
+                            })
+
+                    .setCancelable(false)
+                    .show();
+
+        }
     }
 
     @TargetApi(23)

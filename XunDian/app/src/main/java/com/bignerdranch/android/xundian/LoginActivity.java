@@ -13,10 +13,13 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
@@ -554,15 +557,35 @@ public class LoginActivity extends AppCompatActivity {
      * @param context
      */
     public static void tiShi(Context context){
-        Toast.makeText(context,R.string.zhang_mi_bu, Toast.LENGTH_SHORT).show();
+        Toast mToast = null;
+        if (mToast == null) {
+            mToast = Toast.makeText(context, "",
+                    Toast.LENGTH_LONG);
+            LinearLayout layout = (LinearLayout) mToast.getView();
+            TextView tv = (TextView) layout.getChildAt(0);
+            tv.setTextSize(20);
+        }
+        mToast.setGravity(Gravity.BOTTOM, 0, 10);
+        mToast.setText(R.string.zhang_mi_bu);
+        mToast.show();
     }
 
     /**
      * 提示
      * @param context
      */
-    public static void tiShi(Context context,String string){
-        Toast.makeText(context,string, Toast.LENGTH_SHORT).show();
+    public static void tiShi(Context context, String string) {
+        Toast mToast = null;
+        if (mToast == null) {
+            mToast = Toast.makeText(context, "",
+                    Toast.LENGTH_LONG);
+            LinearLayout layout = (LinearLayout) mToast.getView();
+            TextView tv = (TextView) layout.getChildAt(0);
+            tv.setTextSize(20);
+        }
+        mToast.setGravity(Gravity.BOTTOM, 0, 10);
+        mToast.setText(string);
+        mToast.show();
     }
 
     /**

@@ -150,7 +150,7 @@
                             <TextView
                                 android:id="@+id/textview_an_shi_jian_ri_qi"
                                 style="@style/TjJiHuaTextView"
-                                android:textSize="14dp"
+                                android:textSize="15dp"
                                 android:text="日期选择"/>
 
                             <TextView
@@ -178,7 +178,7 @@
                             <TextView
                                 android:id="@+id/textview_an_shi_jian_shang_wu"
                                 style="@style/TjJiHuaTextView"
-                                android:textSize="14dp"
+                                android:textSize="15dp"
                                 android:text="上午请假时间"/>
 
                             <TextView
@@ -206,7 +206,7 @@
                             <TextView
                                 android:id="@+id/textview_an_shi_jian_xia_wu"
                                 style="@style/TjJiHuaTextView"
-                                android:textSize="14dp"
+                                android:textSize="15dp"
                                 android:text="下午请假时间"/>
 
                             <TextView
