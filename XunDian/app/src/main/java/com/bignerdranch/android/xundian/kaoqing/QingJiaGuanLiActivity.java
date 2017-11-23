@@ -291,6 +291,7 @@ public class QingJiaGuanLiActivity extends KaoQingCommonActivity{
         CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
         // 休息日不可选择
         String[] strings = getXiuXiRi();
+        CalendarConfig.mYiGuoBuKeXuan = 1;
 
         if(strings.length > 0){
             CalendarConfig.mZhouJiBuKeXuan = strings;

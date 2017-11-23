@@ -134,6 +134,8 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
                 CalendarConfig.mYiGuoBuKeXuan = 0;
                 // 编辑模式
                 CalendarConfig.mMoShi = 1;
+                // 没有不可选的
+                CalendarConfig.mZhouJiBuKeXuan = new String[0];
                 // 背景色
                 // CalendarConfig.mMoRenBeiJingSe = mLeiXingBeiJingSe.get(mQingJia.getLeiXing());
                 // 按时间段请假日期选择
