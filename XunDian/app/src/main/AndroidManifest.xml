@@ -47,6 +47,7 @@
         <!--巡店进度-查看详细-->
         <activity android:name=".xundianguanli.XunDianXiangXiActivity">
         </activity>
+
         <!--登录-->
         <activity android:name=".LoginActivity"
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
@@ -55,6 +56,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <!--巡店管理-->
         <activity android:name=".xundianguanli.XunDianGuanLiActivity"></activity>
         <!--巡店-->

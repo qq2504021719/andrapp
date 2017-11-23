@@ -119,8 +119,8 @@ public class LoginActivity extends AppCompatActivity {
         // 销毁其余容器
         AtyContainer.finishAllActivity();
 
-        // 查询token
-        getData();
+        // 验证是否自动登录
+        isZiDongDengLu();
 
     }
 
@@ -143,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
             if(msg.what==1){
                 DengLuAdd((String) msg.obj);
             }else if(msg.what==2){
-//                Log.i("巡店","机器码请求返回"+msg.obj.toString());
                 if(msg.obj.toString().equals("false")){
                     mLoginModel.deleteLogin(1);
                     // 关闭loading
@@ -332,6 +331,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 是否自动登录 mIsBaoCun
+     */
+    public void isZiDongDengLu(){
+        mLoginModel = LoginModel.get(mContext);
+        mLogin = mLoginModel.getLogin(1);
+
+        if(mLogin != null && mLogin.getIsBaoCun() == 1){
+            // 存储容器
+            AtyContainer.addActivity(mContext);
+            Intent i = MainPageActivity.newIntent(mContext,1);
+            mContext.startActivity(i);
+        }else{
+//            Log.i("巡店",mLogin.getIsBaoCun()+"");
+        }
+    }
 
     /**
      * 验证是否登录,验证成功跳转
@@ -339,14 +354,12 @@ public class LoginActivity extends AppCompatActivity {
     public static void getData(){
         mLoginModel = LoginModel.get(mContext);
         mLogin = mLoginModel.getLogin(1);
+//        Log.i("巡店",mLogin.getIsBaoCun()+"");
         if(mLogin != null){
             // 存储容器
             AtyContainer.addActivity(mContext);
             Intent i = MainPageActivity.newIntent(mContext,1);
             mContext.startActivity(i);
-//            Log.i("登录",mLogin.getZhangHao()+"|"+mLogin.getToken());
-        }else{
-//            Log.i("登录","暂无数据");
         }
     }
 
@@ -520,9 +533,17 @@ public class LoginActivity extends AppCompatActivity {
                 login.setZhangHao(mZhangHao);
                 login.setMiMa(mMima);
                 login.setIsBaoCun(mIsBaoCun);
+
+                // 判断是否删除登录信息,存在则删除
+                mLoginModel = LoginModel.get(mContext);
+                mLogin = mLoginModel.getLogin(1);
+                if(mLogin != null){
+                    mLoginModel.deleteLogin(1);
+                }
+                // 添加数据
                 mLoginModel.addLogin(login);
                 // 删除登录信息
-//                mLoginModel.deleteLogin(1);
+
                 if(mYanZhengJiQi.length > 0){
                     int isYOU = 0;
                     for(int c = 0;c<mYanZhengJiQi.length;c++){

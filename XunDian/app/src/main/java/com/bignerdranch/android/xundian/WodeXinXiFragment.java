@@ -378,7 +378,7 @@ public class WodeXinXiFragment extends Fragment {
                 alertBuilder.create();
                 alertBuilder.show();
 
-                // 退出应用
+                // 退出应用 getPackageName
                 tui_chu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -409,7 +409,7 @@ public class WodeXinXiFragment extends Fragment {
      */
     public void isShanChu(){
         mLogin = mLoginModel.getLogin(1);
-        if(mLogin.getIsBaoCun() == 1){
+        if(mLogin.getIsBaoCun() == 2){
             mLoginModel.deleteLogin(1);
         }
     }
