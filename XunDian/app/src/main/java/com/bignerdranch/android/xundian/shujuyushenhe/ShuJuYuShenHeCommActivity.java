@@ -131,6 +131,9 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
     // 1 审核页面继承
     public int mIsShenHe = 0;
 
+    //
+    public String mQuanXianName = "";
+
     /**
      * 实现回调接口
      */

@@ -3,6 +3,7 @@ package com.bignerdranch.android.xundian.kaoqing;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.os.Environment;
@@ -54,6 +55,7 @@ import java.util.List;
 import java.util.Locale;
 
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -134,6 +136,11 @@ public class KaoQingCommonActivity extends CommActivity {
 
     // 本月时间工作小时
     public String mText_shi_ji_gong_zhuo_xiao_shi_value_str = "0";
+
+    // 权限名称
+    public String mQuanXianName = "";
+    // 跳转页面
+    public Intent mI;
 
     /**
      * 实现回调接口
@@ -1003,6 +1010,8 @@ public class KaoQingCommonActivity extends CommActivity {
         }
         return f.getPath();
     }
+
+
 
 
 }

@@ -125,6 +125,10 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     // image弹窗显示
     public Dialog mImagedialog;
 
+    // 弹出审核标识
+    public int mTanChuangBiaoShi = 0;
+    public String mstringJson = "";
+
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,BaiFangChaXunActivity.class);
@@ -258,9 +262,50 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                 }
                 tiShi(mContext,msg.obj.toString());
                 bfdialog.hide();
+            }else if(msg.what == 3){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    if(mTanChuangBiaoShi == 0){
+                        if(!mI.equals("")){
+                            startActivity(mI);
+                        }
+                    }else if(mTanChuangBiaoShi == 1){
+                        TanChuangShenHeDialog(mstringJson);
+                    }
+
+                }
+
             }
         }
     };
+
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(3, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
 
     // 巡店数据查询
     public void XunDianShuJuChaXun(){
@@ -889,9 +934,11 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Log.i("巡店","审核图片:"+stringJson);
-                    Intent i = BaiFangChaXunTuPianActivity.newIntent(BaiFangChaXunActivity.this,stringJson);
-                    startActivity(i);
+                    mTanChuangBiaoShi = 0;
+                    mI = BaiFangChaXunTuPianActivity.newIntent(BaiFangChaXunActivity.this,stringJson);
+                    mQuanXianName = "拜访查询-拜访查询图片审核";
+                    // 权限验证
+                    QunXianYanZheng();
                 }
             });
         }else if(is == 3){
@@ -904,39 +951,51 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("巡店","审核内容:"+stringJson);
-                    try {
-                        JSONObject jsonObject = new JSONObject(stringJson);
-                        // id
-                        bfid = jsonObject.getString("id");
-                        // 驳回内容
-                        BFFankui = jsonObject.getString("nei_rong_fan_kui");
-                        BFFankui = BFFankui=="null"?"":BFFankui;
-                        // 设置默认显示
-                        if(!BFFankui.equals("")){
-                            mEdittext_Fan_Kui_Shu_Ru.setText(BFFankui);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    mTanChuangBiaoShi = 1;
+                    mQuanXianName = "拜访查询-拜访查询内容审核";
+                    // 权限验证
+                    QunXianYanZheng();
+                    mstringJson = stringJson;
 
-                    if(bfdialog == null){
-                        // 弹窗
-                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                        // 设置View
-                        alertBuilder.setView(mbfViewD);
-                        // 显示
-                        alertBuilder.create();
-
-                        bfdialog = alertBuilder.show();
-                    }else{
-                        bfdialog.show();
-                    }
                 }
             });
         }
         textView.setText(string);
         return textView;
+    }
+
+    /**
+     * 弹窗审核
+     * @param stringJson
+     */
+    public void TanChuangShenHeDialog(String stringJson){
+        try {
+            JSONObject jsonObject = new JSONObject(stringJson);
+            // id
+            bfid = jsonObject.getString("id");
+            // 驳回内容
+            BFFankui = jsonObject.getString("nei_rong_fan_kui");
+            BFFankui = BFFankui=="null"?"":BFFankui;
+            // 设置默认显示
+            if(!BFFankui.equals("")){
+                mEdittext_Fan_Kui_Shu_Ru.setText(BFFankui);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(bfdialog == null){
+            // 弹窗
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+            // 设置View
+            alertBuilder.setView(mbfViewD);
+            // 显示
+            alertBuilder.create();
+
+            bfdialog = alertBuilder.show();
+        }else{
+            bfdialog.show();
+        }
     }
 
     /**

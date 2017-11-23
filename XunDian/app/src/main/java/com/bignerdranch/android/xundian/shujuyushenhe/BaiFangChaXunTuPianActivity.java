@@ -791,7 +791,9 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             // 勾选合格还是不合格
             if(mIsHeGe1.equals("")){
                 mPhone1_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+                mPhone1_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
             }else if(mIsHeGe1.equals("不合格")){
+                mPhone1_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
                 mPhone1_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
             }
             // 反馈linear
@@ -830,7 +832,9 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             // 勾选合格还是不合格
             if(mIsHeGe2.equals("")){
                 mPhone2_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+                mPhone2_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
             }else if(mIsHeGe2.equals("不合格")){
+                mPhone2_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
                 mPhone2_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
             }
             // 反馈linear
@@ -849,7 +853,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             mPhone2_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
             // 反馈编辑框显示内容
             if(!mbuHui1.equals("")){
-                mPhone2_bian_ji_can_shu_xiu_gai.setText(mbuHui1);
+                mPhone2_bian_ji_can_shu_xiu_gai.setText(mbuHui2);
             }
         }
         if(phone3_zhuang_tai == 1){
@@ -866,10 +870,12 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             mPhone3_xian_shi_mo_shi_1.setVisibility(View.GONE);
             // 合格linear
             mPhone3_xian_shi_mo_shi_2.setVisibility(View.VISIBLE);
-            // 勾选合格还是不合格
+            // 勾选合格还是不合格 ka_qing_ku_lian
             if(mIsHeGe3.equals("")){
                 mPhone3_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+                mPhone3_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
             }else if(mIsHeGe3.equals("不合格")){
+                mPhone3_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
                 mPhone3_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
             }
             // 反馈linear
@@ -888,7 +894,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             mPhone3_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
             // 反馈编辑框显示内容
             if(!mbuHui1.equals("")){
-                mPhone3_bian_ji_can_shu_xiu_gai.setText(mbuHui1);
+                mPhone3_bian_ji_can_shu_xiu_gai.setText(mbuHui3);
             }
         }
         if(phone4_zhuang_tai == 1){
@@ -905,10 +911,12 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             mPhone4_xian_shi_mo_shi_1.setVisibility(View.GONE);
             // 合格linear
             mPhone4_xian_shi_mo_shi_2.setVisibility(View.VISIBLE);
-            // 勾选合格还是不合格
+            // 勾选合格还是不合格 ka_qing_ku_lian
             if(mIsHeGe4.equals("")){
                 mPhone4_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+                mPhone4_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
             }else if(mIsHeGe4.equals("不合格")){
+                mPhone4_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
                 mPhone4_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
             }
             // 反馈linear
@@ -927,7 +935,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             mPhone4_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
             // 反馈编辑框显示内容
             if(!mbuHui1.equals("")){
-                mPhone4_bian_ji_can_shu_xiu_gai.setText(mbuHui1);
+                mPhone4_bian_ji_can_shu_xiu_gai.setText(mbuHui4);
             }
         }
     }
@@ -949,12 +957,64 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
 //                    TuPianXianShiMoShi();
                 }
                 tiShi(mContext,msg.obj.toString());
+            }else if(msg.what == 2){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    // 拜访查询图片审核数据提交
+                    shenHeShuJuTiJiao();
+                }
+
             }
         }
     };
 
-    // 拜访查询图片审核
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+
+    /**
+     * 拜访查询图片审核权限验证
+     */
     public void BaiFangTupianShenHe(){
+        if(ZhaoZhuoMS.equals("抽查")){
+            mQuanXianName = "拜访查询-审核-图片抽查";
+        }else if(ZhaoZhuoMS.equals("反馈")){
+            mQuanXianName = "拜访查询-审核-图片反馈";
+        }else if(ZhaoZhuoMS.equals("删除")){
+            mQuanXianName = "拜访查询-审核-图片删除";
+        }
+        QunXianYanZheng();
+    }
+
+    /**
+     * 拜访查询图片审核数据提交
+     */
+    public void shenHeShuJuTiJiao(){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
         body.addFormDataPart("isT",String.valueOf(isT));

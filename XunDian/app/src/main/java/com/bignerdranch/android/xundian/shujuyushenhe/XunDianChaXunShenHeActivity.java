@@ -213,7 +213,7 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
             @Override
             public void onClick(View view) {
                 TiJiaoMoShi = "1";
-                shenHeDataTiJiao();
+                shenHeShuJuQuanXian();
             }
         });
 
@@ -222,7 +222,7 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
             @Override
             public void onClick(View view) {
                 TiJiaoMoShi = "2";
-                shenHeDataTiJiao();
+                shenHeShuJuQuanXian();
             }
         });
         // 编辑保存
@@ -230,7 +230,7 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
             @Override
             public void onClick(View view) {
                 TiJiaoMoShi = "3";
-                shenHeDataTiJiao();
+                shenHeShuJuQuanXian();
             }
         });
     }
@@ -246,15 +246,67 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
              */
             if(msg.what==1){
 //                finish();
-                Intent i = XunDianChaXunActivity.newIntent(XunDianChaXunShenHeActivity.this,like);
+                Intent i = XunDianChaXunActivity.newIntent(XunDianChaXunShenHeActivity.this,mMenDianDataJson);
                 startActivity(i);
                 finish();
                 tiShi(mContext,msg.obj.toString());
+            }else if(msg.what == 2){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    // 数据提交
+                    shenHeDataTiJiao();
+                }
+
             }
         }
     };
 
-    // 审核数据提交
+    /**
+     * 权限验证
+     */
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(2, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+    public void shenHeShuJuQuanXian(){
+        if(TiJiaoMoShi.equals("1")){
+            mQuanXianName = "巡店查询-审核-删除";
+        }else if(TiJiaoMoShi.equals("2")){
+            mQuanXianName = "巡店查询-审核-抽查";
+        }else if(TiJiaoMoShi.equals("3")){
+            mQuanXianName = "巡店查询-审核-编辑";
+        }
+        // 权限验证
+        QunXianYanZheng();
+    }
+
+    /**
+     * 审核数据提交
+     */
     public void shenHeDataTiJiao(){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);

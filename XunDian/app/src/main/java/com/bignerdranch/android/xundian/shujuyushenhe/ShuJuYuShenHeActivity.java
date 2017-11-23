@@ -152,8 +152,8 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
         mXun_dian_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mI = XunDianChaXunActivity.newIntent(mContext,"0");
-                mQuanXianName = "进入巡店查询页面";
+                mI = XunDianChaXunActivity.newIntent(mContext,"");
+                mQuanXianName = "巡店查询-巡店查询";
                 // 权限验证
                 QunXianYanZheng();
             }
@@ -164,7 +164,7 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
             @Override
             public void onClick(View view) {
                 mI = BaiFangChaXunActivity.newIntent(mContext,1);
-                mQuanXianName = "进入拜访查询页面";
+                mQuanXianName = "拜访查询-拜访查询";
                 // 权限验证
                 QunXianYanZheng();
             }
@@ -175,7 +175,7 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
             @Override
             public void onClick(View view) {
                 mI = JiHuaShenHeActivity.newIntent(mContext,1);
-                mQuanXianName = "进入Android计划审核页面";
+                mQuanXianName = "计划审核-计划审核查询";
                 // 权限验证
                 QunXianYanZheng();
             }
@@ -185,7 +185,7 @@ public class ShuJuYuShenHeActivity extends ShuJuYuShenHeCommActivity{
             @Override
             public void onClick(View view) {
                 mI = QingJiaShenHeActivity.newIntent(mContext,1);
-                mQuanXianName = "进入Android请假审核页面";
+                mQuanXianName = "请假审核-请假审核查询";
                 // 权限验证
                 QunXianYanZheng();
             }

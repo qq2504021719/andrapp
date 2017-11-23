@@ -79,6 +79,10 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
     // 审核提交地址
     public String mShenHeTiJaiURL = Config.URL+"/app/ji_hua_shen_he";
 
+    // 审核状态
+    public String ShenHeZhuangTai = "";
+    // 不同意意见
+    public String mBuTongYiYiJian = "";
 
     // 零时数据
     public String[] mLingShiData = new String[4];
@@ -204,6 +208,19 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                     qingQiuWeiShenHeShuJu();
                 }
                 tiShi(mContext,msg.obj.toString());
+            }else if(msg.what == 5){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    if(ShenHeZhuangTai.equals("同意")){
+                        ShenHeTiJiao("同意","");
+                    }else if(ShenHeZhuangTai.equals("不同意")){
+                        ShenHeTiJiao("不同意",mBuTongYiYiJian);
+                    }else if(ShenHeZhuangTai.equals("删除")){
+                        jiHuaShanChu();
+                    }
+                }
+
             }
             WeiboDialogUtils.closeDialog(mWeiboDialog);
         }
@@ -269,6 +286,56 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
         mThread.start();
     }
 
+    /**
+     *
+     * @param BString 同意 不同意 删除
+     */
+    public void JiHuaShenHeQuanXian(String BString){
+        if(BString.equals("同意")){
+            ShenHeZhuangTai = "同意";
+            mQuanXianName = "android计划审核-同意";
+
+        }else if(BString.equals("不同意")){
+            ShenHeZhuangTai = "不同意";
+            mQuanXianName = "android计划审核-不同意";
+
+        }else if(BString.equals("删除")){
+            ShenHeZhuangTai = "删除";
+            mQuanXianName = "android计划审核-删除";
+        }
+        // 权限验证
+        QunXianYanZheng();
+    }
+
+    /**
+     * 权限验证
+     */
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(5, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
 
     /**
      * 审核数据提交
@@ -791,7 +858,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                 public void onClick(View view) {
                     if (isTiJiao()){
                         // 审核提交
-                        ShenHeTiJiao("同意","");
+                        JiHuaShenHeQuanXian("同意");
                     }
 
                 }
@@ -831,7 +898,8 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                             if (isTiJiao()) {
                                 String str = "";
                                 str = edittext_qing_jia_bu_tong_yi_ti_jiao.getText().toString();
-                                ShenHeTiJiao("不同意", str);
+                                mBuTongYiYiJian = str;
+                                JiHuaShenHeQuanXian("不同意");
 
                                 // 弹出销毁
                                 dialog.dismiss();
@@ -872,7 +940,7 @@ public class JiHuaShenHeActivity extends ShuJuYuShenHeCommActivity {
                 public void onClick(View view) {
                     if (isTiJiao()){
                         // 删除计划
-                        jiHuaShanChu();
+                        JiHuaShenHeQuanXian("删除");
                     }
                 }
             });

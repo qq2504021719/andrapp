@@ -232,7 +232,7 @@
                         android:background="@drawable/button"
                         android:textColor="@color/colorAccent"
                         android:layout_height="20dp"
-                        android:text="编辑"/>
+                        android:text="反馈"/>
 
                     <TextView
                         android:id="@+id/phone2_shen_he_shan_chu"
@@ -382,7 +382,7 @@
                         android:background="@drawable/button"
                         android:textColor="@color/colorAccent"
                         android:layout_height="20dp"
-                        android:text="编辑"/>
+                        android:text="反馈"/>
 
                     <TextView
                         android:id="@+id/phone3_shen_he_shan_chu"
@@ -532,7 +532,7 @@
                         android:background="@drawable/button"
                         android:textColor="@color/colorAccent"
                         android:layout_height="20dp"
-                        android:text="编辑"/>
+                        android:text="反馈"/>
 
                     <TextView
                         android:id="@+id/phone4_shen_he_shan_chu"

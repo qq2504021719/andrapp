@@ -139,6 +139,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     // image弹窗显示
     public Dialog mImagedialog;
 
+    // 门店搜索返回
+    public String mMenDianDataJson = "";
+
     public static Intent newIntent(Context packageContext, String like){
         Intent i = new Intent(packageContext,XunDianChaXunActivity.class);
         i.putExtra(EXTRA,like);
@@ -160,13 +163,53 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
     @Override
     public void onResume(){
-        likebt = getIntent().getStringExtra(EXTRA);
+        mMenDianDataJson = getIntent().getStringExtra(EXTRA);
+        // 参数解析
+        canShuJieXi();
+
         if(!likebt.equals("") && !likebt.equals("0")){
+            // 请求巡店数据
             XunDianShuJuChaXun();
         }
-        // 请求巡店数据
-//        XunDianShuJuChaXun();
         super.onResume();
+    }
+
+    public void canShuJieXi(){
+        try {
+            JSONObject jsonObject = new JSONObject(mMenDianDataJson);
+            // 门店名称
+            likebt = jsonObject.getString("mendian_name");
+            mText_bf_gong_si_ming_cheng_value.setText(likebt);
+
+            // 门店号
+            mText_bf_gong_si_bian_hao_value.setText(jsonObject.getString("mendian_men_dian_hao"));
+
+            // 提交人
+            tiJiaoRen = jsonObject.getString("created_user_name");
+            mTi_jiao_ren_value.setText(tiJiaoRen);
+
+            // 搜索时间
+            kstime = jsonObject.getString("kstime");
+            jstime = jsonObject.getString("jstime");
+            mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
+
+            // 品牌
+            pinPai = jsonObject.getString("mendian_men_dian_ping_pai");
+            mText_bf_gong_si_pin_pai_value.setText(pinPai);
+            // 搜索品牌
+            mPinPaiSearch = pinPai;
+
+            // 参数类型
+            canShuLeiXing = jsonObject.getString("men_dian_lei_xing");
+            mCha_xun_men_dian_lei_xing_value.setText(canShuLeiXing);
+
+            // 项目名称
+            XiangMuMingCheng = jsonObject.getString("canshu_name");
+            mXun_dian_xiang_mu_ming_chen_search.setText(XiangMuMingCheng);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -293,9 +336,49 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                 mMenDianLeiXingJsonData = msg.obj.toString();
                 // 显示门店类型数据
                 ShowMenDian(mMenDianLeiXingJsonData,3);
+            }else if(msg.what == 3){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    startActivity(mI);
+                    finish();
+                }
+
             }
         }
     };
+
+    /**
+     * 权限验证
+     */
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(3, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+
 
     // 巡店数据查询
     public void XunDianShuJuChaXun(){
@@ -992,9 +1075,11 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = XunDianChaXunShenHeActivity.newIntent(XunDianChaXunActivity.this,stringJson);
-                    startActivity(i);
-                    finish();
+                    mI = XunDianChaXunShenHeActivity.newIntent(XunDianChaXunActivity.this,stringJson);
+                    mQuanXianName = "巡店查询-巡店查询审核";
+                    // 权限验证
+                    QunXianYanZheng();
+
                 }
             });
         }

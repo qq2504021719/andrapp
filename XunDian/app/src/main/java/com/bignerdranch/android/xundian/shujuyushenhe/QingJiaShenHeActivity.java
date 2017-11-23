@@ -50,6 +50,12 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
     // 提交状态
     public String mTiJiaoZhuangTai = "";
 
+
+    // 审核回调
+    public String mShstring = "";
+    public int mShid = 0;
+    public String mShBString = "";
+
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,QingJiaShenHeActivity.class);
         i.putExtra(EXTRA,intIsId);
@@ -153,9 +159,46 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
                 }
                 // 关闭loading
                 WeiboDialogUtils.closeDialog(mWeiboDialog);
+            }else if(msg.what == 4){
+                if(msg.obj.toString().equals("无")){
+                    tiShi(mContext,"无权限");
+                }else{
+                    ShenHeTiJiao(mShstring,mShid,mShBString);
+                }
+
             }
         }
     };
+
+    /**
+     * 权限验证
+     */
+    public void QunXianYanZheng(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("name",mQuanXianName);
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/UserDataQuanXian")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(4, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
 
     /**
      * 请求未审核数据
@@ -227,6 +270,8 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
 
     }
 
+
+
     /**
      * 用户同意不同意回调
      * @param string 同意/不同意
@@ -236,12 +281,39 @@ public class QingJiaShenHeActivity extends ShuJuYuShenHeCommActivity implements 
     public void weiShenHe(String string, int id,String BString) {
         if(string.trim().equals("同意") || string.trim().equals("不同意")){
             mTiJiaoZhuangTai = string.trim();
-            ShenHeTiJiao(string,id,BString);
+            QingJiaShenHeQuanXian(string,id,BString);
         }else{
             tiShi(mContext,"异常,请稍后再试");
         }
     }
 
+
+
+    /**
+     *
+     * @param string
+     * @param id
+     * @param BString
+     */
+    public void QingJiaShenHeQuanXian(String string, int id,String BString){
+        mShstring = string;
+        mShid = id;
+        mShBString = BString;
+        if(string.equals("同意")){
+            mQuanXianName = "android-请假审核-同意";
+        }else if(string.equals("不同意")){
+            mQuanXianName = "android-请假审核-不同意";
+        }
+        // 权限验证
+        QunXianYanZheng();
+    }
+
+    /**
+     * 审核提交
+     * @param string
+     * @param id
+     * @param BString
+     */
     public void ShenHeTiJiao(String string, int id,String BString){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
