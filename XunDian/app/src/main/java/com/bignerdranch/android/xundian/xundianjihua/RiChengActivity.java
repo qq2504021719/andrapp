@@ -261,7 +261,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     mZhouData[0] = jsonArray.get(0).toString()+"周";
 
                     // 日期赋值
-                    mRiQiData = new String[7];
+                    mRiQiData = new String[8];
                     mRiQiData[0] = jsonArray.get(0).toString();
                     mRiQiData[1] = jsonArray.get(1).toString();
                     mRiQiData[2] = jsonArray.get(2).toString();
@@ -269,6 +269,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     mRiQiData[4] = jsonArray.get(4).toString();
                     mRiQiData[5] = jsonArray.get(5).toString();
                     mRiQiData[6] = jsonArray.get(6).toString();
+                    mRiQiData[7] = jsonArray.get(7).toString();
 
                     // 数据赋值
                     mZhouJsonData = jsonObject.getString("data").toString();
@@ -286,7 +287,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             }
         }
 
-        mRiQiDataZhou = new String[7];
+        mRiQiDataZhou = new String[8];
         // 得到每天周几
         for(int i = 0;i<mRiQiData.length;i++){
             mRiQiDataZhou[i] = mRiQiData[i]+" "+getCurrentWeekOfMonth(mRiQiData[i]);
@@ -905,7 +906,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         String strs = null;
 
 
-        if(mRiQiData[0].equals(xunDianJiHua.getRiQi())){
+        if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
             // 周一
             strs = stringRiQi+" 周一";
             ll = mLinear_zhou_yi;
@@ -913,37 +914,37 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
 //            Log.i("巡店",mRiQiData[0]+"|"+xunDianJiHua.getRiQi());
             ZhouYi++;
 
-        }else if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
             // 周二
             strs = stringRiQi+" 周二";
             ll = mLinear_zhou_er;
             BiaoShi = ZhouEr;
             ZhouEr++;
-        }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
             // 周三
             strs = stringRiQi+" 周三";
             ll = mLinear_zhou_san;
             BiaoShi = ZhouSan;
             ZhouSan++;
-        }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
             // 周四
             strs = stringRiQi+" 周四";
             ll = mLinear_zhou_si;
             BiaoShi = ZhouSi;
             ZhouSi++;
-        }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
             // 周五
             strs = stringRiQi+" 周五";
             ll = mLinear_zhou_wu;
             BiaoShi = ZhouWu;
             ZhouWu++;
-        }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
             // 周六
             strs = stringRiQi+" 周六";
             ll = mLinear_zhou_liu;
             BiaoShi = ZhouLiu;
             ZhouLiu++;
-        }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[7].equals(xunDianJiHua.getRiQi())){
             // 周日
             strs = stringRiQi+" 周日";
             ll = mLinear_zhou_ri;

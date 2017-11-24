@@ -267,7 +267,6 @@ public class BenZhouFragment extends Fragment{
      * @param string
      */
     public void JiHuaQingQiuFanHui(String string){
-
         if(!string.equals("")){
             try {
 
@@ -278,7 +277,7 @@ public class BenZhouFragment extends Fragment{
                     mBenZhou = jsonArray.get(0).toString();
 
                     // 日期赋值
-                    mRiQiData = new String[7];
+                    mRiQiData = new String[8];
                     mRiQiData[0] = jsonArray.get(0).toString();
                     mRiQiData[1] = jsonArray.get(1).toString();
                     mRiQiData[2] = jsonArray.get(2).toString();
@@ -286,10 +285,10 @@ public class BenZhouFragment extends Fragment{
                     mRiQiData[4] = jsonArray.get(4).toString();
                     mRiQiData[5] = jsonArray.get(5).toString();
                     mRiQiData[6] = jsonArray.get(6).toString();
+                    mRiQiData[7] = jsonArray.get(7).toString();
 
                     // 数据赋值
                     mZhouJsonData = jsonObject.getString("data").toString();
-
                     // 值处理
                     setXunDianJiHuas();
                     // 显示计划
@@ -430,19 +429,19 @@ public class BenZhouFragment extends Fragment{
      */
     public void WanChengnum(XunDianJiHua xunDianJiHua){
         int c = xunDianJiHua.getIsWC();
-            if(mRiQiData[0].equals(xunDianJiHua.getRiQi())){
+            if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
             if(c == 1) mJiLuNum[0]++;
-        }else if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
-            if(c == 1) mJiLuNum[1]++;
         }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
-            if(c == 1) mJiLuNum[2]++;
+            if(c == 1) mJiLuNum[1]++;
         }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
-            if(c == 1) mJiLuNum[3]++;
+            if(c == 1) mJiLuNum[2]++;
         }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
-            if(c == 1) mJiLuNum[4]++;
+            if(c == 1) mJiLuNum[3]++;
         }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
-            if(c == 1) mJiLuNum[5]++;
+            if(c == 1) mJiLuNum[4]++;
         }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
+            if(c == 1) mJiLuNum[5]++;
+        }else if(mRiQiData[7].equals(xunDianJiHua.getRiQi())){
             if(c == 1) mJiLuNum[6]++;
         }
     }
@@ -503,7 +502,8 @@ public class BenZhouFragment extends Fragment{
         // 每天的完成率
         String wanChengLv = "0%";
 
-        if(mRiQiData[0].equals(xunDianJiHua.getRiQi())){
+
+        if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
             // 周一
 
             ll = mLinear_zhou_yi;
@@ -520,8 +520,9 @@ public class BenZhouFragment extends Fragment{
             wanChengLv = (int)(float3*100)+"%";
             ZhouYi++;
 
-        }else if(mRiQiData[1].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
             // 周二
+
             ll = mLinear_zhou_er;
             bianhao = ZhouEr;
             ll_title = mLinear_zhou_er_title;
@@ -533,7 +534,7 @@ public class BenZhouFragment extends Fragment{
             float float3 = float1/float2;
             wanChengLv = (int)(float3*100)+"%";
             ZhouEr++;
-        }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
             // 周三
             ll = mLinear_zhou_san;
             bianhao = ZhouSan;
@@ -546,7 +547,7 @@ public class BenZhouFragment extends Fragment{
             float float3 = float1/float2;
             wanChengLv = (int)(float3*100)+"%";
             ZhouSan++;
-        }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
             // 周四
             ll = mLinear_zhou_si;
             bianhao = ZhouSi;
@@ -559,7 +560,7 @@ public class BenZhouFragment extends Fragment{
             float float3 = float1/float2;
             wanChengLv = (int)(float3*100)+"%";
             ZhouSi++;
-        }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
             // 周五
             ll = mLinear_zhou_wu;
             bianhao = ZhouWu;
@@ -572,7 +573,7 @@ public class BenZhouFragment extends Fragment{
             float float3 = float1/float2;
             wanChengLv = (int)(float3*100)+"%";
             ZhouWu++;
-        }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
             // 周六
             ll = mLinear_zhou_liu;
             bianhao = ZhouLiu;
@@ -585,7 +586,7 @@ public class BenZhouFragment extends Fragment{
             float float3 = float1/float2;
             wanChengLv = (int)(float3*100)+"%";
             ZhouLiu++;
-        }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
+        }else if(mRiQiData[7].equals(xunDianJiHua.getRiQi())){
             // 周日
             ll = mLinear_zhou_ri;
             bianhao = ZhouQi;
