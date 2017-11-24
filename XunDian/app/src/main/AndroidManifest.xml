@@ -82,8 +82,9 @@
                   android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
         <!--考勤记录-->
         <activity android:name=".kaoqing.KaoQingJiLuActivity"></activity>
-        <!--拜访记录-->
-        <activity android:name=".BaiFangGuanLiActivity"></activity>
+        <!--拜访管理-->
+        <activity android:name=".BaiFangGuanLiActivity"
+                  android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
         <!--数据与审核-->
         <activity android:name=".shujuyushenhe.ShuJuYuShenHeActivity"></activity>
         <!--请假审核-->

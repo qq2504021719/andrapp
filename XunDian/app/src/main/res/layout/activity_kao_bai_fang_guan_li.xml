@@ -125,6 +125,7 @@
 
                     <!--现场采集照片-->
                     <LinearLayout
+                        android:id="@+id/xian_chang_zhao_pian"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -136,12 +137,13 @@
                             android:paddingBottom="10dp"
                             android:textColor="@color/huise6"
                             android:text="现场采集照片"/>
-
+                        <!--1-->
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
+                            <!--1-->
                             <ImageView
                                 android:id="@+id/imageview_bf_phone1"
                                 style="@style/baiFnagImageView"/>
@@ -149,11 +151,10 @@
                             <ImageView
                                 android:id="@+id/imageview_bf_phone2"
                                 style="@style/baiFnagImageView"/>
-
-
                         </LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">

@@ -36,6 +36,7 @@ import com.baidu.mapapi.map.MapView;
 import com.bignerdranch.android.xundian.comm.BaiFangGuanli;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.PictureUtils;
+import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 import com.bignerdranch.android.xundian.kehutuozhan.KeHuActivity;
 
@@ -46,6 +47,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -86,17 +88,8 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     // 结束时间
     private TextView mtext_bf_jie_shu_time;
     private TextView mtext_bf_jie_shu_time_value;
-
-    // 图片1
-    private ImageView mImageview_bf_phone1;
+    // 图片点击标识
     public int REQUEST_PHOTO = 1;
-    // 图片2
-    private ImageView mImageview_bf_phone2;
-    // 图片3
-    private ImageView mImageview_bf_phone3;
-    // 图片4
-    private ImageView mImageview_bf_phone4;
-
     // 拜访内容
     private EditText mEditText_bf_nei_rong;
 
@@ -123,16 +116,33 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     // 拜访对象
     private BaiFangGuanli mBaiFangGuanli = new BaiFangGuanli();
 
+    // 图片ImageViewList
+    public HashMap<Integer,ImageView> mPhoneImageViewList = new HashMap<Integer, ImageView>();
+    // 图片存储对象
+    public HashMap<Integer,File> mPhoneList = new HashMap<Integer, File>();
+    // 图片存储提交地址
+    public JSONObject mPhonePathJson = new JSONObject();
+
     // 数据提交
     // 拜访数据提交url
     private String mBfUrl = Config.URL+"/app/bai_fang_add";
     Handler handler = new Handler();
     // 图片提交返回数量
-    private int mTuPianNum = 0;
+    private int mTuPianNum = 1;
     // 图片总数
     private int mTuPianCount = 4;
 
+    // 公司设置图片数量
+    public int mGongSetPhoneNum = 10;
 
+    // 照片父Linear
+    public LinearLayout mXian_chang_zhao_pian;
+
+    // 当前点击ImageView
+    public ImageView mDangQianOnclickImageView;
+
+    // 当前拍照数量
+    public int mPaiZhaoNum = 0;
 
 
     public static Intent newIntent(Context packageContext, int intIsId){
@@ -187,14 +197,9 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         mtext_bf_jie_shu_time = (TextView)findViewById(R.id.text_bf_jie_shu_time);
         mtext_bf_jie_shu_time_value = (TextView)findViewById(R.id.text_bf_jie_shu_time_value);
 
-        // 图片1
-        mImageview_bf_phone1 = (ImageView)findViewById(R.id.imageview_bf_phone1);
-        // 图片2
-        mImageview_bf_phone2 = (ImageView)findViewById(R.id.imageview_bf_phone2);
-        // 图片3
-        mImageview_bf_phone3 = (ImageView)findViewById(R.id.imageview_bf_phone3);
-        // 图片4
-        mImageview_bf_phone4 = (ImageView)findViewById(R.id.imageview_bf_phone4);
+        // 照片父几点
+        mXian_chang_zhao_pian = (LinearLayout)findViewById(R.id.xian_chang_zhao_pian);
+
 
         // 拜访内容
         mEditText_bf_nei_rong = (EditText)findViewById(R.id.editText_bf_nei_rong);
@@ -206,6 +211,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
 
         // 提交
         mButton_bf_ti_jiao_gzb = (Button)findViewById(R.id.button_bf_ti_jiao_gzb);
+
     }
 
     /**
@@ -236,6 +242,9 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         BaiDuDingWeiDiaoYong(mContext);
         // 搜索门店
         menDianSearch();
+        // 请求公司信息
+        GongSiXinXiQingQiu();
+
     }
 
 
@@ -297,39 +306,6 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
             }
         });
 
-        // 图片1
-        mImageview_bf_phone1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhoneXuanZhe();
-                REQUEST_PHOTO = 1;
-            }
-        });
-        // 图片2
-        mImageview_bf_phone2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhoneXuanZhe();
-                REQUEST_PHOTO = 2;
-            }
-        });
-        // 图片3
-        mImageview_bf_phone3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhoneXuanZhe();
-                REQUEST_PHOTO = 3;
-            }
-        });
-        // 图片4
-        mImageview_bf_phone4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhoneXuanZhe();
-                REQUEST_PHOTO = 4;
-            }
-        });
-
         // 拜访内容
         mEditText_bf_nei_rong.addTextChangedListener(new TextWatcher() {
             @Override
@@ -370,23 +346,14 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
                 if(mBaiFangGuanli.getMenDianId() != null && mBaiFangGuanli.getMenDian() != null){
                     if(mBaiFangGuanli.getKaiShiTime() != null){
                         if(mBaiFangGuanli.getJieShuShiJian() != null){
-                            if(mBaiFangGuanli.getPhont1() != null
-                                    && mBaiFangGuanli.getPhont2() != null
-                                    && mBaiFangGuanli.getPhont3() != null
-                                    && mBaiFangGuanli.getPhont4() != null){
-
-                                if(mBaiFangGuanli.getBaiFangNeiRong() != null){
-                                    if(mBaiFangGuanli.getAddr() != null){
-                                        shuJiTiJiao();
-                                    }else{
-                                        tiShi(mContext,"请重新定位");
-                                    }
+                            if(mBaiFangGuanli.getBaiFangNeiRong() != null){
+                                if(mBaiFangGuanli.getAddr() != null){
+                                    shuJiTiJiao();
                                 }else{
-                                    tiShi(mContext,"拜访内容不能为空");
+                                    tiShi(mContext,"请重新定位");
                                 }
-
                             }else{
-                                tiShi(mContext,"图片不能为空");
+                                tiShi(mContext,"拜访内容不能为空");
                             }
                         }else{
                             tiShi(mContext,"请选择结束时间");
@@ -419,44 +386,106 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
                     try {
                         JSONObject jsonObject = new JSONObject(string);
                         if (jsonObject.getString("id") != null && jsonObject.getString("path") != null) {
-                            mTuPianNum++;
-                            switch (mTuPianNum) {
-                                case 1:
-                                    mBaiFangGuanli.setShangChuanFilePath1(jsonObject.getString("path"));
-                                    break;
-                                case 2:
-                                    mBaiFangGuanli.setShangChuanFilePath2(jsonObject.getString("path"));
-                                    break;
-                                case 3:
-                                    mBaiFangGuanli.setShangChuanFilePath3(jsonObject.getString("path"));
-                                    break;
-                                case 4:
-                                    mBaiFangGuanli.setShangChuanFilePath4(jsonObject.getString("path"));
-                                    // 参数提交
-                                    canShuTiJiao();
-                                    break;
+
+                            // 存储返回地址
+                            mPhonePathJson.put(String.valueOf(mTuPianNum),jsonObject.getString("path"));
+                            if(mTuPianNum == mPaiZhaoNum){
+                                // 参数提交
+                                canShuTiJiao();
                             }
+                            mTuPianNum++;
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }else if(msg.what==2){
+                // 关闭loading
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
                 tiShi(mContext,msg.obj+"");
                 TiJiaoNeiRongQingKong();
+            }else if(msg.what == 3){
+                if(msg.obj.toString().equals("无数据")){
+                }else{
+                    try {
+                        JSONObject jsonObject = new JSONObject(msg.obj.toString());
+                        String bai_fang_phone_num = jsonObject.getString("bai_fang_phone_num");
+                        if(!bai_fang_phone_num.equals("null") && !bai_fang_phone_num.equals("")){
+                            if(Integer.valueOf(bai_fang_phone_num) > 10){
+                                mGongSetPhoneNum = Integer.valueOf(bai_fang_phone_num);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 照片处理显示 mGongSetPhoneNum
+                ZhaoXunHuanXianShi();
             }
         }
     };
 
     /**
+     * 请求公司信息
+     */
+    public void GongSiXinXiQingQiu(){
+        final OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        body.addFormDataPart("xx","xx");
+        final Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+mToken)
+                .url(Config.URL+"/app/user_gs")
+                .post(body.build())
+                .build();
+        //新建一个线程，用于得到服务器响应的参数
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                try {
+                    //回调
+                    response = client.newCall(request).execute();
+                    //将服务器响应的参数response.body().string())发送到hanlder中，并更新ui
+                    mHandler.obtainMessage(3, response.body().string()).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+    }
+
+    /**
      * 拜访图片提交
      */
     public void shuJiTiJiao(){
+        LoadingStringEdit("数据提交中...");
 
-        PhoneTiJiao(mBaiFangGuanli.getPhont1());
-        PhoneTiJiao(mBaiFangGuanli.getPhont2());
-        PhoneTiJiao(mBaiFangGuanli.getPhont3());
-        PhoneTiJiao(mBaiFangGuanli.getPhont4());
+        // 计算图片实际拍照数量
+        mPaiZhaoNum = 0;
+        for (int i = 1;i<=mGongSetPhoneNum;i++){
+            if(mPhoneList.get(i) != null){
+                mPaiZhaoNum ++;
+            }
+        }
+
+
+
+        // 没有选择图片
+        if(mPaiZhaoNum == 0){
+            // 参数提交
+            canShuTiJiao();
+        }else{
+            // 图片上传
+            mTuPianNum = 1;
+            for (int i = 1;i<=mGongSetPhoneNum;i++){
+                if(mPhoneList.get(i) != null){
+                    PhoneTiJiao(mPhoneList.get(i));
+                }
+            }
+        }
+
+
     }
 
     /**
@@ -504,7 +533,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     }
 
     /**
-     * 拜访数据提交
+     * 拜访数据提交 mPhonePathList
      */
     public void canShuTiJiao(){
         final OkHttpClient client = new OkHttpClient();
@@ -513,10 +542,8 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         body.addFormDataPart("men_dian_id",mBaiFangGuanli.getMenDianId());
         body.addFormDataPart("kai_shi_time",mBaiFangGuanli.getKaiShiTime());
         body.addFormDataPart("jie_shu_time",mBaiFangGuanli.getJieShuShiJian());
-        body.addFormDataPart("phone1",mBaiFangGuanli.getShangChuanFilePath1());
-        body.addFormDataPart("phone2",mBaiFangGuanli.getShangChuanFilePath2());
-        body.addFormDataPart("phone3",mBaiFangGuanli.getShangChuanFilePath3());
-        body.addFormDataPart("phone4",mBaiFangGuanli.getShangChuanFilePath4());
+        body.addFormDataPart("phone",mPhonePathJson.toString());
+
         body.addFormDataPart("bai_fang_nei_rong",mBaiFangGuanli.getBaiFangNeiRong());
         body.addFormDataPart("lng",mBaiFangGuanli.getLng());
         body.addFormDataPart("lat",mBaiFangGuanli.getLat());
@@ -564,14 +591,12 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         // 结束时间
         mtext_bf_jie_shu_time_value.setText("");
 
-        // 图片1
-        mImageview_bf_phone1.setImageDrawable(getResources().getDrawable(R.color.zhuti));
-        // 图片2
-        mImageview_bf_phone2.setImageDrawable(getResources().getDrawable(R.color.zhuti));
-        // 图片3
-        mImageview_bf_phone3.setImageDrawable(getResources().getDrawable(R.color.zhuti));
-        // 图片4
-        mImageview_bf_phone4.setImageDrawable(getResources().getDrawable(R.color.zhuti));
+        // 清除图片
+        for (int i = 0;i<=mGongSetPhoneNum;i++){
+            if(mPhoneImageViewList.get(i) != null){
+                mPhoneImageViewList.get(i).setImageDrawable(getResources().getDrawable(R.color.zhuti));
+            }
+        }
 
         // 拜访内容
         mEditText_bf_nei_rong.setText("");
@@ -627,24 +652,10 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         // 获取文件存储地址
         final File mPhotoFile = getPhotoFile(getPhotoFilename());
         ImageView imageView = new ImageView(mContext);
-        switch (REQUEST_PHOTO){
-            case 1:
-                imageView = mImageview_bf_phone1;
-                mBaiFangGuanli.setPhont1(mPhotoFile);
-                break;
-            case 2:
-                imageView = mImageview_bf_phone2;
-                mBaiFangGuanli.setPhont2(mPhotoFile);
-                break;
-            case 3:
-                imageView = mImageview_bf_phone3;
-                mBaiFangGuanli.setPhont3(mPhotoFile);
-                break;
-            case 4:
-                imageView = mImageview_bf_phone4;
-                mBaiFangGuanli.setPhont4(mPhotoFile);
-                break;
-        }
+        // 存储生成的文件地址
+        mPhoneList.put(REQUEST_PHOTO,mPhotoFile);
+
+        imageView = mDangQianOnclickImageView;
 
         PackageManager packageManager = this.getPackageManager();
         // 相机
@@ -654,7 +665,6 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         final boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
         imageView.setEnabled(canTakePhoto);
         if(canTakePhoto){
-//            Uri uri = Uri.fromFile(mPhotoFile);
             Uri uri = FileProvider.getUriForFile(mContext,"com.bignerdranch.android.xundian.provider",mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
         }
@@ -773,6 +783,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         mBaiFangGuanli.setAddr(mLocationBaiDu.getAddr());
         // 存储定位信息语义化
         mBaiFangGuanli.setAddr1(mLocationBaiDu.getLocationDescribe());
+        Log.i("巡店",mBaiFangGuanli.getAddr()+"|"+mBaiFangGuanli.getAddr1());
         // 存储经度
         mBaiFangGuanli.setLng(String.valueOf(mLocationBaiDu.getLontitude()));
         // 存储纬度
@@ -787,7 +798,6 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     public void ShowMenDian(String string,int is){
         mBf_search_men_dian.removeAllViews();
         try {
-            Log.i("巡店",string);
             JSONArray jsonArray = new JSONArray(string);
             if(jsonArray.length() > 0){
                 for(int i = 0;i<jsonArray.length();i++){
@@ -825,35 +835,32 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(is == 2){
-                    // 隐藏弹出
-                    dialog.hide();
-                    // 显示选择项
-                    try {
-                        JSONObject jsonObject = new JSONObject(string);
-                        String idText = jsonObject.getString("id");
-                        String nameText = jsonObject.getString("name");
-                        String men_dian_ping_paiText = jsonObject.getString("men_dian_ping_pai");
-                        String men_dian_haoText = jsonObject.getString("men_dian_hao");
+            if(is == 2){
+                // 隐藏弹出
+                dialog.hide();
+                // 显示选择项
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    String idText = jsonObject.getString("id");
+                    String nameText = jsonObject.getString("name");
+                    String men_dian_ping_paiText = jsonObject.getString("men_dian_ping_pai");
+                    String men_dian_haoText = jsonObject.getString("men_dian_hao");
 
-                        mText_bf_gong_si_ming_cheng_value.setText(nameText);
-                        // 存储
-                        mBaiFangGuanli.setMenDianId(idText);
-                        mBaiFangGuanli.setMenDian(nameText);
-                        // 编号
-                        mText_bf_gong_si_bian_hao_value.setText(men_dian_haoText);
-                        mBaiFangGuanli.setMenDianHao(men_dian_haoText);
-                        // 品牌
-                        mText_bf_gong_si_pin_pai_value.setText(men_dian_ping_paiText);
-                        mBaiFangGuanli.setPinPai(men_dian_ping_paiText);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }else if(is == 1){
-
+                    mText_bf_gong_si_ming_cheng_value.setText(nameText);
+                    // 存储
+                    mBaiFangGuanli.setMenDianId(idText);
+                    mBaiFangGuanli.setMenDian(nameText);
+                    // 编号
+                    mText_bf_gong_si_bian_hao_value.setText(men_dian_haoText);
+                    mBaiFangGuanli.setMenDianHao(men_dian_haoText);
+                    // 品牌
+                    mText_bf_gong_si_pin_pai_value.setText(men_dian_ping_paiText);
+                    mBaiFangGuanli.setPinPai(men_dian_ping_paiText);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
+            }else if(is == 1){
+            }
             }
         });
 
@@ -942,24 +949,10 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
 
         Bitmap bitmap = PictureUtils.getScaledBitmap(files.getPath(),this);
 
-        switch (REQUEST_PHOTO){
-            case 1:
-                mImageview_bf_phone1.setImageBitmap(bitmap);
-                mBaiFangGuanli.setPhont1(files);
-                break;
-            case 2:
-                mImageview_bf_phone2.setImageBitmap(bitmap);
-                mBaiFangGuanli.setPhont2(files);
-                break;
-            case 3:
-                mImageview_bf_phone3.setImageBitmap(bitmap);
-                mBaiFangGuanli.setPhont3(files);
-                break;
-            case 4:
-                mImageview_bf_phone4.setImageBitmap(bitmap);
-                mBaiFangGuanli.setPhont4(files);
-                break;
-        }
+        // 显示图片
+        mDangQianOnclickImageView.setImageBitmap(bitmap);
+        // 存储压缩后的图片
+        mPhoneList.put(REQUEST_PHOTO,files);
     }
 
     /**
@@ -968,20 +961,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     private void updatePhotoView(){
         // 隐藏弹出
         File PhotoFile = null;
-        switch (REQUEST_PHOTO){
-            case 1:
-                PhotoFile = mBaiFangGuanli.getPhont1();
-                break;
-            case 2:
-                PhotoFile = mBaiFangGuanli.getPhont2();
-                break;
-            case 3:
-                PhotoFile = mBaiFangGuanli.getPhont3();
-                break;
-            case 4:
-                PhotoFile = mBaiFangGuanli.getPhont4();
-                break;
-        }
+        PhotoFile = mPhoneList.get(REQUEST_PHOTO);
 
         if(PhotoFile != null){
             // 压缩图片
@@ -991,24 +971,87 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
             // 显示图片
             Bitmap bitmap = PictureUtils.getScaledBitmap(files.getPath(),this);
 
-            switch (REQUEST_PHOTO){
-                case 1:
-                    mImageview_bf_phone1.setImageBitmap(bitmap);
-                    mBaiFangGuanli.setPhont1(files);
-                    break;
-                case 2:
-                    mImageview_bf_phone2.setImageBitmap(bitmap);
-                    mBaiFangGuanli.setPhont2(files);
-                    break;
-                case 3:
-                    mImageview_bf_phone3.setImageBitmap(bitmap);
-                    mBaiFangGuanli.setPhont3(files);
-                    break;
-                case 4:
-                    mImageview_bf_phone4.setImageBitmap(bitmap);
-                    mBaiFangGuanli.setPhont4(files);
-                    break;
+            // 显示图片
+            mDangQianOnclickImageView.setImageBitmap(bitmap);
+            // 存储压缩后的图片
+            mPhoneList.put(REQUEST_PHOTO,files);
+        }
+    }
+
+    /**
+     * 照片点击循环显示 mXian_chang_zhao_pian
+     */
+    public void ZhaoXunHuanXianShi(){
+        LinearLayout linearLayout = CreateLinearBaiFang(1);
+        for(int i = 0;i<mGongSetPhoneNum;i++){
+            ImageView imageView = CreateImageViewBaiFang(1,i+1);
+
+            if(i%2 == 0 && i > 0){
+                mXian_chang_zhao_pian.addView(linearLayout);
+                linearLayout = CreateLinearBaiFang(1);
+                linearLayout.addView(imageView);
+            }else{
+                linearLayout.addView(imageView);
+            }
+
+            // 最后一次循环,并且最后一次不是偶数。
+            if((mGongSetPhoneNum-1)%2 != 0 && (mGongSetPhoneNum-1) == i){
+                mXian_chang_zhao_pian.addView(linearLayout);
             }
         }
+    }
+
+    /**
+     * 创建linearLayout
+     * @param is 创建类型
+     */
+    public LinearLayout CreateLinearBaiFang(int is){
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if(is == 1){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }else
+
+        linearLayout.setLayoutParams(layoutParam);
+
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        if(is == 1){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        }
+
+        return linearLayout;
+    }
+
+    /**
+     * 创建ImageView
+     * @param is 创建类型
+     * @return
+     */
+    public ImageView CreateImageViewBaiFang(int is,final int bs){
+        final ImageView imageView = new ImageView(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        if(is == 1){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,370,1);
+            layoutParam.setMargins(0,0,30,30);
+        }
+        imageView.setLayoutParams(layoutParam);
+
+        if(is == 1){
+            imageView.setBackgroundColor(getResources().getColor(R.color.zhuti));
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDangQianOnclickImageView = imageView;
+                    // 启动拍照
+                    PhoneXuanZhe();
+                    REQUEST_PHOTO = bs;
+
+                    mPhoneImageViewList.put(REQUEST_PHOTO,mDangQianOnclickImageView);
+                }
+            });
+        }
+        return imageView;
     }
 }
