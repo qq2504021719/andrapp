@@ -1,15 +1,19 @@
 package com.bignerdranch.android.xundian;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.Installation;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
@@ -32,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
@@ -614,18 +620,10 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     public void getJiQiMa(){
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-        String imei = "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //  大于等于26即为7.0及以上执行内容
-            imei = telephonyManager.getImei();
-        } else {
-            //  低于24即为7.0以下执行内容
-            imei = telephonyManager.getDeviceId();
-        }
-        mJiQiMa = imei;
-    }
 
+        mJiQiMa = Installation.id(mContext);
+
+    }
 
     /**
      * 检查网络是否完全连接 true 连接  false 没有连接
