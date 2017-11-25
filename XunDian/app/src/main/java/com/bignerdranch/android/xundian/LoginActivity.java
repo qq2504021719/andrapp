@@ -614,8 +614,15 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     public void getJiQiMa(){
-        TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
-        String imei = telephonyManager.getDeviceId();
+        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+        String imei = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //  大于等于26即为7.0及以上执行内容
+            imei = telephonyManager.getImei();
+        } else {
+            //  低于24即为7.0以下执行内容
+            imei = telephonyManager.getDeviceId();
+        }
         mJiQiMa = imei;
     }
 
