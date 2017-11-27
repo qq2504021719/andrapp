@@ -1115,7 +1115,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     View viewD = inflater.inflate(R.layout.alert_image, null);
 
                     // 初始化组件
-                    ImageView image = viewD.findViewById(R.id.alert_iamge);
+                    ImageView image = viewD.findViewById(R.id.alert_iamge_image);
 
                     WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 

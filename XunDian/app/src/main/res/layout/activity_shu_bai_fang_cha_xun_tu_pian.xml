@@ -11,6 +11,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/bai_fang_shen_he_linear"
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,7 +27,7 @@
                 android:textColor="@color/heise"
                 android:textSize="18dp"/>
 
-            <!--phone1-->
+            <!--1-->
             <LinearLayout
                 android:id="@+id/phone1_shenhe_linear_bj"
                 android:layout_width="match_parent"
@@ -34,24 +35,16 @@
                 android:background="@drawable/bottom_border"
                 android:orientation="vertical"
                 android:padding="10dp"
+                android:visibility="gone"
                 >
-
+                <!--1-->
                 <ImageView
                     android:id="@+id/phone1_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <EditText
-                    android:id="@+id/phone1_bian_ji_can_shu_xiu_gai"
-                    style="@style/keHuTuoZhanEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="left|center"
-                    android:hint="反馈内容"
-                    android:textColor="@color/huise6"
-                    android:visibility="gone"/>
 
-                <!--审核-->
+                <!--2-->
                 <LinearLayout
                     android:id="@+id/phone1_xian_shi_mo_shi_1"
                     android:layout_width="match_parent"
@@ -59,7 +52,7 @@
                     android:gravity="right"
                     android:orientation="horizontal"
                     android:paddingTop="10dp">
-
+                    <!--1-->
                     <TextView
                         android:id="@+id/phone1_shen_he_chou_cha"
                         android:layout_width="40dp"
@@ -68,7 +61,7 @@
                         android:gravity="center"
                         android:text="抽查"
                         android:textColor="@color/colorAccent"/>
-
+                    <!--2-->
                     <TextView
                         android:id="@+id/phone1_shen_he_bian_ji"
                         android:layout_width="40dp"
@@ -78,7 +71,7 @@
                         android:gravity="center"
                         android:text="反馈"
                         android:textColor="@color/colorAccent"/>
-
+                    <!--2-->
                     <TextView
                         android:id="@+id/phone1_shen_he_shan_chu"
                         android:layout_width="40dp"
@@ -91,26 +84,26 @@
 
                 </LinearLayout>
 
-                <!--合格 不合格-->
+                <!--3-->
                 <LinearLayout
                     android:id="@+id/phone1_xian_shi_mo_shi_2"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
-                    <!--合格-->
+                    <!--4-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center">
-
+                        <!--2-->
                         <ImageView
                             android:id="@+id/phone1_cha_xun_zhao_pian_xian_shi"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:background="@drawable/ka_qing_ku_lian"/>
-
+                        <!--3-->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -118,19 +111,19 @@
                             android:text="合格"
                             android:textColor="@color/heise"/>
                     </LinearLayout>
-                    <!--不合格-->
+                    <!--4-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center">
-
+                        <!--2-->
                         <ImageView
                             android:id="@+id/phone1_cha_xun_can_shu_xian_shi"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:background="@drawable/ka_qing_ku_lian"/>
-
+                        <!--3-->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -138,13 +131,13 @@
                             android:text="不合格"
                             android:textColor="@color/heise"/>
                     </LinearLayout>
-                    <!--保存-->
+                    <!--5-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical">
-
+                        <!--4-->
                         <TextView
                             android:id="@+id/phone1_chou_cha_bao_cun"
                             android:layout_width="40dp"
@@ -167,6 +160,16 @@
                     android:paddingTop="10dp"
                     android:visibility="gone">
 
+                    <!--2-->
+                    <EditText
+                        android:id="@+id/phone1_bian_ji_can_shu_xiu_gai"
+                        style="@style/keHuTuoZhanEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="left|center"
+                        android:hint="反馈内容"
+                        android:textColor="@color/huise6"/>
+
                     <TextView
                         android:id="@+id/phone1_shen_he_ti_jiao"
                         android:layout_width="40dp"
@@ -181,457 +184,8 @@
 
             </LinearLayout>
 
-            <!--phone2-->
-            <LinearLayout
-                android:id="@+id/phone2_shenhe_linear_bj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bottom_border"
-                android:padding="10dp"
-                android:orientation="vertical">
-
-
-                <ImageView
-                    android:id="@+id/phone2_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:visibility="gone"
-                    android:id="@+id/phone2_bian_ji_can_shu_xiu_gai"
-                    style="@style/keHuTuoZhanEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="left|center"
-                    android:text="参数"
-                    android:textColor="@color/huise6"/>
-
-                <!--审核-->
-                <LinearLayout
-                    android:id="@+id/phone2_xian_shi_mo_shi_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phone2_shen_he_chou_cha"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="抽查"/>
-
-                    <TextView
-                        android:id="@+id/phone2_shen_he_bian_ji"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="反馈"/>
-
-                    <TextView
-                        android:id="@+id/phone2_shen_he_shan_chu"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="删除"/>
-
-                </LinearLayout>
-
-                <!--合格 不合格-->
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/phone2_xian_shi_mo_shi_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
-                    <!--合格-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <ImageView
-                            android:id="@+id/phone2_cha_xun_zhao_pian_xian_shi"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/ka_qing_ku_lian"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/heise"
-                            android:gravity="center"
-                            android:text="合格"/>
-                    </LinearLayout>
-                    <!--不合格-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <ImageView
-                            android:id="@+id/phone2_cha_xun_can_shu_xian_shi"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/ka_qing_ku_lian"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/heise"
-                            android:gravity="center"
-                            android:text="不合格"/>
-                    </LinearLayout>
-                    <!--保存-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical">
-                        <TextView
-                            android:id="@+id/phone2_chou_cha_bao_cun"
-                            android:layout_width="40dp"
-                            android:gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/button"
-                            android:textColor="@color/colorAccent"
-                            android:layout_height="20dp"
-                            android:text="保存"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!--编辑提交-->
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/phone2_xian_shi_mo_shi_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phone2_shen_he_ti_jiao"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="保存"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!--phone3-->
-            <LinearLayout
-                android:id="@+id/phone3_shenhe_linear_bj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bottom_border"
-                android:padding="10dp"
-                android:orientation="vertical">
-
-
-                <ImageView
-                    android:id="@+id/phone3_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:visibility="gone"
-                    android:id="@+id/phone3_bian_ji_can_shu_xiu_gai"
-                    style="@style/keHuTuoZhanEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="left|center"
-                    android:text="参数"
-                    android:textColor="@color/huise6"/>
-
-                <!--审核-->
-                <LinearLayout
-                    android:id="@+id/phone3_xian_shi_mo_shi_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phone3_shen_he_chou_cha"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="抽查"/>
-
-                    <TextView
-                        android:id="@+id/phone3_shen_he_bian_ji"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="反馈"/>
-
-                    <TextView
-                        android:id="@+id/phone3_shen_he_shan_chu"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="删除"/>
-
-                </LinearLayout>
-
-                <!--合格 不合格-->
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/phone3_xian_shi_mo_shi_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
-                    <!--合格-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <ImageView
-                            android:id="@+id/phone3_cha_xun_zhao_pian_xian_shi"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/ka_qing_ku_lian"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/heise"
-                            android:gravity="center"
-                            android:text="合格"/>
-                    </LinearLayout>
-                    <!--不合格-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <ImageView
-                            android:id="@+id/phone3_cha_xun_can_shu_xian_shi"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/ka_qing_ku_lian"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/heise"
-                            android:gravity="center"
-                            android:text="不合格"/>
-                    </LinearLayout>
-                    <!--保存-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical">
-                        <TextView
-                            android:id="@+id/phone3_chou_cha_bao_cun"
-                            android:layout_width="40dp"
-                            android:gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/button"
-                            android:textColor="@color/colorAccent"
-                            android:layout_height="20dp"
-                            android:text="保存"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!--编辑提交-->
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/phone3_xian_shi_mo_shi_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phone3_shen_he_ti_jiao"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="保存"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!--phone4-->
-            <LinearLayout
-                android:id="@+id/phone4_shenhe_linear_bj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bottom_border"
-                android:padding="10dp"
-                android:orientation="vertical">
-
-
-                <ImageView
-                    android:id="@+id/phone4_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:visibility="gone"
-                    android:id="@+id/phone4_bian_ji_can_shu_xiu_gai"
-                    style="@style/keHuTuoZhanEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="left|center"
-                    android:text="参数"
-                    android:textColor="@color/huise6"/>
-
-                <!--审核-->
-                <LinearLayout
-                    android:id="@+id/phone4_xian_shi_mo_shi_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phone4_shen_he_chou_cha"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="抽查"/>
-
-                    <TextView
-                        android:id="@+id/phone4_shen_he_bian_ji"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="反馈"/>
-
-                    <TextView
-                        android:id="@+id/phone4_shen_he_shan_chu"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="删除"/>
-
-                </LinearLayout>
-
-                <!--合格 不合格-->
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/phone4_xian_shi_mo_shi_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
-                    <!--合格-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <ImageView
-                            android:id="@+id/phone4_cha_xun_zhao_pian_xian_shi"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/ka_qing_ku_lian"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/heise"
-                            android:gravity="center"
-                            android:text="合格"/>
-                    </LinearLayout>
-                    <!--不合格-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1">
-                        <ImageView
-                            android:id="@+id/phone4_cha_xun_can_shu_xian_shi"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:background="@drawable/ka_qing_ku_lian"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/heise"
-                            android:gravity="center"
-                            android:text="不合格"/>
-                    </LinearLayout>
-                    <!--保存-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right|center_vertical">
-                        <TextView
-                            android:id="@+id/phone4_chou_cha_bao_cun"
-                            android:layout_width="40dp"
-                            android:gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/button"
-                            android:textColor="@color/colorAccent"
-                            android:layout_height="20dp"
-                            android:text="保存"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!--编辑提交-->
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/phone4_xian_shi_mo_shi_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phone4_shen_he_ti_jiao"
-                        android:layout_width="40dp"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/button"
-                        android:textColor="@color/colorAccent"
-                        android:layout_height="20dp"
-                        android:text="保存"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
         </LinearLayout>
+
     </com.bignerdranch.android.xundian.ui.BounceScrollView>
 
 

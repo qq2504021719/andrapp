@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,138 +65,14 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
     // id
     public String id = "";
 
-    // 图片1
-    public String mPhone1 = "";
-    public String mIsHeGe1 = "";
-    public String mbuHui1 = "";
-    // 图片2
-    public String mPhone2 = "";
-    public String mIsHeGe2 = "";
-    public String mbuHui2 = "";
-    // 图片3
-    public String mPhone3 = "";
-    public String mIsHeGe3 = "";
-    public String mbuHui3 = "";
-    // 图片4
-    public String mPhone4 = "";
-    public String mIsHeGe4 = "";
-    public String mbuHui4 = "";
+    // 拜访图片审核父linear
+    public LinearLayout mBai_fang_shen_he_linear;
 
-    // 图片1组件
-    public ImageView mPhone1_image;
-    // 图片1linear
-    public LinearLayout mPhone1_shenhe_linear_bj;
-    // 审核linear
-    public LinearLayout mPhone1_xian_shi_mo_shi_1;
-    // 抽查
-    public TextView mPhone1_shen_he_chou_cha;
-    // 反馈
-    public TextView mPhone1_shen_he_bian_ji;
-    // 删除
-    public TextView mPhone1_shen_he_shan_chu;
-    // 合格linear
-    public LinearLayout mPhone1_xian_shi_mo_shi_2;
-    // 合格
-    public ImageView mPhone1_cha_xun_zhao_pian_xian_shi;
-    // 不合格
-    public ImageView mPhone1_cha_xun_can_shu_xian_shi;
-    // 合格不合格保存
-    public TextView mPhone1_chou_cha_bao_cun;
-    // 反馈linear
-    public LinearLayout mPhone1_xian_shi_mo_shi_3;
-    // 反馈编辑
-    public EditText mPhone1_bian_ji_can_shu_xiu_gai;
-    // 反馈保存
-    public TextView mPhone1_shen_he_ti_jiao;
-    // 图片1状态 1正常 2抽查 3反馈
-    public int phone1_zhuang_tai = 1;
+    // 图片JsonArray对象
+    public JSONArray mBaiFangPhoneFan;
 
-    // 图片2组件
-    public ImageView mPhone2_image;
-    // 图片2linear
-    public LinearLayout mPhone2_shenhe_linear_bj;
-    // 审核linear
-    public LinearLayout mPhone2_xian_shi_mo_shi_1;
-    // 抽查
-    public TextView mPhone2_shen_he_chou_cha;
-    // 反馈
-    public TextView mPhone2_shen_he_bian_ji;
-    // 删除
-    public TextView mPhone2_shen_he_shan_chu;
-    // 合格linear
-    public LinearLayout mPhone2_xian_shi_mo_shi_2;
-    // 合格
-    public ImageView mPhone2_cha_xun_zhao_pian_xian_shi;
-    // 不合格
-    public ImageView mPhone2_cha_xun_can_shu_xian_shi;
-    // 合格不合格保存
-    public TextView mPhone2_chou_cha_bao_cun;
-    // 反馈linear
-    public LinearLayout mPhone2_xian_shi_mo_shi_3;
-    // 反馈编辑
-    public EditText mPhone2_bian_ji_can_shu_xiu_gai;
-    // 反馈保存
-    public TextView mPhone2_shen_he_ti_jiao;
-    // 图片1状态 1正常 2抽查 3反馈
-    public int phone2_zhuang_tai = 1;
-
-    // 图片3组件
-    public ImageView mPhone3_image;
-    // 图片3linear
-    public LinearLayout mPhone3_shenhe_linear_bj;
-    // 审核linear
-    public LinearLayout mPhone3_xian_shi_mo_shi_1;
-    // 抽查
-    public TextView mPhone3_shen_he_chou_cha;
-    // 反馈
-    public TextView mPhone3_shen_he_bian_ji;
-    // 删除
-    public TextView mPhone3_shen_he_shan_chu;
-    // 合格linear
-    public LinearLayout mPhone3_xian_shi_mo_shi_2;
-    // 合格
-    public ImageView mPhone3_cha_xun_zhao_pian_xian_shi;
-    // 不合格
-    public ImageView mPhone3_cha_xun_can_shu_xian_shi;
-    // 合格不合格保存
-    public TextView mPhone3_chou_cha_bao_cun;
-    // 反馈linear
-    public LinearLayout mPhone3_xian_shi_mo_shi_3;
-    // 反馈编辑
-    public EditText mPhone3_bian_ji_can_shu_xiu_gai;
-    // 反馈保存
-    public TextView mPhone3_shen_he_ti_jiao;
-    // 图片1状态 1正常 2抽查 3反馈
-    public int phone3_zhuang_tai = 1;
-
-    // 图片4组件
-    public ImageView mPhone4_image;
-    // 图片4linear
-    public LinearLayout mPhone4_shenhe_linear_bj;
-    // 审核linear
-    public LinearLayout mPhone4_xian_shi_mo_shi_1;
-    // 抽查
-    public TextView mPhone4_shen_he_chou_cha;
-    // 反馈
-    public TextView mPhone4_shen_he_bian_ji;
-    // 删除
-    public TextView mPhone4_shen_he_shan_chu;
-    // 合格linear
-    public LinearLayout mPhone4_xian_shi_mo_shi_2;
-    // 合格
-    public ImageView mPhone4_cha_xun_zhao_pian_xian_shi;
-    // 不合格
-    public ImageView mPhone4_cha_xun_can_shu_xian_shi;
-    // 合格不合格保存
-    public TextView mPhone4_chou_cha_bao_cun;
-    // 反馈linear
-    public LinearLayout mPhone4_xian_shi_mo_shi_3;
-    // 反馈编辑
-    public EditText mPhone4_bian_ji_can_shu_xiu_gai;
-    // 反馈保存
-    public TextView mPhone4_shen_he_ti_jiao;
-    // 图片1状态 1正常 2抽查 3反馈
-    public int phone4_zhuang_tai = 1;
+    // 需要审查的linear
+    public LinearLayout mShanChuLinear;
 
     public static Intent newIntent(Context packageContext,String string){
         Intent i = new Intent(packageContext,BaiFangChaXunTuPianActivity.class);
@@ -221,115 +99,8 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
      */
     public void ZhuJianInit(){
         mTitle_nei_ye = (TextView)findViewById(R.id.title_nei_ye);
-        // 图片1组件
-        mPhone1_image = (ImageView)findViewById(R.id.phone1_image);
-        // 图片linear
-        mPhone1_shenhe_linear_bj = (LinearLayout)findViewById(R.id.phone1_shenhe_linear_bj);
-        // 审核linear
-        mPhone1_xian_shi_mo_shi_1 = (LinearLayout)findViewById(R.id.phone1_xian_shi_mo_shi_1);
-        // 抽查
-        mPhone1_shen_he_chou_cha = (TextView)findViewById(R.id.phone1_shen_he_chou_cha);
-        // 反馈
-        mPhone1_shen_he_bian_ji = (TextView)findViewById(R.id.phone1_shen_he_bian_ji);
-        // 删除
-        mPhone1_shen_he_shan_chu = (TextView)findViewById(R.id.phone1_shen_he_shan_chu);
-        // 合格linear
-        mPhone1_xian_shi_mo_shi_2 = (LinearLayout)findViewById(R.id.phone1_xian_shi_mo_shi_2);
-        // 合格
-        mPhone1_cha_xun_zhao_pian_xian_shi = (ImageView)findViewById(R.id.phone1_cha_xun_zhao_pian_xian_shi);
-        // 不合格
-        mPhone1_cha_xun_can_shu_xian_shi = (ImageView)findViewById(R.id.phone1_cha_xun_can_shu_xian_shi);
-        // 合格不合格保存
-        mPhone1_chou_cha_bao_cun = (TextView)findViewById(R.id.phone1_chou_cha_bao_cun);
-        // 反馈linear
-        mPhone1_xian_shi_mo_shi_3 = (LinearLayout)findViewById(R.id.phone1_xian_shi_mo_shi_3);
-        // 反馈编辑框
-        mPhone1_bian_ji_can_shu_xiu_gai = (EditText)findViewById(R.id.phone1_bian_ji_can_shu_xiu_gai);
-        // 反馈保存
-        mPhone1_shen_he_ti_jiao = (TextView)findViewById(R.id.phone1_shen_he_ti_jiao);
-
-
-        // 图片2组件
-        mPhone2_image = (ImageView)findViewById(R.id.phone2_image);
-        // 图片linear
-        mPhone2_shenhe_linear_bj = (LinearLayout)findViewById(R.id.phone2_shenhe_linear_bj);
-        // 审核linear
-        mPhone2_xian_shi_mo_shi_1 = (LinearLayout)findViewById(R.id.phone2_xian_shi_mo_shi_1);
-        // 抽查
-        mPhone2_shen_he_chou_cha = (TextView)findViewById(R.id.phone2_shen_he_chou_cha);
-        // 反馈
-        mPhone2_shen_he_bian_ji = (TextView)findViewById(R.id.phone2_shen_he_bian_ji);
-        // 删除
-        mPhone2_shen_he_shan_chu = (TextView)findViewById(R.id.phone2_shen_he_shan_chu);
-        // 合格linear
-        mPhone2_xian_shi_mo_shi_2 = (LinearLayout)findViewById(R.id.phone2_xian_shi_mo_shi_2);
-        // 合格
-        mPhone2_cha_xun_zhao_pian_xian_shi = (ImageView)findViewById(R.id.phone2_cha_xun_zhao_pian_xian_shi);
-        // 不合格
-        mPhone2_cha_xun_can_shu_xian_shi = (ImageView)findViewById(R.id.phone2_cha_xun_can_shu_xian_shi);
-        // 合格不合格保存
-        mPhone2_chou_cha_bao_cun = (TextView)findViewById(R.id.phone2_chou_cha_bao_cun);
-        // 反馈linear
-        mPhone2_xian_shi_mo_shi_3 = (LinearLayout)findViewById(R.id.phone2_xian_shi_mo_shi_3);
-        // 反馈编辑框
-        mPhone2_bian_ji_can_shu_xiu_gai = (EditText)findViewById(R.id.phone2_bian_ji_can_shu_xiu_gai);
-        // 反馈保存
-        mPhone2_shen_he_ti_jiao = (TextView)findViewById(R.id.phone2_shen_he_ti_jiao);
-
-        // 图片3组件
-        mPhone3_image = (ImageView)findViewById(R.id.phone3_image);
-        // 图片linear
-        mPhone3_shenhe_linear_bj = (LinearLayout)findViewById(R.id.phone3_shenhe_linear_bj);
-        // 审核linear
-        mPhone3_xian_shi_mo_shi_1 = (LinearLayout)findViewById(R.id.phone3_xian_shi_mo_shi_1);
-        // 抽查
-        mPhone3_shen_he_chou_cha = (TextView)findViewById(R.id.phone3_shen_he_chou_cha);
-        // 反馈
-        mPhone3_shen_he_bian_ji = (TextView)findViewById(R.id.phone3_shen_he_bian_ji);
-        // 删除
-        mPhone3_shen_he_shan_chu = (TextView)findViewById(R.id.phone3_shen_he_shan_chu);
-        // 合格linear
-        mPhone3_xian_shi_mo_shi_2 = (LinearLayout)findViewById(R.id.phone3_xian_shi_mo_shi_2);
-        // 合格
-        mPhone3_cha_xun_zhao_pian_xian_shi = (ImageView)findViewById(R.id.phone3_cha_xun_zhao_pian_xian_shi);
-        // 不合格
-        mPhone3_cha_xun_can_shu_xian_shi = (ImageView)findViewById(R.id.phone3_cha_xun_can_shu_xian_shi);
-        // 合格不合格保存
-        mPhone3_chou_cha_bao_cun = (TextView)findViewById(R.id.phone3_chou_cha_bao_cun);
-        // 反馈linear
-        mPhone3_xian_shi_mo_shi_3 = (LinearLayout)findViewById(R.id.phone3_xian_shi_mo_shi_3);
-        // 反馈编辑框
-        mPhone3_bian_ji_can_shu_xiu_gai = (EditText)findViewById(R.id.phone3_bian_ji_can_shu_xiu_gai);
-        // 反馈保存
-        mPhone3_shen_he_ti_jiao = (TextView)findViewById(R.id.phone3_shen_he_ti_jiao);
-
-        // 图片4组件
-        mPhone4_image = (ImageView)findViewById(R.id.phone4_image);
-        // 图片linear
-        mPhone4_shenhe_linear_bj = (LinearLayout)findViewById(R.id.phone4_shenhe_linear_bj);
-        // 审核linear
-        mPhone4_xian_shi_mo_shi_1 = (LinearLayout)findViewById(R.id.phone4_xian_shi_mo_shi_1);
-        // 抽查
-        mPhone4_shen_he_chou_cha = (TextView)findViewById(R.id.phone4_shen_he_chou_cha);
-        // 反馈
-        mPhone4_shen_he_bian_ji = (TextView)findViewById(R.id.phone4_shen_he_bian_ji);
-        // 删除
-        mPhone4_shen_he_shan_chu = (TextView)findViewById(R.id.phone4_shen_he_shan_chu);
-        // 合格linear
-        mPhone4_xian_shi_mo_shi_2 = (LinearLayout)findViewById(R.id.phone4_xian_shi_mo_shi_2);
-        // 合格
-        mPhone4_cha_xun_zhao_pian_xian_shi = (ImageView)findViewById(R.id.phone4_cha_xun_zhao_pian_xian_shi);
-        // 不合格
-        mPhone4_cha_xun_can_shu_xian_shi = (ImageView)findViewById(R.id.phone4_cha_xun_can_shu_xian_shi);
-        // 合格不合格保存
-        mPhone4_chou_cha_bao_cun = (TextView)findViewById(R.id.phone4_chou_cha_bao_cun);
-        // 反馈linear
-        mPhone4_xian_shi_mo_shi_3 = (LinearLayout)findViewById(R.id.phone4_xian_shi_mo_shi_3);
-        // 反馈编辑框
-        mPhone4_bian_ji_can_shu_xiu_gai = (EditText)findViewById(R.id.phone4_bian_ji_can_shu_xiu_gai);
-        // 反馈保存
-        mPhone4_shen_he_ti_jiao = (TextView)findViewById(R.id.phone4_shen_he_ti_jiao);
-
+        // 父linear
+        mBai_fang_shen_he_linear = (LinearLayout)findViewById(R.id.bai_fang_shen_he_linear);
     }
 
     /**
@@ -337,381 +108,6 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
      */
     public void ZhuJianCaoZhuo(){
         mTitle_nei_ye.setText(R.string.xun_dian_shen_he);
-
-        // 图片1
-        // 图片展示
-        if(mPhone1.equals("")){
-            mPhone1_shenhe_linear_bj.setVisibility(View.GONE);
-        }else{
-            Picasso.with(mContext).load(Config.URL+"/"+mPhone1).into(mPhone1_image);
-            // 抽查
-            mPhone1_shen_he_chou_cha.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone1_zhuang_tai = 2;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 合格
-            mPhone1_cha_xun_zhao_pian_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "";
-                    mPhone1_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                    mPhone1_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                }
-            });
-            // 不合格
-            mPhone1_cha_xun_can_shu_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "不合格";
-                    mPhone1_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                    mPhone1_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                }
-            });
-            // 抽查保存
-            mPhone1_chou_cha_bao_cun.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 1;
-                    phone1_zhuang_tai = 1;
-                    ZhaoZhuoMS = "抽查";
-                    // 视图刷新
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 反馈
-            mPhone1_shen_he_bian_ji.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone1_zhuang_tai = 3;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 反馈内容
-            mPhone1_bian_ji_can_shu_xiu_gai.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    FanKui = String.valueOf(editable).trim();
-                }
-            });
-            // 反馈保存
-            mPhone1_shen_he_ti_jiao.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 1;
-                    phone1_zhuang_tai = 1;
-                    ZhaoZhuoMS = "反馈";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 删除
-            mPhone1_shen_he_shan_chu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 1;
-                    isShanChu = "是";
-                    ZhaoZhuoMS = "删除";
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-        }
-
-
-
-        // 图片2展示
-        if(mPhone2.equals("")){
-            mPhone2_shenhe_linear_bj.setVisibility(View.GONE);
-        }else {
-            Picasso.with(mContext).load(Config.URL + "/" + mPhone2).into(mPhone2_image);
-            // 抽查
-            mPhone2_shen_he_chou_cha.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone2_zhuang_tai = 2;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 合格
-            mPhone2_cha_xun_zhao_pian_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "";
-                    mPhone2_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                    mPhone2_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                }
-            });
-            // 不合格
-            mPhone2_cha_xun_can_shu_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "不合格";
-                    mPhone2_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                    mPhone2_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                }
-            });
-            // 抽查保存
-            mPhone2_chou_cha_bao_cun.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 2;
-                    phone2_zhuang_tai = 1;
-                    ZhaoZhuoMS = "抽查";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 反馈
-            mPhone2_shen_he_bian_ji.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone2_zhuang_tai = 3;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 反馈内容
-            mPhone2_bian_ji_can_shu_xiu_gai.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    FanKui = String.valueOf(editable).trim();
-                }
-            });
-            // 反馈保存
-            mPhone2_shen_he_ti_jiao.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 2;
-                    phone2_zhuang_tai = 1;
-                    ZhaoZhuoMS = "反馈";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 删除
-            mPhone2_shen_he_shan_chu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 2;
-                    isShanChu = "是";
-                    ZhaoZhuoMS = "删除";
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-        }
-        // 图片3展示
-        if(mPhone3.equals("")){
-            mPhone3_shenhe_linear_bj.setVisibility(View.GONE);
-        }else {
-            Picasso.with(mContext).load(Config.URL + "/" + mPhone3).into(mPhone3_image);
-            // 抽查
-            mPhone3_shen_he_chou_cha.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone3_zhuang_tai = 2;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 合格
-            mPhone3_cha_xun_zhao_pian_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "";
-                    mPhone3_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                    mPhone3_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                }
-            });
-            // 不合格
-            mPhone3_cha_xun_can_shu_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "不合格";
-                    mPhone3_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                    mPhone3_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                }
-            });
-            // 抽查保存
-            mPhone3_chou_cha_bao_cun.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 3;
-                    phone3_zhuang_tai = 1;
-                    ZhaoZhuoMS = "抽查";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 反馈
-            mPhone3_shen_he_bian_ji.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone3_zhuang_tai = 3;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 反馈内容
-            mPhone3_bian_ji_can_shu_xiu_gai.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    FanKui = String.valueOf(editable).trim();
-                }
-            });
-            // 反馈保存
-            mPhone3_shen_he_ti_jiao.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 3;
-                    phone3_zhuang_tai = 1;
-                    ZhaoZhuoMS = "反馈";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 删除
-            mPhone3_shen_he_shan_chu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 3;
-                    isShanChu = "是";
-                    ZhaoZhuoMS = "删除";
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-        }
-        // 图片4展示
-        if(mPhone4.equals("")){
-            mPhone4_shenhe_linear_bj.setVisibility(View.GONE);
-        }else {
-            Picasso.with(mContext).load(Config.URL + "/" + mPhone4).into(mPhone4_image);
-            // 抽查
-            mPhone4_shen_he_chou_cha.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone4_zhuang_tai = 2;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 合格
-            mPhone4_cha_xun_zhao_pian_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "";
-                    mPhone4_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                    mPhone4_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                }
-            });
-            // 不合格
-            mPhone4_cha_xun_can_shu_xian_shi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isHeGE = "不合格";
-                    mPhone4_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                    mPhone4_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                }
-            });
-            // 抽查保存
-            mPhone4_chou_cha_bao_cun.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 4;
-                    phone4_zhuang_tai = 1;
-                    ZhaoZhuoMS = "抽查";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 反馈
-            mPhone4_shen_he_bian_ji.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    phone4_zhuang_tai = 3;
-                    TuPianXianShiMoShi();
-                }
-            });
-            // 反馈内容
-            mPhone4_bian_ji_can_shu_xiu_gai.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    FanKui = String.valueOf(editable).trim();
-                }
-            });
-            // 反馈保存
-            mPhone4_shen_he_ti_jiao.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 4;
-                    phone4_zhuang_tai = 1;
-                    ZhaoZhuoMS = "反馈";
-                    TuPianXianShiMoShi();
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-            // 删除
-            mPhone4_shen_he_shan_chu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isT = 4;
-                    isShanChu = "是";
-                    ZhaoZhuoMS = "删除";
-                    // 数据保存
-                    BaiFangTupianShenHe();
-                }
-            });
-        }
-
     }
 
     /**
@@ -720,12 +116,12 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
     public void values(){
         // Token赋值
         setToken(mContext);
-
         // 拜访图片审核数据接收
         mBaiFangShenHeData = getIntent().getStringExtra(EXTRA);
-
         // 图片数据解析
         tuPianDataJieXi();
+        // 数据显示
+        ShiTuXianShi();
     }
 
     /**
@@ -736,209 +132,98 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             JSONObject jsonObject = new JSONObject(mBaiFangShenHeData);
             id = jsonObject.getString("id");
 
-            mPhone1 = jsonObject.getString("phone1");
-            mPhone1 = mPhone1=="null"?"":mPhone1;
-            mIsHeGe1 = jsonObject.getString("phone1_is_hg");
-            mIsHeGe1 = mIsHeGe1=="null"?"":mIsHeGe1;
-            mbuHui1 = jsonObject.getString("phone1_fan_kui");
-            mbuHui1 = mbuHui1=="null"?"":mbuHui1;
-
-            mPhone2 = jsonObject.getString("phone2");
-            mPhone2 = mPhone2=="null"?"":mPhone2;
-            mIsHeGe2 = jsonObject.getString("phone2_is_hg");
-            mIsHeGe2 = mIsHeGe2=="null"?"":mIsHeGe2;
-            mbuHui2 = jsonObject.getString("phone2_fan_kui");
-            mbuHui2 = mbuHui2=="null"?"":mbuHui2;
-
-            mPhone3 = jsonObject.getString("phone3");
-            mPhone3 = mPhone3=="null"?"":mPhone3;
-            mIsHeGe3 = jsonObject.getString("phone3_is_hg");
-            mIsHeGe3 = mIsHeGe3=="null"?"":mIsHeGe3;
-            mbuHui3 = jsonObject.getString("phone3_fan_kui");
-            mbuHui3 = mbuHui3=="null"?"":mbuHui3;
-
-            mPhone4 = jsonObject.getString("phone4");
-            mPhone4 = mPhone4=="null"?"":mPhone4;
-            mIsHeGe4 = jsonObject.getString("phone4_is_hg");
-            mIsHeGe4 = mIsHeGe4=="null"?"":mIsHeGe4;
-            mbuHui4 = jsonObject.getString("phone4_fan_kui");
-            mbuHui4 = mbuHui4=="null"?"":mbuHui4;
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 图片对应显示模式更改
+     * 视图显示 mBai_fang_shen_he_linear
      */
-    public void TuPianXianShiMoShi(){
-        if(phone1_zhuang_tai == 1){
-            // 审核linear
-            mPhone1_xian_shi_mo_shi_1.setVisibility(View.VISIBLE);
-            // 合格linear
-            mPhone1_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone1_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone1_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
-        }else if(phone1_zhuang_tai == 2){
-            // 审核linear
-            mPhone1_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone1_xian_shi_mo_shi_2.setVisibility(View.VISIBLE);
-            // 勾选合格还是不合格
-            if(mIsHeGe1.equals("")){
-                mPhone1_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                mPhone1_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-            }else if(mIsHeGe1.equals("不合格")){
-                mPhone1_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                mPhone1_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-            }
-            // 反馈linear
-            mPhone1_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone1_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
+    public void ShiTuXianShi(){
+        try {
+            JSONObject jsonObject = new JSONObject(mBaiFangShenHeData);
+            JSONArray jsonArray = new JSONArray(jsonObject.getString("BaiFangPhoneFan"));
+            mBaiFangPhoneFan = jsonArray;
+            if(jsonArray.length() > 0){
+                for (int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject1 = new JSONObject(jsonArray.get(i).toString());
+                    // 图片父
+                    LinearLayout linearLayout = CreateLinearBFSh(1);
+                    mBai_fang_shen_he_linear.addView(linearLayout);
 
-        }else if(phone1_zhuang_tai == 3){
-            // 审核linear
-            mPhone1_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone1_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone1_xian_shi_mo_shi_3.setVisibility(View.VISIBLE);
-            // 反馈编辑框
-            mPhone1_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
-            // 反馈编辑框显示内容
-            if(!mbuHui1.equals("")){
-                mPhone1_bian_ji_can_shu_xiu_gai.setText(mbuHui1);
-            }
-        }
-        if(phone2_zhuang_tai == 1){
-            // 审核linear
-            mPhone2_xian_shi_mo_shi_1.setVisibility(View.VISIBLE);
-            // 合格linear
-            mPhone2_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone2_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone2_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
-        }else if(phone2_zhuang_tai == 2){
-            // 审核linear
-            mPhone2_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone2_xian_shi_mo_shi_2.setVisibility(View.VISIBLE);
-            // 勾选合格还是不合格
-            if(mIsHeGe2.equals("")){
-                mPhone2_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                mPhone2_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-            }else if(mIsHeGe2.equals("不合格")){
-                mPhone2_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                mPhone2_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-            }
-            // 反馈linear
-            mPhone2_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone2_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
+                    // 图片
+                    ImageView imageView = CreateImageViewBFSH(1,R.mipmap.ic_launcher);
+                    Picasso.with(mContext).load(Config.URL+"/"+jsonObject1.getString("path")).into(imageView);
+                    linearLayout.addView(imageView);
 
-        }else if(phone2_zhuang_tai == 3){
-            // 审核linear
-            mPhone2_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone2_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone2_xian_shi_mo_shi_3.setVisibility(View.VISIBLE);
-            // 反馈编辑框
-            mPhone2_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
-            // 反馈编辑框显示内容
-            if(!mbuHui1.equals("")){
-                mPhone2_bian_ji_can_shu_xiu_gai.setText(mbuHui2);
-            }
-        }
-        if(phone3_zhuang_tai == 1){
-            // 审核linear
-            mPhone3_xian_shi_mo_shi_1.setVisibility(View.VISIBLE);
-            // 合格linear
-            mPhone3_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone3_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone3_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
-        }else if(phone3_zhuang_tai == 2){
-            // 审核linear
-            mPhone3_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone3_xian_shi_mo_shi_2.setVisibility(View.VISIBLE);
-            // 勾选合格还是不合格 ka_qing_ku_lian
-            if(mIsHeGe3.equals("")){
-                mPhone3_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                mPhone3_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-            }else if(mIsHeGe3.equals("不合格")){
-                mPhone3_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                mPhone3_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-            }
-            // 反馈linear
-            mPhone3_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone3_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
+                    // 抽查 反馈 删除 按钮
+                    LinearLayout linearLayout2 = CreateLinearBFSh(2);
+                    linearLayout.addView(linearLayout2);
+                    // 抽查linear
+                    LinearLayout linearLayout3 = CreateLinearBFSh(3);
+                    linearLayout.addView(linearLayout3);
+                    // 抽查
+                    TextView textView = CreateTextViewBFSH(1,"抽查",jsonObject1,jsonObject1.getString("id"),linearLayout3,linearLayout2,"",linearLayout);
+                    linearLayout2.addView(textView);
+                    // 抽查 合格 不合格
+                    ImageView imageViewB = CreateImageViewBFSH(2,R.drawable.ka_qing_ku_lian);
+                    ImageView imageViewH = CreateImageViewBFSH(2,R.drawable.ka_qing_ku_lian);
+                    // 不合格选中
+                    if(jsonObject1.getString("phone_is_hg").equals("1")){
+                        imageViewB = CreateImageViewBFSH(2,R.drawable.ka_qing_xiao_lian);
+                    }else{
+                        // 合格选中
+                        imageViewH = CreateImageViewBFSH(2,R.drawable.ka_qing_xiao_lian);
+                    }
+                    // 不合格
+                    LinearLayout linearLayout4 = CreateLinearBFShHG(4,i,"不合格",imageViewH,imageViewB);
+                    TextView textView1 = CreateTextViewBFSH(2,"不合格",jsonObject1,jsonObject1.getString("id"),linearLayout3,linearLayout2,"不合格",linearLayout);
+                    linearLayout4.addView(imageViewB);
+                    linearLayout4.addView(textView1);
+                    linearLayout3.addView(linearLayout4);
 
-        }else if(phone3_zhuang_tai == 3){
-            // 审核linear
-            mPhone3_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone3_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone3_xian_shi_mo_shi_3.setVisibility(View.VISIBLE);
-            // 反馈编辑框
-            mPhone3_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
-            // 反馈编辑框显示内容
-            if(!mbuHui1.equals("")){
-                mPhone3_bian_ji_can_shu_xiu_gai.setText(mbuHui3);
-            }
-        }
-        if(phone4_zhuang_tai == 1){
-            // 审核linear
-            mPhone4_xian_shi_mo_shi_1.setVisibility(View.VISIBLE);
-            // 合格linear
-            mPhone4_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone4_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone4_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
-        }else if(phone4_zhuang_tai == 2){
-            // 审核linear
-            mPhone4_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone4_xian_shi_mo_shi_2.setVisibility(View.VISIBLE);
-            // 勾选合格还是不合格 ka_qing_ku_lian
-            if(mIsHeGe4.equals("")){
-                mPhone4_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-                mPhone4_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-            }else if(mIsHeGe4.equals("不合格")){
-                mPhone4_cha_xun_zhao_pian_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-                mPhone4_cha_xun_can_shu_xian_shi.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-            }
-            // 反馈linear
-            mPhone4_xian_shi_mo_shi_3.setVisibility(View.GONE);
-            // 反馈编辑框
-            mPhone4_bian_ji_can_shu_xiu_gai.setVisibility(View.GONE);
+                    // 合格
+                    LinearLayout linearLayout41 = CreateLinearBFShHG(4,i,"合格",imageViewH,imageViewB);
+                    TextView textView11 = CreateTextViewBFSH(2,"合格",jsonObject1,jsonObject1.getString("id"),linearLayout3,linearLayout2,"合格",linearLayout);
+                    linearLayout41.addView(imageViewH);
+                    linearLayout41.addView(textView11);
+                    linearLayout3.addView(linearLayout41);
 
-        }else if(phone4_zhuang_tai == 3){
-            // 审核linear
-            mPhone4_xian_shi_mo_shi_1.setVisibility(View.GONE);
-            // 合格linear
-            mPhone4_xian_shi_mo_shi_2.setVisibility(View.GONE);
-            // 反馈linear
-            mPhone4_xian_shi_mo_shi_3.setVisibility(View.VISIBLE);
-            // 反馈编辑框
-            mPhone4_bian_ji_can_shu_xiu_gai.setVisibility(View.VISIBLE);
-            // 反馈编辑框显示内容
-            if(!mbuHui1.equals("")){
-                mPhone4_bian_ji_can_shu_xiu_gai.setText(mbuHui4);
+                    // 抽查保存
+                    LinearLayout linearLayout5 = CreateLinearBFSh(5);
+                    TextView textView2 = CreateTextViewBFSH(1,"保存",jsonObject1,jsonObject1.getString("id"),linearLayout3,linearLayout2,"抽查",linearLayout);
+                    linearLayout5.addView(textView2);
+                    linearLayout3.addView(linearLayout5);
+
+                    // 反馈linear
+                    LinearLayout linearLayout6 = CreateLinearBFSh(6);
+                    EditText editText1 = CreateEditTextBFSH();
+                    TextView textView3 = CreateTextViewBFSH(1,"保存",jsonObject1,jsonObject1.getString("id"),linearLayout6,linearLayout2,"反馈",linearLayout);
+                    LinearLayout linearLayout7 = CreateLinearBFSh(7);
+                    LinearLayout linearLayout8 = CreateLinearBFSh(8);
+                    linearLayout7.addView(editText1);
+                    linearLayout8.addView(textView3);
+                    linearLayout6.addView(linearLayout7);
+                    linearLayout6.addView(linearLayout8);
+                    linearLayout.addView(linearLayout6);
+                    // 反馈
+                    TextView textViewF = CreateTextViewBFSH(1,"反馈",jsonObject1,jsonObject1.getString("id"),linearLayout6,linearLayout2,"反馈",linearLayout);
+                    linearLayout2.addView(textViewF);
+
+                    // 删除
+                    TextView textViewS = CreateTextViewBFSH(1,"删除",jsonObject1,jsonObject1.getString("id"),linearLayout3,linearLayout2,"删除",linearLayout);
+                    linearLayout2.addView(textViewS);
+
+
+                }
             }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
+
 
     // 开启线程
     public static Thread mThread = null;
@@ -953,7 +238,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
              */
             if(msg.what==1){
                 if(msg.obj.toString().equals("审核成功")){
-                    finish();
+//                    finish();
 //                    TuPianXianShiMoShi();
                 }
                 tiShi(mContext,msg.obj.toString());
@@ -962,13 +247,16 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
                     tiShi(mContext,"无权限");
                 }else{
                     // 拜访查询图片审核数据提交
-                    shenHeShuJuTiJiao();
+                    TuBianShenHeYanZhengTiJiao();
                 }
 
             }
         }
     };
 
+    /**
+     * 请求验证
+     */
     public void QunXianYanZheng(){
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -996,19 +284,33 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
         mThread.start();
     }
 
-
     /**
-     * 拜访查询图片审核权限验证
+     * 拜访查询图片审核验证数据提交
      */
-    public void BaiFangTupianShenHe(){
-        if(ZhaoZhuoMS.equals("抽查")){
-            mQuanXianName = "拜访查询-审核-图片抽查";
+    public void TuBianShenHeYanZhengTiJiao(){
+        if(ZhaoZhuoMS.equals("删除")){
+            // 隐藏布局
+            if(!mShanChuLinear.equals("")){
+                mShanChuLinear.setVisibility(View.GONE);
+            }
+
+            shenHeShuJuTiJiao();
+        }else if(ZhaoZhuoMS.equals("抽查")){
+            if(!isHeGE.equals("")){
+                if(isHeGE.equals("合格")){
+                    isHeGE = "";
+                }
+                if(isHeGE.equals("不合格")){
+                    isHeGE = "1";
+                }
+                shenHeShuJuTiJiao();
+            }
+
         }else if(ZhaoZhuoMS.equals("反馈")){
-            mQuanXianName = "拜访查询-审核-图片反馈";
-        }else if(ZhaoZhuoMS.equals("删除")){
-            mQuanXianName = "拜访查询-审核-图片删除";
+            if(!FanKui.equals("")){
+                shenHeShuJuTiJiao();
+            }
         }
-        QunXianYanZheng();
     }
 
     /**
@@ -1045,5 +347,243 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
             }
         });
         mThread.start();
+    }
+
+    /**
+     * 创建TextView
+     * @param is 创建类型
+     * @param string 显示内容
+     * @param stringJson 审核json字符串
+     * @param ids 审核id
+     * @param linearLayout 显示linear
+     * @param HiddenLinear 隐藏linear
+     * @param tag 标签 (抽查/反馈/删除)
+     */
+    public TextView CreateTextViewBFSH(int is,final String string,final JSONObject stringJson,final String ids,final LinearLayout linearLayout,final LinearLayout HiddenLinear,final String tag,final LinearLayout linearLayoutF){
+
+        TextView textView = new TextView(mContext);
+
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if(is == 1){
+            layoutParam = new LinearLayout.LayoutParams(130,60);
+            layoutParam.setMargins(0,0,10,0);
+        }else if(is == 2){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }
+
+        textView.setLayoutParams(layoutParam);
+
+        if(is == 1){
+
+            textView.setBackground(getResources().getDrawable(R.drawable.button));
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextColor(getResources().getColor(R.color.colorAccent));
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    id = ids;
+
+                    // 抽查
+                    if(string.equals("抽查")){
+                        isHeGE = "";
+                    }
+
+                    // 反馈
+                    if(string.equals("反馈")){
+                        FanKui = "";
+                    }
+
+                    if(string.equals("抽查") || string.equals("反馈")){
+                        linearLayout.setVisibility(View.VISIBLE);
+                        HiddenLinear.setVisibility(View.GONE);
+                    }
+                    if(string.equals("保存")){
+                        linearLayout.setVisibility(View.GONE);
+                        HiddenLinear.setVisibility(View.VISIBLE);
+                    }
+
+                    // 抽查保存
+                    if(string.equals("保存") && tag.equals("抽查")){
+                        ZhaoZhuoMS = "抽查";
+                        mQuanXianName = "拜访查询-审核-图片抽查";
+                        QunXianYanZheng();
+                    }
+                    // 反馈保存
+                    if(string.equals("保存") && tag.equals("反馈")){
+                        ZhaoZhuoMS = "反馈";
+                        mQuanXianName = "拜访查询-审核-图片反馈";
+                        QunXianYanZheng();
+                    }
+
+                    // 删除保存
+                    if(string.equals("删除")){
+                        mQuanXianName = "拜访查询-审核-图片删除";
+                        ZhaoZhuoMS = "删除";
+                        isShanChu = "是";
+                        mShanChuLinear = linearLayoutF;
+                        QunXianYanZheng();
+                    }
+                }
+            });
+        }else if(is == 2){
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextColor(getResources().getColor(R.color.heise));
+        }
+
+        textView.setText(string);
+        return textView;
+    }
+
+    /**
+     * 创建linearLayout
+     * @param is 创建类型
+     */
+    public LinearLayout CreateLinearBFSh(int is){
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if(is == 3){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,150);
+        }else if(is == 2){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,150);
+        }else if(is == 4){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,1);
+        }else if(is == 5){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,1);
+        }else if(is == 6){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,150);
+        }else if(is == 7){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
+        }else if(is == 8){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT,1);
+        }
+
+        linearLayout.setLayoutParams(layoutParam);
+
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        if(is == 1){
+            linearLayout.setPadding(10,10,10,10);
+            linearLayout.setBackground(getResources().getDrawable(R.drawable.bottom_border));
+        }else if(is == 2){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.RIGHT);
+            linearLayout.setPadding(0,10,0,0);
+        }else if(is == 3){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setVisibility(View.GONE);
+        }else if(is == 4){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER);
+        }else if(is == 5){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.RIGHT);
+        }else if(is == 6){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setVisibility(View.GONE);
+            linearLayout.setPadding(0,10,0,0);
+        }else if(is == 8){
+            linearLayout.setGravity(Gravity.RIGHT);
+        }
+
+        return linearLayout;
+    }
+
+    /**
+     * 合格不合格linear创建
+     *
+     */
+    public LinearLayout CreateLinearBFShHG(int is,final int key,final String isHe,final ImageView imageViewH,final ImageView imageViewB){
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if(is == 4){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1);
+        }
+
+        linearLayout.setLayoutParams(layoutParam);
+
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        if(is == 4){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    isHeGE = "";
+                    if(isHe.equals("合格")){
+                        isHeGE = "合格";
+                        imageViewH.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+                        imageViewB.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
+                    }else if(isHe.equals("不合格")){
+                        isHeGE = "不合格";
+                        Log.i("巡店",isHe+"点击");
+                        imageViewH.setBackground(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
+                        imageViewB.setBackground(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+                    }
+                }
+            });
+        }
+
+        return linearLayout;
+    }
+
+
+    /**
+     * 创建ImageView
+     * @param is 创建类型
+     * @return
+     */
+    public ImageView CreateImageViewBFSH(int is,int idDr){
+        ImageView imageView = new ImageView(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if(is == 2){
+            layoutParam = new LinearLayout.LayoutParams(60,60);
+        }
+
+        imageView.setLayoutParams(layoutParam);
+
+        if(is == 2){
+            imageView.setBackground(getResources().getDrawable(idDr));
+        }
+
+        return imageView;
+    }
+
+    /**
+     * 创建EditText
+     * @return
+     */
+    public EditText CreateEditTextBFSH(){
+        EditText editText = new EditText(mContext);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(800,LinearLayout.LayoutParams.MATCH_PARENT);
+        layoutParam.setMargins(10,0,0,0);
+        editText.setLayoutParams(layoutParam);
+
+        editText.setHint("反馈内容");
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                FanKui = String.valueOf(editable);
+            }
+        });
+
+        editText.setTextColor(getResources().getColor(R.color.huise6));
+        return editText;
     }
 }
