@@ -390,8 +390,12 @@ public class KeHuActivity extends NeiYeCommActivity implements BaiDuActivity.Cal
              * 请求回调
              */
             if(msg.what==1){
-                tiShi(mContext,"添加成功");
-                finish();
+                String string = msg.obj.toString();
+                if(string.equals("添加成功")){
+                    finish();
+                }
+                tiShi(mContext,string);
+
             }
         }
     };
