@@ -309,6 +309,10 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
 //                            tiShi(mContext,"向左");
                             if(mPhoneZuoYouHuaDongDangQian > 0){
                                 mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDongDangQian-1;
+                            }else{
+                                if(mPhoneZuoYouHuaDongDangQian == 0){
+                                    mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDong.size()-1;
+                                }
                             }
                             // 刷新视图
                             ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(mPhoneZuoYouHuaDongDangQian));

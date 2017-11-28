@@ -899,13 +899,17 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mXun_dian_cha_xun_cha_xun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!likebt.equals("")){
+                if(!mXunDianLike.getXiangMuMingCheng().equals("")){
                     // 请求巡店数据
                     XunDianShuJuChaXun();
                 }else{
-                    tiShi(mContext,"请选择门店");
+                    if(!likebt.equals("")){
+                        // 请求巡店数据
+                        XunDianShuJuChaXun();
+                    }else{
+                        tiShi(mContext,"请选择门店");
+                    }
                 }
-
             }
         });
     }
@@ -1312,6 +1316,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 //                            tiShi(mContext,"向左");
                             if(mPhoneZuoYouHuaDongDangQian > 0){
                                 mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDongDangQian-1;
+                            }else{
+                                if(mPhoneZuoYouHuaDongDangQian == 0){
+                                    mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDong.size()-1;
+                                }
                             }
                             // 刷新视图
                             ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(mPhoneZuoYouHuaDongDangQian));

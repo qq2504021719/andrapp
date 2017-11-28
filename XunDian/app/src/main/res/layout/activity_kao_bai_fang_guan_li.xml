@@ -167,7 +167,6 @@
                                 android:id="@+id/imageview_bf_phone4"
                                 style="@style/baiFnagImageView"/>
 
-
                         </LinearLayout>
 
                     </LinearLayout>
@@ -178,6 +177,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:background="@drawable/bottom_border">
                         <TextView
                             style="@style/TjJiHuaTextView"
@@ -187,6 +188,7 @@
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="5dp"
                             android:id="@+id/editText_bf_nei_rong"
+                            android:iconifiedByDefault="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
