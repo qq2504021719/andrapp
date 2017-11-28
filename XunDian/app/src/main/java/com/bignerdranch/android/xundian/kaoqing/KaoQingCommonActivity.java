@@ -902,6 +902,7 @@ public class KaoQingCommonActivity extends CommActivity {
             }else if(msg.what == 2){
                 // 品牌参数请求回调
                 String string = msg.obj.toString();
+//                Log.i("巡店",""+string);
                 mCallbacksc.shuJuHuiDiao(string,1);
             }
         }

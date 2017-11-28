@@ -129,22 +129,24 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     public Dialog bfdialog = null;
 
     // image弹窗显示
-    public Dialog mImagedialog;
+    public Dialog mImagedialog = null;
 
     // 弹出审核标识
     public int mTanChuangBiaoShi = 0;
     public String mstringJson = "";
 
-    // 图片左右滑动
+    // 图片左右滑动图片存储
     public ArrayList<Phone> mPhoneZuoYouHuaDong = new ArrayList<>();
 
-    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
-    final int RIGHT = 0;
-    final int LEFT = 1;
-    private GestureDetector gestureDetector;
+    // 当前显示位置
+    public Integer mPhoneZuoYouHuaDongDangQian = 0;
 
     public View mAlertImageViewD;
-
+    // 滑动监听
+    public float mPosX;
+    public float mPosY;
+    public float mCurPosX;
+    public float mCurPosY;
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,BaiFangChaXunActivity.class);
@@ -218,6 +220,15 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         // 门店搜索模式
         moshi = "3";
 
+        // 弹窗显示图片
+        // 获取布局文件
+        LayoutInflater inflateImage = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mAlertImageViewD = inflateImage.inflate(R.layout.alert_image, null);
+
+        // 左右滑动监听
+        setGestureListener();
+
         // 公司弹出View
         // 获取布局文件
         LayoutInflater inflater = (LayoutInflater) mContext
@@ -255,23 +266,13 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         mButton_TextView.setText("驳回提交");
 
 
-        // 弹窗显示图片
-        // 获取布局文件
-        LayoutInflater inflateImage = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mAlertImageViewD = inflateImage.inflate(R.layout.alert_image, null);
 
-
-        setGestureListener();
     }
 
-    public float mPosX;
-    public float mPosY;
-    public float mCurPosX;
-    public float mCurPosY;
+
 
     /**
-     * 设置上下滑动作监听器
+     * 设置左右滑动作监听器
      * @author jczmdeveloper
      */
     private void setGestureListener(){
@@ -292,15 +293,39 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
 
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (mCurPosY - mPosY > 0
-                                && (Math.abs(mCurPosY - mPosY) > 25)) {
-                            //向下滑動
-                            tiShi(mContext,"向下");
-
-                        } else if (mCurPosY - mPosY < 0
-                                && (Math.abs(mCurPosY - mPosY) > 25)) {
-                            //向上滑动
-                            tiShi(mContext,"向上");
+//                        if (mCurPosY - mPosY > 0
+//                                && (Math.abs(mCurPosY - mPosY) > 25)) {
+//                            //向下滑動
+//                            tiShi(mContext,"向下");
+//
+//                        } else if (mCurPosY - mPosY < 0
+//                                && (Math.abs(mCurPosY - mPosY) > 25)) {
+//                            //向上滑动
+//                            tiShi(mContext,"向上");
+//                        }
+                        if (mCurPosX - mPosX > 0
+                                && (Math.abs(mCurPosX - mPosX) > 25)) {
+                            //向左滑動
+//                            tiShi(mContext,"向左");
+                            if(mPhoneZuoYouHuaDongDangQian > 0){
+                                mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDongDangQian-1;
+                            }
+                            // 刷新视图
+                            ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(mPhoneZuoYouHuaDongDangQian));
+                        } else if (mCurPosX - mPosX < 0
+                                && (Math.abs(mCurPosX - mPosX) > 25)) {
+                            //向右滑动
+                            if(mPhoneZuoYouHuaDongDangQian < (mPhoneZuoYouHuaDong.size()-1)){
+                                mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDongDangQian+1;
+                            }else{
+                                // 恢复为0
+                                if(mPhoneZuoYouHuaDongDangQian == (mPhoneZuoYouHuaDong.size()-1)){
+                                    mPhoneZuoYouHuaDongDangQian = 0;
+                                }
+                            }
+//                            tiShi(mContext,"向右");
+                            // 刷新视图
+                            ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(mPhoneZuoYouHuaDongDangQian));
                         }
 
                         break;
@@ -421,7 +446,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
      * 显示视图 CreateLinear
      */
     public void showXianShi(){
-
+        mPhoneZuoYouHuaDong = new ArrayList<>();
         // 清空内容
         mXun_dian_cha_xun_nei_rong.removeAllViews();
 
@@ -452,10 +477,13 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     // 图片张数
                     TextView textView331 = new TextView(mContext);
 
+                    // 图片解析存储
+                    TuPianJieXiCunChu(jsonObject);
+
                     String[] Phone1 = getBuWeiKongDeTuPian(jsonObject);
+
                     ImageView imageView332 = CreateImageViewXunDian(1,0,Config.URL+"/vendor/courier/img/TR.ico");
                     if(Phone1.length > 0){
-                        imageView332 = CreateImageViewXunDian(1,0,Config.URL+"/"+Phone1[0]);
                         if(!Phone1[0].equals("")){
                             Picasso.with(mContext).load(Config.URL+"/"+Phone1[0]).into(imageView332);
                         }
@@ -529,6 +557,61 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     }
 
     /**
+     * 图片解析存储
+     * @param jsonObject
+     */
+    public void TuPianJieXiCunChu(JSONObject jsonObject){
+        try {
+            JSONArray jsonArray = new JSONArray(jsonObject.getString("BaiFangPhoneFan"));
+
+            if(jsonArray.length() > 0){
+                for (int i = 0;i<=jsonArray.length();i++){
+                    JSONObject jsonObject1 = new JSONObject(jsonArray.get(i).toString());
+                    // 图片地址
+                    String path = jsonObject1.getString("path");
+                    // 图片合格 1-不合格
+                    String phone_is_hg = jsonObject1.getString("phone_is_hg");
+                    // 图片反馈内容
+                    String phone_fan_kui = jsonObject1.getString("phone_fan_kui");
+
+
+                    Phone phone = new Phone();
+                    phone.setTitle(jsonObject.getString("mname"));
+                    phone.setPath(path);
+
+                    // 第二个表格
+                    LinearLayout linearLayout7 = CreateLinear(9);
+
+                    // 图片审核标识
+                    ImageView tuImageView = new ImageView(mContext);
+                    // 图片提示
+                    TextView textView331 = new TextView(mContext);
+//                    Log.i("巡店","phone_fan_kui:"+phone_fan_kui+"|phone_is_hg:"+phone_is_hg);
+                    if(!phone_fan_kui.equals("") && !phone_fan_kui.equals("null")){
+                        textView331 = CreateTextViewXun(1,phone_fan_kui,"");
+                    }
+                    if(!phone_is_hg.equals("") && !phone_is_hg.equals("null")){
+                        tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan,"");
+                    }
+
+
+                    // 审核按钮
+                    linearLayout7.addView(tuImageView);
+                    linearLayout7.addView(textView331);
+                    // 存储
+                    phone.setLinearLayout(linearLayout7);
+
+                    mPhoneZuoYouHuaDong.add(phone);
+                }
+
+            }else{
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 获取json对象中不为空的图片
      * 创建图片滑动list mPhoneZuoYouHuaDong
      * @param jsonObject
@@ -541,38 +624,14 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             if(jsonArray.length() > 0){
                 JSONObject jsonObject1 = new JSONObject(jsonArray.get(0).toString());
                 String string[] = new String[3];
+                // 图片地址
                 String path = jsonObject1.getString("path");
+                // 图片合格 1-不合格
                 String phone_is_hg = jsonObject1.getString("phone_is_hg");
+
                 string[0] = path;
                 string[1] = phone_is_hg;
                 string[2] = jsonArray.length()+"";
-
-                Phone phone = new Phone();
-                phone.setTitle(jsonObject.getString("mname"));
-                phone.setPath(path);
-                // 第二个表格
-                LinearLayout linearLayout7 = CreateLinear(7);
-                // 获取没有删除的图片
-
-                // 图片张数
-                TextView textView331 = new TextView(mContext);
-                ImageView imageView332 = CreateImageViewXunDian(1,0,Config.URL+"/vendor/courier/img/TR.ico");
-                imageView332 = CreateImageViewXunDian(1,0,Config.URL+"/"+path);
-                if(!path.equals("")){
-                    Picasso.with(mContext).load(Config.URL+"/"+path).into(imageView332);
-                }
-                // 图片审核
-                ImageView tuImageView = new ImageView(mContext);
-                if(phone_is_hg.equals("1")){
-                    tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan,"");
-                }
-                // 审核按钮
-                linearLayout7.addView(imageView332);
-                linearLayout7.addView(tuImageView);
-                // 存储
-                phone.setLinearLayout(linearLayout7);
-
-                mPhoneZuoYouHuaDong.add(phone);
 
                 return string;
             }else{
@@ -980,6 +1039,8 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }else if(is == 8){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }else if(is == 9){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }
 
         linearLayout.setLayoutParams(layoutParam);
@@ -1011,6 +1072,10 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             linearLayout.setGravity(Gravity.RIGHT);
         }else if(is == 8){
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        }else if(is == 9){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setPadding(20,20,10,20);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         }
 
@@ -1128,20 +1193,22 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // 弹窗
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    if(mImagedialog == null){
+                        // 弹窗
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
 
+                        ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(0));
 
+                        // 设置View
+                        alertBuilder.setView(mAlertImageViewD);
 
+                        // 显示
+                        alertBuilder.create();
+                        mImagedialog = alertBuilder.show();
+                    }else{
+                        mImagedialog.show();
+                    }
 
-                    ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(0));
-
-                    // 设置View
-                    alertBuilder.setView(mAlertImageViewD);
-
-                    // 显示
-                    alertBuilder.create();
-                    mImagedialog = alertBuilder.show();
                 }
             });
         }else if(is == 2){
@@ -1156,23 +1223,22 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
      * ImageView弹窗显示
      */
     public void ImageViewAlert(View view,Phone phone){
-        // 标题
+        // 标题 mPhoneZuoYouHuaDongDangQian
         TextView textView = view.findViewById(R.id.alert_image_title);
         textView.setText(phone.getTitle());
+
+        // 标题介绍
+        TextView textView1 = view.findViewById(R.id.alert_image_title_sm);
+        textView1.setText((mPhoneZuoYouHuaDongDangQian+1)+"/"+mPhoneZuoYouHuaDong.size()+"张");
+
         // 初始化组件
         ImageView image = view.findViewById(R.id.alert_iamge_image);
         // linear
         LinearLayout linearLayout = view.findViewById(R.id.alert_image_linear);
+        linearLayout.removeAllViews();
         linearLayout.addView(phone.getLinearLayout());
 
-
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-
-        int height = wm.getDefaultDisplay().getHeight();
-
-        int width = (int)Config.TuPianBiLi*height;
-
-        Picasso.with(mContext).load(phone.getPath()).resize(width,height).into(image);
+        Picasso.with(mContext).load(Config.URL+"/"+phone.getPath()).into(image);
     }
 
     // 内容审核提交
@@ -1220,7 +1286,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
     public void onDestroy() {
         super.onDestroy();
         // 销毁回调
-        mCallbacksc = null;
+//        mCallbacksc = null;
         // 弹窗销毁
         if(dialog != null){
             dialog.dismiss();

@@ -4,23 +4,19 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.Button;
+
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,16 +27,15 @@ import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
-import com.bignerdranch.android.xundian.xundianguanli.XunDianActivity;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import okhttp3.MultipartBody;
@@ -137,10 +132,27 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     private String XiangMuMingCheng = "";
 
     // image弹窗显示
-    public Dialog mImagedialog;
+    public Dialog mImagedialog = null;
 
     // 门店搜索返回
     public String mMenDianDataJson = "";
+
+    // 图片左右滑动图片存储
+    public ArrayList<Phone> mPhoneZuoYouHuaDong = new ArrayList<>();
+
+    // 当前显示位置
+    public Integer mPhoneZuoYouHuaDongDangQian = 0;
+
+    public View mAlertImageViewD;
+
+    // 滑动监听
+    public float mPosX;
+    public float mPosY;
+    public float mCurPosX;
+    public float mCurPosY;
+
+    // 搜索对象
+    public XunDianLike mXunDianLike = new XunDianLike();
 
     public static Intent newIntent(Context packageContext, String like){
         Intent i = new Intent(packageContext,XunDianChaXunActivity.class);
@@ -163,52 +175,84 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
     @Override
     public void onResume(){
+        // 初始化值
+        initXunDianLike();
         mMenDianDataJson = getIntent().getStringExtra(EXTRA);
         // 参数解析
         canShuJieXi();
 
-        if(!likebt.equals("") && !likebt.equals("0")){
+        if(!mXunDianLike.getLikebt().equals("") && !mXunDianLike.getLikebt().equals("0")){
             // 请求巡店数据
             XunDianShuJuChaXun();
+
         }
         super.onResume();
     }
 
     public void canShuJieXi(){
-        try {
-            JSONObject jsonObject = new JSONObject(mMenDianDataJson);
+        if(!mMenDianDataJson.equals("")){
+            mXunDianLike = new Gson().fromJson(mMenDianDataJson,XunDianLike.class);
+
             // 门店名称
-            likebt = jsonObject.getString("mendian_name");
-            mText_bf_gong_si_ming_cheng_value.setText(likebt);
-
-            // 门店号
-            mText_bf_gong_si_bian_hao_value.setText(jsonObject.getString("mendian_men_dian_hao"));
-
-            // 提交人
-            tiJiaoRen = jsonObject.getString("created_user_name");
-            mTi_jiao_ren_value.setText(tiJiaoRen);
-
-            // 搜索时间
-            kstime = jsonObject.getString("kstime");
-            jstime = jsonObject.getString("jstime");
-            mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
-
+            if(!mXunDianLike.getLikebt().equals("")){
+                mText_bf_gong_si_ming_cheng_value.setText(mXunDianLike.getLikebt());
+            }
             // 品牌
-            pinPai = jsonObject.getString("mendian_men_dian_ping_pai");
-            mText_bf_gong_si_pin_pai_value.setText(pinPai);
-            // 搜索品牌
-            mPinPaiSearch = pinPai;
-
+            if(!mXunDianLike.getPinPai().equals("")){
+                mText_bf_gong_si_pin_pai_value.setText(mXunDianLike.getPinPai());
+            }
+            // 搜索时间
+            if(!mXunDianLike.getKstime().equals("") && !mXunDianLike.getJstime().equals("")){
+                mXun_dian_text_cha_xun_ri_qi_value.setText(mXunDianLike.getKstime()+"~"+mXunDianLike.getJstime());
+            }
+            // 提交人
+            if(!mXunDianLike.getTiJiaoRen().equals("")){
+                mTi_jiao_ren_value.setText(mXunDianLike.getTiJiaoRen());
+            }
             // 参数类型
-            canShuLeiXing = jsonObject.getString("men_dian_lei_xing");
-            mCha_xun_men_dian_lei_xing_value.setText(canShuLeiXing);
-
+            if(!mXunDianLike.getCanShuLeiXing().equals("")){
+                mCha_xun_men_dian_lei_xing_value.setText(mXunDianLike.getCanShuLeiXing());
+            }
             // 项目名称
-            XiangMuMingCheng = jsonObject.getString("canshu_name");
-            mXun_dian_xiang_mu_ming_chen_search.setText(XiangMuMingCheng);
+            if(!mXunDianLike.getXiangMuMingCheng().equals("")){
+                mXun_dian_xiang_mu_ming_chen_search.setText(mXunDianLike.getXiangMuMingCheng());
+            }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+//            try {
+//                JSONObject jsonObject = new JSONObject(mMenDianDataJson);
+//                // 门店名称
+//                likebt = jsonObject.getString("mendian_name");
+//                mText_bf_gong_si_ming_cheng_value.setText(likebt);
+//
+//                // 门店号
+//                mText_bf_gong_si_bian_hao_value.setText(jsonObject.getString("mendian_men_dian_hao"));
+//
+//                // 提交人
+//                tiJiaoRen = jsonObject.getString("created_user_name");
+//                mTi_jiao_ren_value.setText(tiJiaoRen);
+//
+//                // 搜索时间
+//                kstime = jsonObject.getString("kstime");
+//                jstime = jsonObject.getString("jstime");
+//                mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
+//
+//                // 品牌
+//                pinPai = jsonObject.getString("mendian_men_dian_ping_pai");
+//                mText_bf_gong_si_pin_pai_value.setText(pinPai);
+//                // 搜索品牌
+//                mPinPaiSearch = pinPai;
+//
+//                // 参数类型
+//                canShuLeiXing = jsonObject.getString("men_dian_lei_xing");
+//                mCha_xun_men_dian_lei_xing_value.setText(canShuLeiXing);
+//
+//                // 项目名称
+//                XiangMuMingCheng = jsonObject.getString("canshu_name");
+//                mXun_dian_xiang_mu_ming_chen_search.setText(XiangMuMingCheng);
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -255,12 +299,36 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         // 巡店查询数据显示
         mXun_dian_cha_xun_nei_rong = (LinearLayout)findViewById(R.id.xun_dian_cha_xun_nei_rong);
     }
+
+    /**
+     * 初始化搜索值
+     */
+    public void initXunDianLike(){
+        mXunDianLike.setLikebt("");
+        mXunDianLike.setTiJiaoRen("");
+        mXunDianLike.setKstime("");
+        mXunDianLike.setJstime("");
+        mXunDianLike.setPinPai("");
+        mXunDianLike.setCanShuLeiXing("");
+        mXunDianLike.setXiangMuMingCheng("");
+    }
+
     /**
      * 值操作
      */
     public void values(){
+        // 初始化值
+        initXunDianLike();
         // Token赋值
         setToken(mContext);
+
+        // 弹窗显示图片
+        // 获取布局文件
+        LayoutInflater inflateImage = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mAlertImageViewD = inflateImage.inflate(R.layout.alert_image, null);
+        // 左右滑动监听
+        setGestureListener();
 
         // 门店搜索模式
         moshi = "1";
@@ -299,6 +367,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
 
         // 默认选中参数
         ZhaoCanXianShi();
+
 
     }
 
@@ -383,15 +452,18 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     // 巡店数据查询
     public void XunDianShuJuChaXun(){
         LoadingStringEdit("加载中");
+
+        // 存储到对象
+
         final OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder body = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        body.addFormDataPart("likebt",likebt);
-        body.addFormDataPart("tiJiaoRen",tiJiaoRen);
-        body.addFormDataPart("kstime",kstime);
-        body.addFormDataPart("jstime",jstime);
-        body.addFormDataPart("pinPai",pinPai);
-        body.addFormDataPart("canShuLeiXing",canShuLeiXing);
-        body.addFormDataPart("XiangMuMingCheng",XiangMuMingCheng);
+        body.addFormDataPart("likebt",mXunDianLike.getLikebt());
+        body.addFormDataPart("tiJiaoRen",mXunDianLike.getTiJiaoRen());
+        body.addFormDataPart("kstime",mXunDianLike.getKstime());
+        body.addFormDataPart("jstime",mXunDianLike.getJstime());
+        body.addFormDataPart("pinPai",mXunDianLike.getPinPai());
+        body.addFormDataPart("canShuLeiXing",mXunDianLike.getCanShuLeiXing());
+        body.addFormDataPart("XiangMuMingCheng",mXunDianLike.getXiangMuMingCheng());
 
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)
@@ -450,6 +522,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
      * 显示视图 CreateLinear
      */
     public void showXianShi(){
+        mPhoneZuoYouHuaDong = new ArrayList<>();
         // 清空内容
         mXun_dian_cha_xun_nei_rong.removeAllViews();
         try {
@@ -476,6 +549,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                     linearLayout3.addView(textView32);
                     linearLayout3.addView(textView33);
                     linearLayout1.addView(linearLayout3);
+
+                    // 图片解析存储
+                    TuPianJieXiCunChu(jsonObject);
 
                     // 第三个表格
                     LinearLayout linearLayout33 = CreateLinear(3);
@@ -556,6 +632,57 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     }
 
     /**
+     * 图片解析存储
+     * @param jsonObject
+     */
+    public void TuPianJieXiCunChu(JSONObject jsonObject){
+        try {
+            String path = jsonObject.getString("path");
+            // 图片合格 1-不合格
+            String phone_is_hg = jsonObject.getString("tu_xiugai_hon");
+            // 图片反馈内容
+//            String phone_fan_kui = jsonObject.getString("phone_fan_kui");
+
+
+            Phone phone = new Phone();
+
+            phone.setTitle(jsonObject.getString("mendian_name"));
+            phone.setPath(path);
+
+            // 第二个表格
+            LinearLayout linearLayout7 = CreateLinear(9);
+
+            TextView textView331 = new TextView(mContext);
+//            if(!phone_fan_kui.equals("") && !phone_fan_kui.equals("null")){
+//                textView331 = CreateTextViewXun(1,phone_fan_kui,"");
+//            }
+
+            // 图片审核
+            ImageView tuImageView = new ImageView(mContext);
+            if(phone_is_hg.equals("1")){
+                tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan,"");
+            }
+            // 内容审核
+            ImageView neiImageView = new ImageView(mContext);
+            if(jsonObject.getString("nei_xiugai_huang").equals("1")){
+                neiImageView = CreateImageViewXunDian(2,R.drawable.huang_gan,"");
+            }
+            // 审核按钮
+//            linearLayout7.addView(textView331);
+            linearLayout7.addView(tuImageView);
+            linearLayout7.addView(neiImageView);
+            // 存储
+            phone.setLinearLayout(linearLayout7);
+
+            mPhoneZuoYouHuaDong.add(phone);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
      * 组件操作, 操作
      */
     public void ZhuJianCaoZhuo(){
@@ -577,6 +704,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                         String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
                         // 开始时间
                         kstime = string;
+                        mXunDianLike.setKstime(kstime);
                         Calendar c = Calendar.getInstance();
                         new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
@@ -585,6 +713,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                                 String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
                                 // 开始时间
                                 jstime = string;
+                                mXunDianLike.setJstime(jstime);
                                 mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
 
                             }
@@ -722,6 +851,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             @Override
             public void afterTextChanged(Editable editable) {
                 XiangMuMingCheng = String.valueOf(editable).trim();
+                mXunDianLike.setXiangMuMingCheng(XiangMuMingCheng);
             }
         });
 
@@ -761,6 +891,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             @Override
             public void afterTextChanged(Editable editable) {
                 tiJiaoRen = String.valueOf(editable).trim();
+                mXunDianLike.setTiJiaoRen(tiJiaoRen);
             }
         });
 
@@ -982,7 +1113,9 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
                 String men_dian_ping_paiText = jsonObject.getString("men_dian_ping_pai");
                 String men_dian_haoText = jsonObject.getString("men_dian_hao");
                 likebt = nameText;
+                mXunDianLike.setLikebt(likebt);
                 pinPai = men_dian_ping_paiText;
+                mXunDianLike.setPinPai(pinPai);
                 // 显示
                 mText_bf_gong_si_ming_cheng_value.setText(nameText);
                 // 编号
@@ -992,6 +1125,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             }else if(is == 3){
                 // 门店类型
                 canShuLeiXing = string;
+                mXunDianLike.setCanShuLeiXing(canShuLeiXing);
 //                mCha_xun_men_dian_lei_xing_value
                 mCha_xun_men_dian_lei_xing_value.setText(string);
             }
@@ -1020,6 +1154,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }else if(is == 6){
             layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        }else if(is == 9){
+            layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         }
 
         linearLayout.setLayoutParams(layoutParam);
@@ -1045,6 +1181,10 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         }else if(is == 6){
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        }else if(is == 9){
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setPadding(20,20,10,20);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
         }
 
@@ -1075,7 +1215,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mI = XunDianChaXunShenHeActivity.newIntent(XunDianChaXunActivity.this,stringJson);
+                    String StJ = new Gson().toJson(mXunDianLike);
+                    mI = XunDianChaXunShenHeActivity.newIntent(XunDianChaXunActivity.this,stringJson,StJ);
                     mQuanXianName = "巡店查询-巡店查询审核";
                     // 权限验证
                     QunXianYanZheng();
@@ -1107,29 +1248,22 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // 弹窗
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
-                    // 获取布局文件
-                    LayoutInflater inflater = (LayoutInflater) mContext
-                            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View viewD = inflater.inflate(R.layout.alert_image, null);
+                    if(mImagedialog == null){
+                        // 弹窗
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
 
-                    // 初始化组件
-                    ImageView image = viewD.findViewById(R.id.alert_iamge_image);
+                        ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(0));
 
-                    WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+                        // 设置View
+                        alertBuilder.setView(mAlertImageViewD);
 
-                    int height = wm.getDefaultDisplay().getHeight();
+                        // 显示
+                        alertBuilder.create();
+                        mImagedialog = alertBuilder.show();
+                    }else{
+                        mImagedialog.show();
+                    }
 
-                    int width = (int)Config.TuPianBiLi*height;
-
-                    Picasso.with(mContext).load(file).resize(width,height).into(image);
-                    // 设置View
-                    alertBuilder.setView(viewD);
-
-                    // 显示
-                    alertBuilder.create();
-                    mImagedialog = alertBuilder.show();
 
                 }
             });
@@ -1138,6 +1272,93 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
             imageView.setBackground(getResources().getDrawable(drawable));
         }
         return imageView;
+    }
+
+    /**
+     * 设置左右滑动作监听器
+     * @author jczmdeveloper
+     */
+    private void setGestureListener(){
+        mAlertImageViewD.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        mPosX = event.getX();
+                        mPosY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        mCurPosX = event.getX();
+                        mCurPosY = event.getY();
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+//                        if (mCurPosY - mPosY > 0
+//                                && (Math.abs(mCurPosY - mPosY) > 25)) {
+//                            //向下滑動
+//                            tiShi(mContext,"向下");
+//
+//                        } else if (mCurPosY - mPosY < 0
+//                                && (Math.abs(mCurPosY - mPosY) > 25)) {
+//                            //向上滑动
+//                            tiShi(mContext,"向上");
+//                        }
+                        if (mCurPosX - mPosX > 0
+                                && (Math.abs(mCurPosX - mPosX) > 25)) {
+                            //向左滑動
+//                            tiShi(mContext,"向左");
+                            if(mPhoneZuoYouHuaDongDangQian > 0){
+                                mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDongDangQian-1;
+                            }
+                            // 刷新视图
+                            ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(mPhoneZuoYouHuaDongDangQian));
+                        } else if (mCurPosX - mPosX < 0
+                                && (Math.abs(mCurPosX - mPosX) > 25)) {
+                            //向右滑动
+                            if(mPhoneZuoYouHuaDongDangQian < (mPhoneZuoYouHuaDong.size()-1)){
+                                mPhoneZuoYouHuaDongDangQian = mPhoneZuoYouHuaDongDangQian+1;
+                            }else{
+                                // 恢复为0
+                                if(mPhoneZuoYouHuaDongDangQian == (mPhoneZuoYouHuaDong.size()-1)){
+                                    mPhoneZuoYouHuaDongDangQian = 0;
+                                }
+                            }
+
+//                            tiShi(mContext,"向右");
+                            // 刷新视图
+                            ImageViewAlert(mAlertImageViewD,mPhoneZuoYouHuaDong.get(mPhoneZuoYouHuaDongDangQian));
+                        }
+                        break;
+                }
+                return true;
+            }
+
+        });
+    }
+
+    /**
+     * ImageView弹窗显示
+     */
+    public void ImageViewAlert(View view,Phone phone){
+        // 标题
+        TextView textView = view.findViewById(R.id.alert_image_title);
+        textView.setText(phone.getTitle());
+
+        // 标题介绍
+        TextView textView1 = view.findViewById(R.id.alert_image_title_sm);
+        textView1.setText((mPhoneZuoYouHuaDongDangQian+1)+"/"+mPhoneZuoYouHuaDong.size()+"张");
+
+        // 初始化组件
+        ImageView image = view.findViewById(R.id.alert_iamge_image);
+        // linear
+        LinearLayout linearLayout = view.findViewById(R.id.alert_image_linear);
+        linearLayout.removeAllViews();
+        linearLayout.addView(phone.getLinearLayout());
+
+        Picasso.with(mContext).load(Config.URL+"/"+phone.getPath()).into(image);
     }
 
 
@@ -1150,7 +1371,7 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
     public void onDestroy() {
         super.onDestroy();
         // 销毁回调
-        mCallbacksc = null;
+//        mCallbacksc = null;
         // 弹窗销毁
         if(dialog != null){
             dialog.dismiss();

@@ -36,6 +36,8 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
 
     private static final String EXTRA = "com.bignerdranch.android.xundian.xundianguanli.XunDianChaXunShenHeActivity";
 
+    private static final String EXTRALIKE = "com.bignerdranch.android.xundian.xundianguanli.XunDianChaXunShenHeActivity.like";
+
     private String mMenDianDataJson = "";
 
     // 返回传参
@@ -90,9 +92,10 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
     // 编辑模式保存
     private TextView mShen_he_ti_jiao;
 
-    public static Intent newIntent(Context packageContext,String string){
+    public static Intent newIntent(Context packageContext,String string,String string1){
         Intent i = new Intent(packageContext,XunDianChaXunShenHeActivity.class);
         i.putExtra(EXTRA,string);
+        i.putExtra(EXTRALIKE,string1);
         return i;
     }
 
@@ -246,7 +249,7 @@ public class XunDianChaXunShenHeActivity extends KaoQingCommonActivity {
              */
             if(msg.what==1){
 //                finish();
-                Intent i = XunDianChaXunActivity.newIntent(XunDianChaXunShenHeActivity.this,mMenDianDataJson);
+                Intent i = XunDianChaXunActivity.newIntent(XunDianChaXunShenHeActivity.this,getIntent().getStringExtra(EXTRALIKE));
                 startActivity(i);
                 finish();
                 tiShi(mContext,msg.obj.toString());
