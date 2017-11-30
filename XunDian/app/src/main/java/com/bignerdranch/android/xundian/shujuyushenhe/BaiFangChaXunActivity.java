@@ -691,6 +691,8 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         mText_bf_gong_si_pin_pai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 品牌搜索
+                pingPaiSouShuo();
                 if(dialogpp == null){
                     // 弹窗
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);

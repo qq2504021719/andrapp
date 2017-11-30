@@ -102,7 +102,7 @@
         <TextView
             android:id="@+id/cha_kan_imei"
             style="@style/WoDeXinXiTextView"
-            android:text="点击查看IMEI码"
+            android:text="点击查看唯一标识码"
             android:background="@drawable/buttonstyle"/>
 
         <TextView

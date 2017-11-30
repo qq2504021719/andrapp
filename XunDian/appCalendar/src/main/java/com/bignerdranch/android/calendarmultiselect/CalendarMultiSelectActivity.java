@@ -272,7 +272,6 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
         // 清空内容
         mLinear_ri_li.removeAllViews();
 
-
         // 最后一天
         int jieshu = Integer.valueOf(mJieShuRiQi);
         // 数组长度
@@ -307,12 +306,13 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
             if(strings[i] != null){
                 LinearLayout neiBuZuJian = CreateLinearLayout(2);
 //                TextView textView = CreateTextView(strings[i],0,0,0);
+                //
                 TextView textView = isCreateTextDanXuan(strings[i]);
                 // 查看是否创建背景色
                 String[] stringsc = ValueIs(mXuanYear+"-"+mXuanMonth+"-"+strings[i]);
                 if(stringsc[0].equals("true")){
                     DayColor dayColor = myiXuanZheData.get(Integer.valueOf(stringsc[1]));
-                    Log.i("巡店",strings[i]);
+//                    Log.i("巡店",strings[i]);
                     textView = CreateTextView(strings[i],1,dayColor.getFontColor(),dayColor.getColor());
                 }
 
@@ -342,7 +342,7 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
         if(CalendarConfig.mZhouJiBuKeXuan.length > 0){
             for(int i = 0;i<CalendarConfig.mZhouJiBuKeXuan.length;i++){
                 isC = false;
-                Log.i("巡店",CalendarConfig.mZhouJiBuKeXuan[i]);
+//                Log.i("巡店",CalendarConfig.mZhouJiBuKeXuan[i]);
                 if(CalendarConfig.mZhouJiBuKeXuan[i].equals("")){
 
                 }else{
@@ -376,13 +376,8 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
 
 //        Log.i("巡店",mXuanYear+""+mXuanMonth+""+day+"|"+JinRiYear+""+JinRiMonth+""+JinRiDay);
         if(CalendarConfig.mYiGuoBuKeXuan == 1  && day.length() > 0){
-            if(Integer.valueOf(mXuanYear) < JinRiYear){
-                textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
-            }
-            if(Integer.valueOf(mXuanMonth) < JinRiMonth){
-                textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
-            }
-            if(Integer.valueOf(day) < JinRiDay){
+//            Log.i("巡店",Integer.valueOf(mXuanYear)+"|"+JinRiYear+"-"+Integer.valueOf(mXuanMonth)+"|"+JinRiMonth+"-"+Integer.valueOf(day)+"|"+JinRiDay);
+            if(Integer.valueOf(mXuanYear) <= JinRiYear && Integer.valueOf(mXuanMonth) <= JinRiMonth && Integer.valueOf(day) < JinRiDay){
                 textView = CreateTextViewString(day,CalendarConfig.mYiGuoBuKeXuanTiShi,R.color.baiseCalendar,R.drawable.ri_qi_background_huise);
             }
         }
@@ -541,17 +536,21 @@ public class CalendarMultiSelectActivity extends AppCompatActivity {
                         // 删除存储的数据
                         int i = Integer.valueOf(strings[1]);
                         myiXuanZheData.remove(i);
-
                     }else{
-                        textView1.setTextColor(getResources().getColor(CalendarConfig.mMoRenZiTiSe));
-                        textView1.setBackground(getResources().getDrawable(CalendarConfig.mMoRenBeiJingSe));
+                        // 单选模式只能选择一次时间
+                        if(CalendarConfig.mDanXuanMoShi == 1 && myiXuanZheData.size() == 1){
+                            Toast.makeText(mContext,"单选模式,只能选择一次", Toast.LENGTH_SHORT).show();
+                        }else{
+                            textView1.setTextColor(getResources().getColor(CalendarConfig.mMoRenZiTiSe));
+                            textView1.setBackground(getResources().getDrawable(CalendarConfig.mMoRenBeiJingSe));
+                            // 存储选择
+                            DayColor dayColor = new DayColor();
+                            dayColor.setDay(day);
+                            dayColor.setColor(CalendarConfig.mMoRenBeiJingSe);
+                            dayColor.setFontColor(CalendarConfig.mMoRenZiTiSe);
+                            myiXuanZheData.add(dayColor);
+                        }
 
-                        // 存储选择
-                        DayColor dayColor = new DayColor();
-                        dayColor.setDay(day);
-                        dayColor.setColor(CalendarConfig.mMoRenBeiJingSe);
-                        dayColor.setFontColor(CalendarConfig.mMoRenZiTiSe);
-                        myiXuanZheData.add(dayColor);
                     }
                 }
             });

@@ -167,10 +167,11 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mContext = this;
         // 组件初始化
         ZhuJianInit();
-        // 组件操作
-        ZhuJianCaoZhuo();
         // 数据/值设置
         values();
+        // 组件操作
+        ZhuJianCaoZhuo();
+
     }
 
     @Override
@@ -728,6 +729,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mText_bf_gong_si_pin_pai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 品牌搜索
+                pingPaiSouShuo();
                 if(dialogpp == null){
                     // 弹窗
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bignerdranch.android.xundian.comm.AtyContainer;
 import com.bignerdranch.android.xundian.comm.Config;
 import com.bignerdranch.android.xundian.comm.FileSizeUtil;
+import com.bignerdranch.android.xundian.comm.Installation;
 import com.bignerdranch.android.xundian.comm.Login;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.model.LoginModel;
@@ -346,12 +347,11 @@ public class WodeXinXiFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(imei == 1){
-                    mCha_kan_imei.setText("点击查看IMEI码");
+                    mCha_kan_imei.setText("点击查看唯一标识码");
                     imei = 0;
                 }else if (imei == 0){
-                    TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
-                    String imeiS = telephonyManager.getDeviceId();
-                    mCha_kan_imei.setText("IMEI码:"+imeiS);
+                    String imeiS = Installation.id(getActivity());
+                    mCha_kan_imei.setText("唯一标识码:"+imeiS);
                     imei = 1;
                 }
             }

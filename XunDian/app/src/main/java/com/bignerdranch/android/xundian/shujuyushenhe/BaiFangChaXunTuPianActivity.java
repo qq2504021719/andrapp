@@ -560,7 +560,7 @@ public class BaiFangChaXunTuPianActivity extends KaoQingCommonActivity {
      */
     public EditText CreateEditTextBFSH(){
         EditText editText = new EditText(mContext);
-        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(800,LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(600,LinearLayout.LayoutParams.MATCH_PARENT);
         layoutParam.setMargins(10,0,0,0);
         editText.setLayoutParams(layoutParam);
 
