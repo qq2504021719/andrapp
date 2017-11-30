@@ -162,6 +162,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
 
     // 巡店计划集合
     public List<XunDianJiHua> mXunDianJiHuas = new ArrayList<>();
+    // 巡店计划修改后
+    public List<XunDianJiHua> mXunDianJiHuasXG = new ArrayList<>();
 
     // 巡店计划对象
     public XunDianJiHua mXunDianJiHua = new XunDianJiHua();
@@ -177,6 +179,14 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
     public int ZhouWu = 1;
     public int ZhouLiu = 1;
     public int ZhouQi = 1;
+    // 每天序号 巡店计划
+    public int ZhouYiXG = 1;
+    public int ZhouErXG = 1;
+    public int ZhouSanXG = 1;
+    public int ZhouSiXG = 1;
+    public int ZhouWuXG = 1;
+    public int ZhouLiuXG = 1;
+    public int ZhouQiXG = 1;
 
     // 修改下标
     public int mXiuGaiKey = 1000;
@@ -316,6 +326,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                 tiShi(mContext,msg.obj.toString());
                 // 删除数据
                 mXunDianJiHuas = new ArrayList<>();
+                mXunDianJiHuasXG = new ArrayList<>();
                 // 刷新视图
                 setShowJH();
             }
@@ -361,6 +372,7 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             if(jsonArray.length() > 0){
                 for(int i =0;i<jsonArray.length();i++){
                     XunDianJiHua xunDianJiHua = new XunDianJiHua();
+                    XunDianJiHua xunDianJiHuaXG = new XunDianJiHua();
                     if(jsonArray.get(i) != null){
                         JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                         xunDianJiHua.setId(Integer.valueOf(jsonObject.getString("id")));
@@ -374,8 +386,21 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                         xunDianJiHua.setBoHuiYuanYi(jsonObject.getString("bo_hui_yi_jian").trim());
                         xunDianJiHua.setMenDianId(Integer.valueOf(jsonObject.getString("mendian_id")));
                         xunDianJiHua.setZhouStr(jsonObject.getString("zhouStr").trim());
+
+                        xunDianJiHuaXG.setId(Integer.valueOf(jsonObject.getString("id")));
+                        xunDianJiHuaXG.setZhou(jsonObject.getString("zhou").trim());
+                        xunDianJiHuaXG.setRiQi(jsonObject.getString("ri_qi").trim());
+                        xunDianJiHuaXG.setShiJian(jsonObject.getString("kai_shi_time").trim());
+                        xunDianJiHuaXG.setJSShiJian(jsonObject.getString("jie_shu_time").trim());
+                        xunDianJiHuaXG.setPingPaiStr(jsonObject.getString("mendian_pin_pai").trim());
+                        xunDianJiHuaXG.setMenDianHao(jsonObject.getString("mendian_hao").trim());
+                        xunDianJiHuaXG.setMenDianStr(jsonObject.getString("mendian_name").trim());
+                        xunDianJiHuaXG.setBoHuiYuanYi(jsonObject.getString("bo_hui_yi_jian").trim());
+                        xunDianJiHuaXG.setMenDianId(Integer.valueOf(jsonObject.getString("mendian_id")));
+                        xunDianJiHuaXG.setZhouStr(jsonObject.getString("zhouStr").trim());
                     }
                     mXunDianJiHuas.add(xunDianJiHua);
+                    mXunDianJiHuasXG.add(xunDianJiHuaXG);
                 }
             }
         } catch (JSONException e) {
@@ -389,11 +414,11 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
      */
     public void gongZuoBiaoTiJiao(){
         JSONObject jsonObjects = new JSONObject();
-        for(int i = 0;i<mXunDianJiHuas.size();i++){
-            if(mXunDianJiHuas.get(i) != null){
+        for(int i = 0;i<mXunDianJiHuasXG.size();i++){
+            if(mXunDianJiHuasXG.get(i) != null){
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    XunDianJiHua xunDianJiHua = mXunDianJiHuas.get(i);
+                    XunDianJiHua xunDianJiHua = mXunDianJiHuasXG.get(i);
 
                     jsonObject.put("id",xunDianJiHua.getId());
                     jsonObject.put("zhou",xunDianJiHua.getZhou());
@@ -714,7 +739,6 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                         // 存储用户选择门店
                         mXunDianJiHua.setMenDianStr(mMengDianData[index]);
 
-
                         alertDialog1.dismiss();
 
                     }
@@ -733,6 +757,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     shanChuJiLv(String.valueOf(mXunDianJiHuas.get(mXiuGaiKey).getId()));
                     // list删除
                     mXunDianJiHuas.remove(mXiuGaiKey);
+                    // 删除提交交副本
+                    mXunDianJiHuasXG.remove(mXiuGaiKey);
                     // 更新操作
                     initAddDelete();
 
@@ -744,6 +770,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         mButton_gong_zuo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 标识未修改后的值
+                mXunDianJiHua.setBoHuiXG(1);
                 // 存入值
                 setDatabase();
             }
@@ -809,7 +837,12 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
 
             // 添加到List
             if(mXiuGaiKey != 1000){
-                mXunDianJiHuas.set(mXiuGaiKey,mXunDianJiHua);
+//                Log.i("巡店","修改原版:"+mXunDianJiHuasXG.get(mXiuGaiKey).getMenDianStr());
+//                mXunDianJiHuas.set(mXiuGaiKey,mXunDianJiHua);
+                mXunDianJiHuasXG.set(mXiuGaiKey,mXunDianJiHua);
+//                Log.i("巡店","原版:"+mXunDianJiHuas.get(mXiuGaiKey).getMenDianStr());
+
+//                Log.i("巡店","修改:"+mXunDianJiHuasXG.get(mXiuGaiKey).getMenDianStr());
             }
             // 更新下标
             initAddDelete();
@@ -838,8 +871,9 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         // 初始化显示组件
         initShowView();
 
-        Log.i("巡店",mXunDianJiHuas.size()+"");
+
         if(mXunDianJiHuas.size() > 0){
+            // 原始数据
             List<XunDianJiHua> xunDianJiHuaList = new ArrayList<>();
             xunDianJiHuaList = mXunDianJiHuas;
             // 添加排序字段
@@ -850,15 +884,34 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             }
             // 排序
             Collections.sort(xunDianJiHuaList);
+
+            // 修改后数据
+            List<XunDianJiHua> xunDianJiHuaListXG = new ArrayList<>();
+            xunDianJiHuaListXG = mXunDianJiHuasXG;
+            // 添加排序字段
+            for(int i = 0;i<xunDianJiHuaListXG.size();i++){
+                if(xunDianJiHuaListXG.get(i) != null){
+                    xunDianJiHuaListXG.get(i).setOrderBy(Integer.valueOf(strSplit(":",xunDianJiHuaListXG.get(i).getShiJian())));
+                }
+            }
+            // 排序
+            Collections.sort(xunDianJiHuaListXG);
+
             // 生成TextView
             for(int i = 0;i<xunDianJiHuaList.size();i++){
                 if(xunDianJiHuaList.get(i) != null){
+                    // 原始数据
                     CreateViewRiQi(xunDianJiHuaList.get(i),i);
+                    // 修改后数据
+                    if(xunDianJiHuaListXG.get(i).getBoHuiXG() == 1){
+                        CreateViewRiQi(mXunDianJiHuasXG.get(i),1001);
+                    }
                 }
             }
         }
 
     }
+
 
     /**
      * 初始化显示组件
@@ -887,6 +940,14 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         ZhouWu = 1;
         ZhouLiu = 1;
         ZhouQi = 1;
+        // 初始化编号 修改
+        ZhouYiXG = 1;
+        ZhouErXG = 1;
+        ZhouSanXG = 1;
+        ZhouSiXG = 1;
+        ZhouWuXG = 1;
+        ZhouLiuXG = 1;
+        ZhouQiXG = 1;
     }
 
     /**
@@ -910,49 +971,86 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             // 周一
             strs = stringRiQi+" 周一";
             ll = mLinear_zhou_yi;
-            BiaoShi = ZhouYi;
-//            Log.i("巡店",mRiQiData[0]+"|"+xunDianJiHua.getRiQi());
-            ZhouYi++;
+            if(i == 1001){
+                BiaoShi = ZhouYiXG;
+                ZhouYiXG++;
+            }else{
+                BiaoShi = ZhouYi;
+                ZhouYi++;
+            }
+
 
         }else if(mRiQiData[2].equals(xunDianJiHua.getRiQi())){
             // 周二
             strs = stringRiQi+" 周二";
             ll = mLinear_zhou_er;
-            BiaoShi = ZhouEr;
-            ZhouEr++;
+            if(i == 1001){
+                BiaoShi = ZhouErXG;
+                ZhouErXG++;
+            }else{
+                BiaoShi = ZhouEr;
+                ZhouEr++;
+            }
         }else if(mRiQiData[3].equals(xunDianJiHua.getRiQi())){
             // 周三
             strs = stringRiQi+" 周三";
             ll = mLinear_zhou_san;
-            BiaoShi = ZhouSan;
-            ZhouSan++;
+            if(i == 1001){
+                BiaoShi = ZhouSanXG;
+                ZhouSanXG++;
+            }else{
+                BiaoShi = ZhouSan;
+                ZhouSan++;
+            }
+
         }else if(mRiQiData[4].equals(xunDianJiHua.getRiQi())){
             // 周四
             strs = stringRiQi+" 周四";
             ll = mLinear_zhou_si;
-            BiaoShi = ZhouSi;
-            ZhouSi++;
+            if(i == 1001){
+                BiaoShi = ZhouSiXG;
+                ZhouSiXG++;
+            }else{
+                BiaoShi = ZhouSi;
+                ZhouSi++;
+            }
         }else if(mRiQiData[5].equals(xunDianJiHua.getRiQi())){
             // 周五
             strs = stringRiQi+" 周五";
             ll = mLinear_zhou_wu;
-            BiaoShi = ZhouWu;
-            ZhouWu++;
+            if(i == 1001){
+                BiaoShi = ZhouWuXG;
+                ZhouWuXG++;
+            }else{
+                BiaoShi = ZhouWu;
+                ZhouWu++;
+            }
         }else if(mRiQiData[6].equals(xunDianJiHua.getRiQi())){
             // 周六
             strs = stringRiQi+" 周六";
             ll = mLinear_zhou_liu;
-            BiaoShi = ZhouLiu;
-            ZhouLiu++;
+            if(i == 1001){
+                BiaoShi = ZhouLiuXG;
+                ZhouLiuXG++;
+            }else{
+                BiaoShi = ZhouLiu;
+                ZhouLiu++;
+            }
         }else if(mRiQiData[7].equals(xunDianJiHua.getRiQi())){
             // 周日
             strs = stringRiQi+" 周日";
             ll = mLinear_zhou_ri;
-            BiaoShi = ZhouQi;
-            ZhouQi++;
+            if(i == 1001){
+                BiaoShi = ZhouQiXG;
+                ZhouQiXG++;
+            }else{
+                BiaoShi = ZhouQi;
+                ZhouQi++;
+            }
         }
+
         // 创建标题
-        if(ll != null && BiaoShi == 1){
+        if(ll != null && BiaoShi == 1 && i != 1001){
             ll.setVisibility(View.VISIBLE);
             ll.addView(CreateTextView(strs,1000));
         }
@@ -988,10 +1086,13 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
         LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParam.setMargins(0,0,0,5);
         textView.setLayoutParams(layoutParam);
+
         textView.setText(string);
-        // 显示内容
+        // 显示内容 mTextColorInt
         final int xiaobiao = i;
-        if(xiaobiao != 1000){
+        if(xiaobiao != 1000 && xiaobiao != 1001){
+            // 字体颜色
+            textView.setTextColor(getResources().getColor(R.color.hongse));
             textView.setOnClickListener(new View.OnClickListener() {
                 final int xiaoBiao = xiaobiao;
                 @Override
@@ -1000,6 +1101,8 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
                     qingKongNeiRong();
                 }
             });
+        }else if(xiaobiao == 1001){
+            textView.setTextColor(getResources().getColor(R.color.lvse));
         }
 
         return textView;
@@ -1033,15 +1136,16 @@ public class RiChengActivity extends NeiYeCommActivity implements NeiYeCommActiv
             // 显示工作修改按钮
             mButton_gong_zuo.setVisibility(View.VISIBLE);
 
-            mXunDianJiHua = mXunDianJiHuas.get(mXiuGaiKey);
-            mTextview_zhou_value.setText(mXunDianJiHua.getZhou()+"周");
-            mTextview_ri_qi_value.setText(mXunDianJiHua.getRiQi());
-            mTextview_shi_jian_value.setText(mXunDianJiHua.getShiJian());
-            mTextview_js_shi_jian_value.setText(mXunDianJiHua.getJSShiJian());
-            mTextview_pin_pai_value.setText(mXunDianJiHua.getPingPaiStr());
-            mTextview_ming_cheng_value.setText(mXunDianJiHua.getMenDianStr());
-            mTextview_dian_hao_value.setText(mXunDianJiHua.getMenDianHao());
-            mTextview_bo_hui_yuan_yi_value.setText(mXunDianJiHua.getBoHuiYuanYi());
+            mXunDianJiHua = mXunDianJiHuasXG.get(mXiuGaiKey);
+            XunDianJiHua mXunDianJiHuaShow = mXunDianJiHuas.get(mXiuGaiKey);
+            mTextview_zhou_value.setText(mXunDianJiHuaShow.getZhou()+"周");
+            mTextview_ri_qi_value.setText(mXunDianJiHuaShow.getRiQi());
+            mTextview_shi_jian_value.setText(mXunDianJiHuaShow.getShiJian());
+            mTextview_js_shi_jian_value.setText(mXunDianJiHuaShow.getJSShiJian());
+            mTextview_pin_pai_value.setText(mXunDianJiHuaShow.getPingPaiStr());
+            mTextview_ming_cheng_value.setText(mXunDianJiHuaShow.getMenDianStr());
+            mTextview_dian_hao_value.setText(mXunDianJiHuaShow.getMenDianHao());
+            mTextview_bo_hui_yuan_yi_value.setText(mXunDianJiHuaShow.getBoHuiYuanYi());
         }
     }
 

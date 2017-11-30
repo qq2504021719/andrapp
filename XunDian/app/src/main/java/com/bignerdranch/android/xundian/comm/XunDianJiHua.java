@@ -11,6 +11,9 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // id
     public int mId;
 
+    // 驳回修改后的记录 1 0
+    public int mBoHuiXG = 0;
+
     // UID
     public int mUid;
 
@@ -49,6 +52,14 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
 
     // 驳回原因
     public String mBoHuiYuanYi;
+
+    public void setBoHuiXG(int boHuiXG) {
+        mBoHuiXG = boHuiXG;
+    }
+
+    public int getBoHuiXG() {
+        return mBoHuiXG;
+    }
 
     public void setBoHuiYuanYi(String boHuiYuanYi) {
         mBoHuiYuanYi = boHuiYuanYi;

@@ -257,13 +257,13 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
         mbfViewD = inflater.inflate(R.layout.alert_shu_ji_hu_shen_he_bu_tong_yi, null);
         // 内容审核布局文件
         mTitle_TextView = mbfViewD.findViewById(R.id.bu_hui_title);
-        mTitle_TextView.setText("驳回原因");
+        mTitle_TextView.setText("反馈原因");
         // 内容审核输入框
         mEdittext_Fan_Kui_Shu_Ru = mbfViewD.findViewById(R.id.edittext_qing_jia_bu_tong_yi_ti_jiao);
-        mEdittext_Fan_Kui_Shu_Ru.setHint("请输入驳回原因");
+        mEdittext_Fan_Kui_Shu_Ru.setHint("请输入反馈原因");
         // Button
         mButton_TextView = mbfViewD.findViewById(R.id.button_qing_jia_bu_tong_yi_ti_jiao);
-        mButton_TextView.setText("驳回提交");
+        mButton_TextView.setText("反馈提交");
 
 
 

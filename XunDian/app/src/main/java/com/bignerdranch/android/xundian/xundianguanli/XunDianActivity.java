@@ -1161,7 +1161,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             // TODO Auto-generated method stub
                             String string = year+"年"+(monthOfYear+1)+"月"+dayOfMonth;
-                            textView.setText(string);
+                            textView.setText(string+"日");
                             // 数据存储
                             if(string != null){
                                 mXunDianCanShus.get(id).setValue(string);
