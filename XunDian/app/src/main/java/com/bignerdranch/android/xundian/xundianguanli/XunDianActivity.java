@@ -434,17 +434,23 @@ public class XunDianActivity extends NeiYeCommActivity {
             int mFanWei = Integer.valueOf(mXunDian.getString("mFanWei"));
             Double mMenDianLat = Double.valueOf(mXunDian.getString("mMenDianLat"));
             Double mMenDianLng = Double.valueOf(mXunDian.getString("mMenDianLng"));
-            if(mMenDianLat <= 0.0 || mMenDianLng <= 0.0 || mFanWei < 0){
-                ChaoStr = "提交超出提交范围,是否提交?";
+            Log.i("巡店","lat:"+lat+"|lng:"+lng+"|mFanWei:"+mFanWei+"|mMenDianLat:"+mMenDianLat+"|mMenDianLng:"+mMenDianLng);
+            if(mMenDianLat == 0.0 || mMenDianLng == 0.0 || mFanWei == 0){
+                ChaoStr = "";
             }else{
-                Double juLi = GetShortDistance(lng,lat,mMenDianLng,mMenDianLat);
-                if(juLi <= mFanWei){
-                    ChaoStr = "";
+                if(mMenDianLat <= 0.0 || mMenDianLng <= 0.0 || mFanWei < 0){
+                    ChaoStr = "提交超出提交范围,是否提交?";
                 }else{
-                    ChaoFanWei = String.valueOf(df.format(juLi-mFanWei));
-                    ChaoStr = "提交超出提交范围"+ChaoFanWei+"米,是否提交?";
+                    Double juLi = GetShortDistance(lng,lat,mMenDianLng,mMenDianLat);
+                    if(juLi <= mFanWei){
+                        ChaoStr = "";
+                    }else{
+                        ChaoFanWei = String.valueOf(df.format(juLi-mFanWei));
+                        ChaoStr = "提交超出提交范围"+ChaoFanWei+"米,是否提交?";
+                    }
                 }
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

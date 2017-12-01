@@ -594,7 +594,7 @@ public class BaiFangChaXunActivity  extends KaoQingCommonActivity implements Kao
                     if(!phone_fan_kui.equals("") && !phone_fan_kui.equals("null")){
                         textView331 = CreateTextViewXun(1,phone_fan_kui,"");
                     }
-                    if(!phone_is_hg.equals("") && !phone_is_hg.equals("null")){
+                    if((!phone_is_hg.equals("") && !phone_is_hg.equals("null")) || !phone_fan_kui.equals("") && !phone_fan_kui.equals("null")){
                         tuImageView = CreateImageViewXunDian(2,R.drawable.hong_gan,"");
                     }
 
