@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.UUID;
-
+import android.provider.Settings.Secure;
 /**
  * Created by Administrator on 2017/11/25.
  */
@@ -17,17 +17,18 @@ public class Installation {
     private static final String INSTALLATION = "INSTALLATION";
 
     public synchronized static String id(Context context) {
-        if (sID == null) {
-            File installation = new File(context.getFilesDir(), INSTALLATION);
-            try {
-                if (!installation.exists())
-                    writeInstallationFile(installation);
-                sID = readInstallationFile(installation);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return sID;
+        return Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+//        if (sID == null) {
+//            File installation = new File(context.getFilesDir(), INSTALLATION);
+//            try {
+//                if (!installation.exists())
+//                    writeInstallationFile(installation);
+//                sID = readInstallationFile(installation);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        return sID;
     }
 
     private static String readInstallationFile(File installation) throws IOException {

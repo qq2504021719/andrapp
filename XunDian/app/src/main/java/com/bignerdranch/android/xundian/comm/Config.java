@@ -18,6 +18,14 @@ public class Config {
     public static String ChaoJiYongHu = "0";
 
     // 巡店免验证机器码 "35c707f2-33c2-487f-b5ef-c4a00b0eed4e",
-    public static String[] XunDianMianyanZheng = new String[]{"35c707f2-33c2-487f-b5ef-c4a00b0eed4e","b47de206-6134-4a82-b903-8fba297177d5"};
+    public static String[] XunDianMianyanZheng = new String[]{"64d8be952063a587","dccdc7ef501d4026" +
+            "" +
+            "" +
+            "" +
+            "" +
+            "" +
+            "" +
+            "" +
+            ""};
 
 }
