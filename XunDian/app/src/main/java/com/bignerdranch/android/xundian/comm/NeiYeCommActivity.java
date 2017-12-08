@@ -82,7 +82,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
 
 
     // 门店品牌数据
-    public String mMengDianPingpaiJsonData = "[{\"id\":2,\"name\":\"\\u4f0d\\u7f18\"},{\"id\":5,\"name\":\"\\u53ef\\u7684\\u4fbf\\u5229\"},{\"id\":10,\"name\":\"\\u597d\\u5fb7\\u4fbf\\u5229\"},{\"id\":12,\"name\":\"\\u7f57\\u68ee\\u4fbf\\u5229\"}]";
+    public String mMengDianPingpaiJsonData = "";
     public String[] mMengDianPingPaiData;
     public HashMap<String,String> mMengDianHashMapData;
 
@@ -457,7 +457,7 @@ public class NeiYeCommActivity extends AppCompatActivity{
                 }
             }else{
                 if(is == 1){
-                    mMengDianPingPaiData= new String[0];
+                    mMengDianPingPaiData = new String[0];
                 }else if(is == 2){
                     mMengDianData= new String[0];
                 }
@@ -480,11 +480,13 @@ public class NeiYeCommActivity extends AppCompatActivity{
              * 请求回调
              */
             if(msg.what==1){
-                // 品牌参数请求回调
+                // 门店参数请求回调
                 String string = msg.obj.toString();
                 mCallbacks.shuJuHuiDiao(string,2);
             }else if(msg.what==2){
+                // 品牌参数请求回调
                 String string = msg.obj.toString();
+                mMengDianPingpaiJsonData = string;
                 mCallbacks.shuJuHuiDiao(string,1);
             }
         }

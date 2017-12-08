@@ -156,8 +156,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         mChaoShiModel = ChaoShiModel.get(mContext);
         // Token赋值
         setToken(mContext);
-        // 品牌请求
-        pinPaiSearch();
+
         // 请求店铺
         menDianSearch();
 
@@ -170,11 +169,17 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
      */
     public void shuJuHuiDiao(String string,int is){
         if(is == 1){
+            Log.i("巡店",mMengDianPingpaiJsonData);
             mMengDianPingpaiJsonData = string;
+            Log.i("巡店",string);
             setData(mMengDianPingpaiJsonData,1);
         }else if(is == 2){
             mMengDianJsonData = string;
             setData(mMengDianJsonData,2);
+            if(mMengDianPingpaiJsonData.equals("")){
+                // 品牌请求
+                pinPaiSearch();
+            }
         }
 
     }
@@ -244,6 +249,7 @@ public class XunDianGuanLiActivity extends NeiYeCommActivity implements SearchVi
         mXuan_zhe_men_dian_ping_pai_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 //                Log.i("巡店",mMengDianPingPaiData.toString());
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
                 alertBuilder.setItems(mMengDianPingPaiData, new DialogInterface.OnClickListener() {
