@@ -429,9 +429,14 @@ public class XunDianActivity extends NeiYeCommActivity {
         String ChaoStr = "";
 
         try {
+
             Double lat = Double.valueOf(mXunDian.getString("mLatitude"));
             Double lng = Double.valueOf(mXunDian.getString("mLontitude"));
-            int mFanWei = Integer.valueOf(mXunDian.getString("mFanWei"));
+            int mFanWei = 0;
+            if(!mXunDian.getString("mFanWei").equals("null")){
+                mFanWei = Integer.valueOf(mXunDian.getString("mFanWei"));
+            }
+
             Double mMenDianLat = Double.valueOf(mXunDian.getString("mMenDianLat"));
             Double mMenDianLng = Double.valueOf(mXunDian.getString("mMenDianLng"));
             Log.i("巡店","lat:"+lat+"|lng:"+lng+"|mFanWei:"+mFanWei+"|mMenDianLat:"+mMenDianLat+"|mMenDianLng:"+mMenDianLng);
@@ -737,7 +742,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                 // 店铺id
                 mXunDianCanShu.setMenDianId(Integer.valueOf(mXunDian.getString("mMenDianId")));
                 // 品牌id
-                mXunDianCanShu.setMenDianPingPaiId(Integer.valueOf(mXunDian.getString("mMenDianPingPaiId")));
+//                mXunDianCanShu.setMenDianPingPaiId(Integer.valueOf(mXunDian.getString("mMenDianPingPaiId")));
                 // 店铺名称
                 mXunDianCanShu.setMenDianMingCheng(mXunDian.getString("mMenDianMingCheng"));
                 // 下标

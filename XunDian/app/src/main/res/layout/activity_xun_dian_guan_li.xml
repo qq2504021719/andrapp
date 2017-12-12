@@ -105,26 +105,22 @@
             android:gravity="left|center_vertical"
             android:background="@drawable/gong_zuo_zhong_xin_button"/>
 
-
-        <EditText
-            android:id="@+id/men_dian_ming_cheng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:hint="请输入门店名称/门店店号"
-            android:textCursorDrawable="@drawable/edit_gong_cursor_color"
-            android:background="@drawable/gong_zuo_zhong_xin_button"
-            />
-
         <Button
             android:id="@+id/xuan_zhe_men_dian_ping_pai_button"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="选择门店品牌"
+            android:paddingLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:background="@drawable/gong_zuo_zhong_xin_button"/>
+
+        <Button
+            android:id="@+id/xun_dian_cha_xun_men_dian_lei_xing"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择门店类型"
             android:paddingLeft="10dp"
             android:gravity="left|center_vertical"
             android:background="@drawable/gong_zuo_zhong_xin_button"/>

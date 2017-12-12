@@ -111,7 +111,8 @@ public class KaoQingCommonActivity extends CommActivity {
     // activity 类型
     public int mActivityLeiXing = 0;
 
-
+    // 门店类型
+    public String mSearchMenDianLeiXing = "";
 
     // 百度地图定位
     public LocationBaiDu mLocationBaiDu = new LocationBaiDu(); //定位信息存储
@@ -925,6 +926,7 @@ public class KaoQingCommonActivity extends CommActivity {
                     .add("name",str)
                     .add("pin_pai",str1)
                     .add("moshi",moshi)
+                    .add("lei_xing",mSearchMenDianLeiXing)
                     .build();
             final Request request = new Request.Builder()
                     .addHeader("Authorization","Bearer "+mToken)
