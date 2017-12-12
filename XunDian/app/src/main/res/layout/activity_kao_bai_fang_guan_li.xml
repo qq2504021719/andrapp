@@ -45,26 +45,13 @@
 
                     </LinearLayout>
 
-                    <!--公司名称-->
-                    <LinearLayout
-                        style="@style/LinearLayoutHorizontal">
-                        <TextView
-                            android:id="@+id/text_bf_gong_si_ming_cheng"
-                            style="@style/TjJiHuaTextView"
-                            android:text="公司名称"/>
 
-                        <TextView
-                            android:id="@+id/text_bf_gong_si_ming_cheng_value"
-                            style="@style/TjJiHuaTextView1"/>
-
-                        <ImageView
-                            style="@style/TjJiHuaImageView"/>
-                    </LinearLayout>
 
                     <!--公司品牌-->
                     <LinearLayout
                         style="@style/LinearLayoutHorizontal">
                         <TextView
+                            android:id="@+id/bai_fang_guan_li_pin_pai"
                             style="@style/TjJiHuaTextView"
                             android:text="公司品牌"/>
 
@@ -85,6 +72,22 @@
 
                         <TextView
                             android:id="@+id/text_bf_gong_si_bian_hao_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--公司名称-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            android:id="@+id/text_bf_gong_si_ming_cheng"
+                            style="@style/TjJiHuaTextView"
+                            android:text="公司名称"/>
+
+                        <TextView
+                            android:id="@+id/text_bf_gong_si_ming_cheng_value"
                             style="@style/TjJiHuaTextView1"/>
 
                         <ImageView

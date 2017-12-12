@@ -383,10 +383,21 @@ public class XunDianGuanLiActivity extends KaoQingCommonActivity implements Sear
                 mLocationBaiDu.setMenDianMingCheng(nameText);
                 // 门店范围
                 mLocationBaiDu.setFanWei(FanWei);
+
                 // 门店lat
-                mLocationBaiDu.setMenDianLat(Double.valueOf(lat));
-                // 门店lng
-                mLocationBaiDu.setMenDianLng(Double.valueOf(lng));
+                if(lat.equals("null") || lat.equals("")){
+                    mLocationBaiDu.setMenDianLat(0.0);
+                }else{
+                    mLocationBaiDu.setMenDianLat(Double.valueOf(lat));
+                }
+
+                // 门店lat
+                if(lng.equals("null") || lng.equals("")){
+                    mLocationBaiDu.setMenDianLng(0.0);
+                }else{
+                    mLocationBaiDu.setMenDianLng(Double.valueOf(lng));
+                }
+
 
                 mXuan_zhe_men_dian_button.setText(men_dian_ping_paiText+"-"+men_dian_haoText+"-"+nameText);
             }else if(is == 3){
