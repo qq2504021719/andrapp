@@ -56,7 +56,7 @@
                             android:text="公司品牌"/>
 
                         <TextView
-                            android:id="@+id/text_bf_gong_si_pin_pai_value"
+                            android:id="@+id/text_bf_gl_weiyi_gong_si_pin_pai_value"
                             style="@style/TjJiHuaTextView1"/>
 
                         <ImageView

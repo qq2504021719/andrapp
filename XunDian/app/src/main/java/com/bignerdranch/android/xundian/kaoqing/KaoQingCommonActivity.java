@@ -903,7 +903,6 @@ public class KaoQingCommonActivity extends CommActivity {
             }else if(msg.what == 2){
                 // 品牌参数请求回调
                 String string = msg.obj.toString();
-//                Log.i("巡店",""+string);
                 mCallbacksc.shuJuHuiDiao(string,1);
             }
         }
@@ -956,6 +955,8 @@ public class KaoQingCommonActivity extends CommActivity {
      * 品牌搜索
      */
     public void pingPaiSouShuo(){
+        LoadingStringEdit("品牌加载中...");
+        Log.i("巡店","品牌搜索");
         if(mToken != null){
             final OkHttpClient client = new OkHttpClient();
 

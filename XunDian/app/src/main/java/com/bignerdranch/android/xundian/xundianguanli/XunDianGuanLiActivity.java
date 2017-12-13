@@ -519,7 +519,6 @@ public class XunDianGuanLiActivity extends KaoQingCommonActivity implements Sear
             @Override
             public void onClick(View view) {
                 // 品牌搜索
-                pingPaiSouShuo();
                 if(dialogpp == null){
                     // 弹窗
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);

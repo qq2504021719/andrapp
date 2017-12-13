@@ -192,7 +192,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
 
         // 公司品牌
         mBai_fang_guan_li_pin_pai = (TextView)findViewById(R.id.bai_fang_guan_li_pin_pai);
-        mText_bf_gong_si_pin_pai_value = (TextView)findViewById(R.id.text_bf_gong_si_pin_pai_value);
+        mText_bf_gong_si_pin_pai_value = (TextView)findViewById(R.id.text_bf_gl_weiyi_gong_si_pin_pai_value);
 
         // 公司编号
         mText_bf_gong_si_bian_hao_value = (TextView)findViewById(R.id.text_bf_gong_si_bian_hao_value);
@@ -283,8 +283,6 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         mBai_fang_guan_li_pin_pai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 品牌搜索
-                pingPaiSouShuo();
                 if(dialogpp == null){
                     // 弹窗
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
@@ -458,7 +456,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String bai_fang_phone_num = jsonObject.getString("bai_fang_phone_num");
                         if(!bai_fang_phone_num.equals("null") && !bai_fang_phone_num.equals("")){
-                            if(Integer.valueOf(bai_fang_phone_num) > 10){
+                            if(Integer.valueOf(bai_fang_phone_num) > 0){
                                 mGongSetPhoneNum = Integer.valueOf(bai_fang_phone_num);
                             }
                         }
@@ -723,7 +721,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
     public void xiangCeXuanZhe(){
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,5);
+        startActivityForResult(intent,105);
     }
 
     /**
@@ -830,9 +828,6 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
             mMengDianJsonData = string;
             setData(string,2);
             ShowMenDian(string,2);
-            if(mMengDianPingpaiJsonData.equals("")){
-                pingPaiSouShuo();
-            }
         }
 
     }
@@ -956,7 +951,8 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
             if(is == 2){
                 JSONObject jsonObject = new JSONObject(string);
                 String nameText = jsonObject.getString("name");
-
+                // 门店品牌
+                mBaiFangGuanli.setPinPai(nameText);
                 // 品牌
                 mText_bf_gong_si_pin_pai_value.setText(nameText);
                 // 门店搜索品牌
@@ -975,15 +971,16 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
                 String men_dian_haoText = jsonObject.getString("men_dian_hao");
                 String FanWei = jsonObject.getString("fan_wei");
 
+                // 门店id
+                mBaiFangGuanli.setMenDianId(idText);
+                // 门店名称
+                mBaiFangGuanli.setMenDian(nameText);
                 // 门店号
-//                mLocationBaiDu.setBianHao(men_dian_haoText);
-
-                // 存储选择门店id
-//                mLocationBaiDu.setMenDianId(Integer.valueOf(idText));
-                // 存储用户选择门店
-//                mLocationBaiDu.setMenDianMingCheng(nameText);
-                // 门店范围
-//                mLocationBaiDu.setFanWei(FanWei);
+                mBaiFangGuanli.setMenDianHao(men_dian_haoText);
+                // 门店品牌
+                mBaiFangGuanli.setPinPai(men_dian_ping_paiText);
+                // 品牌
+                mText_bf_gong_si_pin_pai_value.setText(men_dian_ping_paiText);
 
                 // 公司编号值设置
                 mText_bf_gong_si_bian_hao_value.setText(men_dian_haoText);
@@ -1044,7 +1041,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
             // 显示图片
             updatePhotoView();
             // 相册选择图片返回
-        }else if(requestCode == 5){
+        }else if(requestCode == 105){
 
             Uri selectedImage = data.getData();
 
@@ -1173,6 +1170,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
                     // 启动拍照
                     PhoneXuanZhe();
                     REQUEST_PHOTO = bs;
+                    Log.i("巡店",REQUEST_PHOTO+"拍照");
 
                     mPhoneImageViewList.put(REQUEST_PHOTO,mDangQianOnclickImageView);
                 }
