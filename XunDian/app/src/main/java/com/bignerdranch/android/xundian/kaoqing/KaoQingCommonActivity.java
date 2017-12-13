@@ -50,6 +50,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -891,8 +892,6 @@ public class KaoQingCommonActivity extends CommActivity {
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
-            // 关闭loading
-            WeiboDialogUtils.closeDialog(mWeiboDialog);
             /**
              * 请求回调
              */
@@ -901,6 +900,8 @@ public class KaoQingCommonActivity extends CommActivity {
                 String string = msg.obj.toString();
                 mCallbacksc.shuJuHuiDiao(string,2);
             }else if(msg.what == 2){
+                // 关闭loading
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
                 // 品牌参数请求回调
                 String string = msg.obj.toString();
                 mCallbacksc.shuJuHuiDiao(string,1);
@@ -955,7 +956,6 @@ public class KaoQingCommonActivity extends CommActivity {
      * 品牌搜索
      */
     public void pingPaiSouShuo(){
-        LoadingStringEdit("品牌加载中...");
         Log.i("巡店","品牌搜索");
         if(mToken != null){
             final OkHttpClient client = new OkHttpClient();
@@ -1038,7 +1038,60 @@ public class KaoQingCommonActivity extends CommActivity {
         return f.getPath();
     }
 
+    /**
+     * @author jerry.chen 2017-10-12
+     * @param dateStr
+     * @return 获取当前是星期几
+     */
+    public String getCurrentWeekOfMonth(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            String[] day_of_week = {"周日","周一","周二","周三","周四","周五","周六"};
+            c.setTime(format.parse(dateStr));
+            int dayForWeek = 0;
 
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+            return day_of_week[dayForWeek];
+
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 根据str截取字符串string返回字符串
+     * @param str
+     * @param string
+     * @return
+     */
+    public String strSplit(String str,String string){
+        String s = new String(string);
+        String a[] = s.split(str);
+
+        String returnStr = "";
+
+        for (int i = 0;i<a.length;i++){
+            returnStr += a[i];
+        }
+
+        return returnStr;
+    }
+
+    /**
+     * 根据str截取字符串string数组
+     * @param str
+     * @param string
+     * @return
+     */
+    public String[] strSplitArray(String str,String string){
+        String s = new String(string);
+        String a[] = s.split(str);
+
+        return a;
+    }
 
 
 }

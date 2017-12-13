@@ -125,23 +125,6 @@
                             style="@style/TjJiHuaImageView"/>
 
                     </LinearLayout>
-                    <!--门店名称-->
-                    <LinearLayout
-                        style="@style/LinearLayoutHorizontal">
-
-                        <TextView
-                            android:id="@+id/textview_ming_cheng"
-                            style="@style/TjJiHuaTextView"
-                            android:text="门店名称"/>
-
-                        <TextView
-                            android:id="@+id/textview_ming_cheng_value"
-                            style="@style/TjJiHuaTextView1"/>
-
-                        <ImageView
-                            style="@style/TjJiHuaImageView"/>
-
-                    </LinearLayout>
                     <!--门店号-->
                     <LinearLayout
                         style="@style/LinearLayoutHorizontal">
@@ -159,7 +142,24 @@
                             style="@style/TjJiHuaImageView"/>
 
                     </LinearLayout>
-                    <!--门店号-->
+                    <!--门店名称-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+
+                        <TextView
+                            android:id="@+id/textview_ming_cheng"
+                            style="@style/TjJiHuaTextView"
+                            android:text="门店名称"/>
+
+                        <TextView
+                            android:id="@+id/textview_ming_cheng_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+
+                    </LinearLayout>
+                    <!--驳回原因-->
                     <LinearLayout
                         style="@style/LinearLayoutHorizontal">
 

@@ -258,6 +258,7 @@ public class BaiFangGuanLiActivity extends KaoQingCommonActivity implements KaoQ
         mViewPPD = inflaters.inflate(R.layout.alert_kao_bai_fang_guan_li_search, null);
         // 公司 alert 弹出
         mBf_search_men_dian_pp = mViewPPD.findViewById(R.id.bf_search_men_dian);
+        LoadingStringEdit("品牌加载中...");
         // 品牌搜索
         pingPaiSouShuo();
 
