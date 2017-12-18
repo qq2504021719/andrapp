@@ -149,19 +149,24 @@ public class LoginActivity extends AppCompatActivity {
             if(msg.what==1){
                 DengLuAdd((String) msg.obj);
             }else if(msg.what==2){
-                if(msg.obj.toString().equals("false")){
-                    mLoginModel.deleteLogin(1);
-                    // 关闭loading
-                    WeiboDialogUtils.closeDialog(mWeiboDialog);
-                    tiShi(mContext,"账号已绑定手机,请联系管理员");
-                }else if(mJiQiMa.equals(msg.obj.toString())){
+                if(mZhangHao.equals("pl")){
                     getUserData();
                 }else{
-                    // 关闭loading
-                    WeiboDialogUtils.closeDialog(mWeiboDialog);
-                    mLoginModel.deleteLogin(1);
-                    tiShi(mContext,"账号已绑定手机,请联系管理员");
+                    if(msg.obj.toString().equals("false")){
+                        mLoginModel.deleteLogin(1);
+                        // 关闭loading
+                        WeiboDialogUtils.closeDialog(mWeiboDialog);
+                        tiShi(mContext,"账号已绑定手机,请联系管理员");
+                    }else if(mJiQiMa.equals(msg.obj.toString())){
+                        getUserData();
+                    }else{
+                        // 关闭loading
+                        WeiboDialogUtils.closeDialog(mWeiboDialog);
+                        mLoginModel.deleteLogin(1);
+                        tiShi(mContext,"账号已绑定手机,请联系管理员");
+                    }
                 }
+
             }else if(msg.what == 3){
                 // 请求用户信息回调
                 if(msg.obj.toString() != null){
@@ -350,7 +355,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent i = MainPageActivity.newIntent(mContext,1);
             mContext.startActivity(i);
         }else{
-//            Log.i("巡店",mLogin.getIsBaoCun()+"");
         }
     }
 
@@ -548,7 +552,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 // 添加数据
                 mLoginModel.addLogin(login);
-                // 删除登录信息
+                // 删除登录信息  && !mLogin.getZhangHao().equals("pl")
 
                 if(mYanZhengJiQi.length > 0){
                     int isYOU = 0;
@@ -559,7 +563,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                     // 机器码
-                    if(isYOU == 1){
+                    if(isYOU == 1 && mZhangHao.equals("pl")){
+//                        Log.i("巡店","免验证");
                         getUserData();
                     }else{
                         // 验证跳转

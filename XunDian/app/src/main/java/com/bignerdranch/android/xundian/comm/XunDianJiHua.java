@@ -53,6 +53,17 @@ public class XunDianJiHua implements Comparable<XunDianJiHua>{
     // 驳回原因
     public String mBoHuiYuanYi;
 
+    // 状态
+    public String mZhuangTai;
+
+    public void setZhuangTai(String zhuangTai) {
+        mZhuangTai = zhuangTai;
+    }
+
+    public String getZhuangTai() {
+        return mZhuangTai;
+    }
+
     public void setBoHuiXG(int boHuiXG) {
         mBoHuiXG = boHuiXG;
     }

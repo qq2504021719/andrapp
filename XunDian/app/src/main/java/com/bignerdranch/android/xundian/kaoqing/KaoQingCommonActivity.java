@@ -144,6 +144,9 @@ public class KaoQingCommonActivity extends CommActivity {
     // 本月时间工作小时
     public String mText_shi_ji_gong_zhuo_xiao_shi_value_str = "0";
 
+    // 计薪周期
+    public String mText_shi_ji_gong_zhuo_xiao_shi_value_str_ji = "";
+
     // 权限名称
     public String mQuanXianName = "";
     // 跳转页面
@@ -288,6 +291,8 @@ public class KaoQingCommonActivity extends CommActivity {
 
                     // 时间工作小时
                     mText_shi_ji_gong_zhuo_xiao_shi_value_str = jsonObjectJi.getString("ShiJiH");
+                    // 计薪周期
+                    mText_shi_ji_gong_zhuo_xiao_shi_value_str_ji = "本月"+jsonObjectJi.getString("month_start")+"日到下月"+jsonObjectJi.getString("month_end")+"日";
 
                     // 请假记录
                     jsonArray = new JSONArray(jsonObjectJi.getString("qingJia"));

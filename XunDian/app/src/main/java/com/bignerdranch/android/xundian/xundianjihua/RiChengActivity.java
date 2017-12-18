@@ -332,6 +332,8 @@ public class RiChengActivity extends KaoQingCommonActivity implements KaoQingCom
              *  msg.obj
              */
             if(msg.what==1){
+                // 清空显示内容
+                initShowView();
                 if(msg.obj.toString().equals("暂无数据驳回")){
                     tiShi(mContext,"暂无驳回计划");
                 }else{
@@ -340,6 +342,9 @@ public class RiChengActivity extends KaoQingCommonActivity implements KaoQingCom
             }else if(msg.what == 2){
                 tiShi(mContext,msg.obj.toString());
             }else if(msg.what == 3){
+                // 清空显示内容
+                initShowView();
+
                 tiShi(mContext,msg.obj.toString());
                 // 删除数据
                 mXunDianJiHuas = new ArrayList<>();
@@ -909,7 +914,7 @@ public class RiChengActivity extends KaoQingCommonActivity implements KaoQingCom
      */
     public void setShowJH(){
         // 初始化显示组件
-        initShowView();
+//        initShowView();
 
 
         if(mXunDianJiHuas.size() > 0){
@@ -957,6 +962,10 @@ public class RiChengActivity extends KaoQingCommonActivity implements KaoQingCom
      * 初始化显示组件
      */
     public void initShowView(){
+        // 清空内容
+        mXunDianJiHuas = new ArrayList<>();
+        mXunDianJiHuasXG = new ArrayList<>();
+
         // 初始化显示父组件
         mLinear_zhou_yi.removeAllViews();
         mLinear_zhou_yi.setVisibility(View.GONE);

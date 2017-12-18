@@ -74,6 +74,22 @@
                             style="@style/TjJiHuaImageView"/>
                     </LinearLayout>
 
+                    <!--计薪周期-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            android:id="@+id/text_shi_ji_ji_xin_zhou_qi"
+                            style="@style/TjJiHuaTextView"
+                            android:text="计薪周期"/>
+
+                        <TextView
+                            android:id="@+id/text_shi_ji_ji_xin_zhou_qi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
                     <!--请假记录-->
                     <LinearLayout
                             style="@style/LinearLayoutHorizontal"

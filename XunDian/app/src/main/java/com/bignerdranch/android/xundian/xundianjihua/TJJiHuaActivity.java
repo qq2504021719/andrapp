@@ -63,6 +63,8 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
 
     // 选择周
     private TextView mTextview_zhou;
+    // 选择周的value
+    public String mTextview_zhou_value_cun_chu = "";
     // 选择周显示
     private TextView mTextview_zhou_value;
     // 周数据
@@ -379,6 +381,7 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
                             }
                         }
                         if(is){
+                            mTextview_zhou_value_cun_chu = mZhouData[index];
                             // 显示选择周
                             mTextview_zhou_value.setText(mZhouData[index]);
                             // 更新用户选择周
@@ -407,7 +410,7 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
                         mTextview_ri_qi_value.setText(mRiQiDataZhou[index]);
                         // 更新用户选择日期
                         mXunDianJiHua.setRiQi(mRiQiData[index]);
-                        Log.i("巡店",mRiQiData[0]+"|"+mXunDianJiHua.getRiQi());
+//                        Log.i("巡店",mRiQiData[0]+"|"+mXunDianJiHua.getRiQi());
                         alertDialog1.dismiss();
                     }
                 });
@@ -589,6 +592,15 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
      * 工作表提交
      */
     public void gongZuoBiaoTiJiao(){
+        // 存储赋值为空
+        mTextview_zhou_value_cun_chu = "";
+        // 清空对象
+        mXunDianJiHua = new XunDianJiHua();
+
+        // 清空显示内容
+        mTextview_zhou_value.setText("");
+
+
         JSONObject jsonObjects = new JSONObject();
         for(int i = 0;i<mXunDianJiHuas.size();i++){
             if(mXunDianJiHuas.get(i) != null){
@@ -733,6 +745,11 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
         mXiuGaiKey = 1000;
         // 初始化对象
         mXunDianJiHua = new XunDianJiHua();
+        // 重新设置,避免重复选择
+        mXunDianJiHua.setZhou(mTextview_zhou_value_cun_chu);
+        // 根据周更新日期
+//        setRiqi(mXunDianJiHua.getZhou());
+
         // 存储用户id
         mXunDianJiHua.setUid(mLogin.getUid());
         // 清空输入内容
@@ -748,6 +765,7 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
         // 查询数据
         mXunDianJiHuas = mXunDianJiHuaModel.getXunDianJiHuas(String.valueOf(mLogin.getUid()));
         //
+        Log.i("巡店",mXunDianJiHuas.size()+"");
         mId = mXunDianJiHuas.size();
     }
 
@@ -939,7 +957,7 @@ public class TJJiHuaActivity extends KaoQingCommonActivity implements KaoQingCom
         // 隐藏删除
         mButton_shan_chu_gong.setVisibility(View.GONE);
 
-        mTextview_zhou_value.setText("");
+//        mTextview_zhou_value.setText("");
         mTextview_ri_qi_value.setText("");
         mTextview_shi_jian_value.setText("");
         mTextview_js_shi_jian_value.setText("");

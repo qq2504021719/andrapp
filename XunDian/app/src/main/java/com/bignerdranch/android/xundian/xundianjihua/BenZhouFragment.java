@@ -376,6 +376,7 @@ public class BenZhouFragment extends Fragment{
                         xunDianJiHua.setMenDianHao(jsonObject.getString("mendian_hao").trim());
                         xunDianJiHua.setMenDianStr(jsonObject.getString("mendian_name").trim());
                         xunDianJiHua.setZhouStr(jsonObject.getString("zhouStr").trim());
+                        xunDianJiHua.setZhuangTai(jsonObject.getString("zhuang_tai").trim());
                         xunDianJiHua.setIsWC(Integer.valueOf(jsonObject.getString("isWC").trim()));
                     }
                     mXunDianJiHuas.add(xunDianJiHua);
@@ -633,11 +634,21 @@ public class BenZhouFragment extends Fragment{
 
         ll.addView(CreateTextView(strs1,1,0));
 
-        if(xunDianJiHua.getIsWC() == 1){
+        if(xunDianJiHua.getZhuangTai().equals("完成")){
             ll.addView(CreateTextView("已完成",0,R.color.zhuti));
-        }else if(xunDianJiHua.getIsWC() == 0){
-            ll.addView(CreateTextView("未完成",0,0));
+        }else if(xunDianJiHua.getZhuangTai().equals("驳回")){
+            ll.addView(CreateTextView("驳回",0,0));
+        }else if(xunDianJiHua.getZhuangTai().equals("待审核")){
+            ll.addView(CreateTextView("待审核",0,0));
+        }else if(xunDianJiHua.getZhuangTai().equals("正常")){
+            ll.addView(CreateTextView("进行中",0,0));
         }
+
+//        if(xunDianJiHua.getIsWC() == 1){
+//            ll.addView(CreateTextView("已完成",0,R.color.zhuti));
+//        }else if(xunDianJiHua.getIsWC() == 0){
+//            ll.addView(CreateTextView("未完成",0,0));
+//        }
 
         linearLayout.addView(ll);
     }
@@ -699,7 +710,9 @@ public class BenZhouFragment extends Fragment{
         layoutParam.setMargins(0,0,0,5);
 
         textView.setLayoutParams(layoutParam);
-
+        if(is == 1){
+            textView.setPadding(0,0,20,0);
+        }
         if(YanSe != 0){
             textView.setTextColor(getResources().getColor(YanSe));
         }
