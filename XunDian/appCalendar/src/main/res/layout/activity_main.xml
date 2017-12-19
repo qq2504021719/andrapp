@@ -154,7 +154,7 @@
             android:layout_height="40dp"
 
             android:layout_margin="5dp"
-            android:text="返回"
+            android:text="确认"
             />
 
     </LinearLayout>

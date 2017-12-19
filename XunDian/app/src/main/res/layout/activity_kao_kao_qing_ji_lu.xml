@@ -90,6 +90,81 @@
                             style="@style/TjJiHuaImageView"/>
                     </LinearLayout>
 
+                    <!--事假-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="事假"/>
+
+                        <TextView
+                            android:id="@+id/test_kao_qing_ji_lv_shi_jia_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--病假-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="病假"/>
+
+                        <TextView
+                            android:id="@+id/test_kao_qing_ji_lv_bing_jia_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--年假-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="年假"/>
+
+                        <TextView
+                            android:id="@+id/test_kao_qing_ji_lv_nian_jia_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--带薪假-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="带薪假"/>
+
+                        <TextView
+                            android:id="@+id/test_kao_qing_ji_lv_dai_xin_jia_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
+                    <!--其他假期-->
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontal">
+                        <TextView
+                            style="@style/TjJiHuaTextView"
+                            android:text="其他假期"/>
+
+                        <TextView
+                            android:id="@+id/test_kao_qing_ji_lv_qi_ta_jia_qi_value"
+                            style="@style/TjJiHuaTextView1"/>
+
+                        <ImageView
+                            style="@style/TjJiHuaImageView"/>
+                    </LinearLayout>
+
                     <!--请假记录-->
                     <LinearLayout
                             style="@style/LinearLayoutHorizontal"

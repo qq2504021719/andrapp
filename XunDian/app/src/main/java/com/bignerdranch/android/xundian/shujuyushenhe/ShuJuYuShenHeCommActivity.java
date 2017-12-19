@@ -134,6 +134,9 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
     //
     public String mQuanXianName = "";
 
+    // 请假审核不同意跟换颜色
+    public String mBuTongYiGengHuanYanSe = "";
+
     /**
      * 实现回调接口
      */
@@ -359,9 +362,11 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
             if(mActivityLeiXing == 0){
                 TextView textView3 = CreateTextView(3,"同意",Integer.valueOf(jsonObject.getString("id")));
                 linearLayout4.addView(textView3);
+                mBuTongYiGengHuanYanSe = "是";
                 TextView textView31 = CreateTextView(3,"不同意",Integer.valueOf(jsonObject.getString("id")));
                 linearLayout4.addView(textView31);
             }else if(mActivityLeiXing == 1){
+                mBuTongYiGengHuanYanSe = "否";
                 TextView textView3 = CreateTextView(3,jsonObject.getString("qing_jia_zhuang_tai"),Integer.valueOf(jsonObject.getString("id")));
                 linearLayout4.addView(textView3);
             }
@@ -624,6 +629,7 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
             textView.setTextSize(12);
         }else if(is == 3){
             if(mActivityLeiXing == 0){
+
                 textView.setPadding(20,5,20,5);
                 textView.setTextSize(14);
                 if(string.equals("同意")){
@@ -639,7 +645,10 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
                     });
                 }else if(string.equals("不同意")){
                     textView.setTextColor(getResources().getColor(R.color.heise));
-                    textView.setBackground(getResources().getDrawable(R.color.huise));
+//                    textView.setBackground(getResources().getDrawable(R.color.huise));
+//                    if(!mBuTongYiGengHuanYanSe.equals("")){
+                        textView.setBackgroundColor(getResources().getColor(R.color.huangse));
+//                    }
                     // 不同意点击事件
                     // 同意点击事件 mCallbacksc
                     textView.setOnClickListener(new View.OnClickListener() {
