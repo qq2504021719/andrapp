@@ -508,19 +508,26 @@ public class ShuJuYuShenHeCommActivity extends CommActivity {
 
     }
 
+    /**
+     * 拼接图片
+     * @param linearLayout
+     * @param imageView
+     * @param string
+     */
     public void isTuBiao(LinearLayout linearLayout,ImageView imageView,String string){
-        if(!string.equals("null")){
-            if(string.equals("待审核")){
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
-            }
-            if(string.equals("不同意")){
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_dai_shen_he));
-            }
-            if(string.equals("同意")){
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
-            }
-            linearLayout.addView(imageView);
+        if(string.equals("待审核")){
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_ku_lian));
         }
+        if(string.equals("不同意")){
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_dai_shen_he));
+        }
+        if(string.equals("") || string.equals("null")){
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_hei_se));
+        }
+        if(string.equals("同意")){
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ka_qing_xiao_lian));
+        }
+        linearLayout.addView(imageView);
 
     }
 
