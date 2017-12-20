@@ -147,6 +147,17 @@ public class KaoQingCommonActivity extends CommActivity {
     // 计薪周期
     public String mText_shi_ji_gong_zhuo_xiao_shi_value_str_ji = "";
 
+    // 事假
+    public String mTest_kao_qing_ji_lv_shi_jia_value_value = "";
+    // 病假
+    public String mTest_kao_qing_ji_lv_bing_jia_value_value = "";
+    // 年假
+    public String mTest_kao_qing_ji_lv_nian_jia_value_value = "";
+    // 带薪假
+    public String mTest_kao_qing_ji_lv_dai_xin_jia_value_value = "";
+    // 其他假期
+    public String mTest_kao_qing_ji_lv_qi_ta_jia_value_value = "";
+
     // 权限名称
     public String mQuanXianName = "";
     // 跳转页面
@@ -292,7 +303,19 @@ public class KaoQingCommonActivity extends CommActivity {
                     // 时间工作小时
                     mText_shi_ji_gong_zhuo_xiao_shi_value_str = jsonObjectJi.getString("ShiJiH");
                     // 计薪周期
-                    mText_shi_ji_gong_zhuo_xiao_shi_value_str_ji = "本月"+jsonObjectJi.getString("month_start")+"日到下月"+jsonObjectJi.getString("month_end")+"日";
+                    mText_shi_ji_gong_zhuo_xiao_shi_value_str_ji = jsonObjectJi.getString("month_start")+"日到"+jsonObjectJi.getString("month_end")+"日";
+                    Log.i("巡店",jsonObjectJi.getString("shijia")+" "+jsonObjectJi.getString("binjia")+" "+jsonObjectJi.getString("nianjia")+" "+jsonObjectJi.getString("daixinjia")+" "+jsonObjectJi.getString("qitajiaqi"));
+                    // 事假
+                    mTest_kao_qing_ji_lv_shi_jia_value_value = jsonObjectJi.getString("shijia");
+                    // 病假
+                    mTest_kao_qing_ji_lv_bing_jia_value_value = jsonObjectJi.getString("binjia");
+                    // 年假
+                    mTest_kao_qing_ji_lv_nian_jia_value_value = jsonObjectJi.getString("nianjia");
+                    // 带薪假
+                    mTest_kao_qing_ji_lv_dai_xin_jia_value_value = jsonObjectJi.getString("daixinjia");
+                    // 其他假期
+                    mTest_kao_qing_ji_lv_qi_ta_jia_value_value = jsonObjectJi.getString("qitajiaqi");
+
 
                     // 请假记录
                     jsonArray = new JSONArray(jsonObjectJi.getString("qingJia"));

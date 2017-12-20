@@ -46,7 +46,6 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
     public String mQingQiuDataUrl = Config.URL+"/app/qing_jia_cha_xun_nian";
     // 请假数据日期
     public String mQingJiaRiQi = "";
-
     // 日期选择
     public TextView mText_ji_lu_ri_qi;
     // 日期选择value
@@ -61,6 +60,16 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
     public TextView mText_shi_ji_gong_zhuo_xiao_shi_value;
     // 计薪周期显示
     public TextView mText_shi_ji_ji_xin_zhou_qi_value;
+    // 事假
+    public TextView mTest_kao_qing_ji_lv_shi_jia_value;
+    // 病假
+    public TextView mTest_kao_qing_ji_lv_bing_jia_value;
+    // 年假
+    public TextView mTest_kao_qing_ji_lv_nian_jia_value;
+    // 带薪假
+    public TextView mTest_kao_qing_ji_lv_dai_xin_jia_value;
+    // 其他假期
+    public TextView mTest_kao_qing_ji_lv_qi_ta_jia_value;
 
     public static Intent newIntent(Context packageContext, int intIsId){
         Intent i = new Intent(packageContext,KaoQingJiLuActivity.class);
@@ -108,6 +117,16 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
         mText_shi_ji_gong_zhuo_xiao_shi_value = (TextView)findViewById(R.id.text_shi_ji_gong_zhuo_xiao_shi_value);
         // 计薪周期
         mText_shi_ji_ji_xin_zhou_qi_value = (TextView)findViewById(R.id.text_shi_ji_ji_xin_zhou_qi_value);
+        // 事假
+        mTest_kao_qing_ji_lv_shi_jia_value = (TextView)findViewById(R.id.test_kao_qing_ji_lv_shi_jia_value);
+        // 病假
+        mTest_kao_qing_ji_lv_bing_jia_value = (TextView)findViewById(R.id.test_kao_qing_ji_lv_bing_jia_value);
+        // 年假
+        mTest_kao_qing_ji_lv_nian_jia_value = (TextView)findViewById(R.id.test_kao_qing_ji_lv_nian_jia_value);
+        // 带薪假
+        mTest_kao_qing_ji_lv_dai_xin_jia_value = (TextView)findViewById(R.id.test_kao_qing_ji_lv_dai_xin_jia_value);
+        // 其他假期
+        mTest_kao_qing_ji_lv_qi_ta_jia_value = (TextView)findViewById(R.id.test_kao_qing_ji_lv_qi_ta_jia_qi_value);
 
     }
 
@@ -221,9 +240,18 @@ public class KaoQingJiLuActivity extends KaoQingCommonActivity {
                 mText_ben_yue_ying_shang_xiao_shi_value.setText(mText_ben_yue_ying_shang_xiao_shi_value_str);
                 // 实际工作小时
                 mText_shi_ji_gong_zhuo_xiao_shi_value.setText(mText_shi_ji_gong_zhuo_xiao_shi_value_str);
-
                 // 计薪周期
                 mText_shi_ji_ji_xin_zhou_qi_value.setText(mText_shi_ji_gong_zhuo_xiao_shi_value_str_ji);
+                // 事假
+                mTest_kao_qing_ji_lv_shi_jia_value.setText(mTest_kao_qing_ji_lv_shi_jia_value_value);
+                // 病假
+                mTest_kao_qing_ji_lv_bing_jia_value.setText(mTest_kao_qing_ji_lv_bing_jia_value_value);
+                // 年假
+                mTest_kao_qing_ji_lv_nian_jia_value.setText(mTest_kao_qing_ji_lv_nian_jia_value_value);
+                // 带薪假
+                mTest_kao_qing_ji_lv_dai_xin_jia_value.setText(mTest_kao_qing_ji_lv_dai_xin_jia_value_value);
+                // 其他假期
+                mTest_kao_qing_ji_lv_qi_ta_jia_value.setText(mTest_kao_qing_ji_lv_qi_ta_jia_value_value);
 
             }
 
