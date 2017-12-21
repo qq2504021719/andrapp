@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.xundian.R;
 import com.bignerdranch.android.xundian.comm.Config;
+import com.bignerdranch.android.xundian.comm.DateDistance;
 import com.bignerdranch.android.xundian.comm.WeiboDialogUtils;
 import com.bignerdranch.android.xundian.kaoqing.KaoQingCommonActivity;
 import com.google.gson.Gson;
@@ -679,6 +680,54 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 日期选择
+     */
+    public void RiQiXuanZhe(){
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                // TODO Auto-generated method stub
+                String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                // 开始时间
+                kstime = string;
+                mXunDianLike.setKstime(kstime);
+                Calendar c = Calendar.getInstance();
+                new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                        // 开始时间
+                        jstime = string;
+                        // 验证是否超过31天,超过则重新选择
+
+                        try {
+                            if((int) DateDistance.getDistanceDays(kstime,jstime) > Config.XunDianChaXunZuiDaTianShu){
+                                tiShi(mContext,"不能查询超过31天的数据,请重新选择时间");
+                                mXunDianLike.setKstime("");
+                                mXunDianLike.setJstime("");
+                                // 调用日期选择
+                                RiQiXuanZhe();
+                            }else{
+                                mXunDianLike.setJstime(jstime);
+                                mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+
+            }
+
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void IsYanZhengChongXinXuanZhe(){
 
 
     }
@@ -697,31 +746,8 @@ public class XunDianChaXunActivity extends KaoQingCommonActivity implements KaoQ
         mXun_dian_text_cha_xun_ri_qi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
-                new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
-                        // 开始时间
-                        kstime = string;
-                        mXunDianLike.setKstime(kstime);
-                        Calendar c = Calendar.getInstance();
-                        new DatePickerDialog(XunDianChaXunActivity.this, new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                // TODO Auto-generated method stub
-                                String string = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
-                                // 开始时间
-                                jstime = string;
-                                mXunDianLike.setJstime(jstime);
-                                mXun_dian_text_cha_xun_ri_qi_value.setText(kstime+"~"+jstime);
-
-                            }
-                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                // 调用日期选择
+                RiQiXuanZhe();
             }
         });
 
