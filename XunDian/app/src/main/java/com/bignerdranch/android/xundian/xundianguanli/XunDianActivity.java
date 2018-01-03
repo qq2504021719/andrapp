@@ -284,6 +284,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                         mCanShuYiTiJiao++;
                         if(mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))) != null){
                             mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).setServerPhotoPath(jsonObject.getString("path"));
+//                            Log.i("巡店-数据提交",jsonObject.getString("id")+"-"+mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).getId()+"-"+mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).getName());
 //                            tiShi(mContext,"图片上传 : "+mCanShuYiTiJiao+"/"+mCanShuNums);
                         }
                         // 提交数据
@@ -541,7 +542,10 @@ public class XunDianActivity extends NeiYeCommActivity {
                     Log.i("巡店",""+mCanShuNums);
                     for(Integer key:mXunDianCanShus.keySet()){
                         if(mXunDianCanShus.get(key) != null){
-                            PhoneTiJiao(mXunDianCanShus.get(key));
+                            if(mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null){
+                                PhoneTiJiao(mXunDianCanShus.get(key));
+                            }
+
                         }
                     }
                 }else{
@@ -578,10 +582,24 @@ public class XunDianActivity extends NeiYeCommActivity {
                     RequestBody.create(MediaType.parse("image/jpeg"),file)
             );
 
-        }
 
+
+        }
+        // 名称信息
+        String strName = "";
+        try {
+            strName = mXunDian.getString("mMenDianPingPai")+"-"+mXunDian.getString("mBianHao")+"-"+mXunDian.getString("mMenDianMingCheng")+"-"+xunDianCanShu.getName();
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        body.addFormDataPart("fileName",strName);
+//        Log.i("巡店-数据提交",xunDianCanShu.getId()+'-'+strName);
         // 参数id
         body.addFormDataPart("id",String.valueOf(xunDianCanShu.getId()));
+        // 用户id
+        body.addFormDataPart("uid",String.valueOf(mLogin.getUid()));
 
         final Request request = new Request.Builder()
                 .addHeader("Authorization","Bearer "+mToken)

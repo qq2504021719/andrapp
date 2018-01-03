@@ -36,6 +36,8 @@ public class LocationBaiDu {
     private int mMenDianPingPaiId;
     // 门店名称
     private String mMenDianMingCheng;
+    // 门店品牌
+    private String mMenDianPingPai;
     // 门店编号
     private String mBianHao;
     // 用户签到范围
@@ -44,6 +46,16 @@ public class LocationBaiDu {
     private Double mMenDianLat;
     // 门店lng
     private Double mMenDianLng;
+
+    public void setMenDianPingPai(String menDianPingPai) {
+        mMenDianPingPai = menDianPingPai;
+    }
+
+
+    public String getMenDianPingPai() {
+        return mMenDianPingPai;
+    }
+
 
     public void setFanWei(String fanWei) {
         mFanWei = fanWei;

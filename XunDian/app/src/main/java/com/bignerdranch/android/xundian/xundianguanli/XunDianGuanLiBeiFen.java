@@ -295,6 +295,8 @@ public class XunDianGuanLiBeiFen extends NeiYeCommActivity implements SearchView
                         mLocationBaiDu.setMenDianId(Integer.valueOf(strings[0]));
                         // 存储用户选择门店
                         mLocationBaiDu.setMenDianMingCheng(strings[1]);
+                        // 存储品牌名称
+//                        mLocationBaiDu.setMenDianPingPai(strings[3]);
                         // 门店范围
                         mLocationBaiDu.setFanWei(strings[4]);
                         // 门店lat

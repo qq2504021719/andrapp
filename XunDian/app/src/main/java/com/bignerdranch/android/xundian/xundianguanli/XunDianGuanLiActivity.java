@@ -382,6 +382,8 @@ public class XunDianGuanLiActivity extends KaoQingCommonActivity implements Sear
                 mLocationBaiDu.setMenDianId(Integer.valueOf(idText));
                 // 存储用户选择门店
                 mLocationBaiDu.setMenDianMingCheng(nameText);
+                // 存储门店品牌
+                mLocationBaiDu.setMenDianPingPai(men_dian_ping_paiText);
                 // 门店范围
                 mLocationBaiDu.setFanWei(FanWei);
 
