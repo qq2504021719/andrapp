@@ -275,16 +275,20 @@ public class XunDianActivity extends NeiYeCommActivity {
                 }
             }else if(msg.what == 3){
                 String string = msg.obj.toString();
+                Log.i("巡店","返回json:"+string);
                 // 图片上传回调
                 if(msg.obj != null && string != null){
                     try {
                         JSONObject jsonObject = new JSONObject(string);
                     if(jsonObject.getString("id") != null && jsonObject.getString("path") != null){
+                        int id = Integer.valueOf(jsonObject.getString("id"));
                         // 参数提交回调
                         mCanShuYiTiJiao++;
-                        if(mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))) != null){
-                            mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).setServerPhotoPath(jsonObject.getString("path"));
-//                            Log.i("巡店-数据提交",jsonObject.getString("id")+"-"+mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).getId()+"-"+mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).getName());
+                        if(mXunDianCanShus.get(id) != null){
+                            mXunDianCanShus.get(id).setServerPhotoPath(jsonObject.getString("path"));
+                            // 写入数据库
+                            mXunDianModel.addIsUpdate(mXunDianCanShus.get(id));
+//                            Log.i("巡店",jsonObject.getString("id")+"-"+mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).getId()+"-"+mXunDianCanShus.get(Integer.valueOf(jsonObject.getString("id"))).getName());
 //                            tiShi(mContext,"图片上传 : "+mCanShuYiTiJiao+"/"+mCanShuNums);
                         }
                         // 提交数据
@@ -524,14 +528,19 @@ public class XunDianActivity extends NeiYeCommActivity {
             if(mXunDianCanShus.size() > 0){
                 mCanShuYiTiJiao = 0;
                 mCanShuNums = 0;
-//            tiShi(mContext,"上传中,请稍等");
+            tiShi(mContext,"上传中,请稍等");
                 /**
                  * 图片的数量
                  */
                 for(Integer key:mXunDianCanShus.keySet()){
                     if(mXunDianCanShus.get(key) != null){
-                        if(mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null){
+                        // 图片未提交数量
+                        if((mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null) && mXunDianCanShus.get(key).getServerPhotoPath() == null){
                             mCanShuNums++;
+                        }
+                        // 图片提交数量
+                        if(mXunDianCanShus.get(key).getServerPhotoPath() != null){
+                            mCanShuYiTiJiao++;
                         }
                     }
                 }
@@ -539,16 +548,17 @@ public class XunDianActivity extends NeiYeCommActivity {
                  * 图片上传
                  */
                 if(mCanShuNums > 0){
-                    Log.i("巡店",""+mCanShuNums);
+                    Log.i("巡店","图片未提交数量:"+mCanShuNums);
                     for(Integer key:mXunDianCanShus.keySet()){
                         if(mXunDianCanShus.get(key) != null){
-                            if(mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null){
+                            if(mXunDianCanShus.get(key).getPhotoFile() != null || mXunDianCanShus.get(key).getPhontPath() != null && mXunDianCanShus.get(key).getServerPhotoPath() == null){
                                 PhoneTiJiao(mXunDianCanShus.get(key));
                             }
 
                         }
                     }
                 }else{
+                    Log.i("巡店","参数提交");
                     TiJiao(mXunDianCanShus);
                 }
             }
@@ -595,7 +605,7 @@ public class XunDianActivity extends NeiYeCommActivity {
             e.printStackTrace();
         }
         body.addFormDataPart("fileName",strName);
-//        Log.i("巡店-数据提交",xunDianCanShu.getId()+'-'+strName);
+        Log.i("巡店","拍照上传:"+xunDianCanShu.getId()+'-'+strName);
         // 参数id
         body.addFormDataPart("id",String.valueOf(xunDianCanShu.getId()));
         // 用户id
@@ -1307,6 +1317,11 @@ public class XunDianActivity extends NeiYeCommActivity {
                             mXunDianCanShus.get(id).setPhotoFile(mPhotoFile);
                             // 存储图片路径
                             mXunDianCanShus.get(id).setPhontPath(mPhotoFile.getPath());
+
+                            // 图片上传
+//                            if(mXunDianCanShus.get(id).getPhotoFile() != null || mXunDianCanShus.get(id).getPhontPath() != null){
+
+//                            }
                         }
                     }
                 }
@@ -1376,7 +1391,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                         }
                     }
 
-                    Log.i("巡店",mCanShuNum+"|"+inWenTi);
+                    Log.i("巡店","参数必填数量:"+mCanShuNum+"|输入框累加:"+inWenTi);
 
                     // 提交 18817610991  34805
                     if(mIsTijiao == 1){
@@ -1386,7 +1401,7 @@ public class XunDianActivity extends NeiYeCommActivity {
                             // 保存完成时间
                             baoCunWanChengTime();
 
-                            // 延迟地址提交
+                            // 延迟提交
                             panDuanTiJiao();
                         }
                     }else{
@@ -1459,6 +1474,9 @@ public class XunDianActivity extends NeiYeCommActivity {
                 mXunDianCanShus.get(mTuPianDianJi).setPhotoFile(files);
                 // 存入文件路径
                 mXunDianCanShus.get(mTuPianDianJi).setPhontPath(files.getPath());
+                // 图片上传
+                Log.i("巡店","拍照返回:"+mTuPianDianJi);
+                PhoneTiJiao(mXunDianCanShus.get(mTuPianDianJi));
                 // 写入数据库
                 mXunDianModel.addIsUpdate(mXunDianCanShus.get(mTuPianDianJi));
             }
@@ -1481,6 +1499,9 @@ public class XunDianActivity extends NeiYeCommActivity {
             mXunDianCanShu.setValue(xunDianCanShu.getValue());
             // 图片路径
             mXunDianCanShu.setPhontPath(xunDianCanShu.getPhontPath());
+            Log.i("巡店","查询地址"+xunDianCanShu.getServerPhotoPath());
+            // 图片服务器路径
+            mXunDianCanShu.setServerPhotoPath(xunDianCanShu.getServerPhotoPath());
             // 巡店开始时间
             mXunDianCanShu.setXunKaiShiTime(xunDianCanShu.getXunKaiShiTime());
             // 巡店结束时间

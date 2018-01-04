@@ -53,6 +53,8 @@ public class DbSchema {
             public static final String USERID = "uid";
             // 店铺名称
             public static final String NAME = "menDianName";
+            // 图片服务器地址
+            public static final String PHONEFILE = "phonefile";
 
         }
     }
