@@ -528,7 +528,6 @@ public class XunDianActivity extends NeiYeCommActivity {
             if(mXunDianCanShus.size() > 0){
                 mCanShuYiTiJiao = 0;
                 mCanShuNums = 0;
-            tiShi(mContext,"上传中,请稍等");
                 /**
                  * 图片的数量
                  */
@@ -641,6 +640,7 @@ public class XunDianActivity extends NeiYeCommActivity {
      */
     public void TiJiao(HashMap<Integer,XunDianCanShu> xunDianCanShuHashMap){
         JSONObject jsonObjects = new JSONObject();
+
         for(Integer key:mXunDianCanShus.keySet()){
             if(mXunDianCanShus.get(key) != null){
                 JSONObject jsonObject = new JSONObject();
@@ -688,6 +688,7 @@ public class XunDianActivity extends NeiYeCommActivity {
 
         }
 //        Log.i(" ",jsonObjects.toString());
+        Log.i("巡店","TiJiao()提交");
         final OkHttpClient client = new OkHttpClient();
         //3, 发起新的请求,获取返回信息
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonObjects.toString());
